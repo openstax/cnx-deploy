@@ -1,0 +1,8 @@
+---
+# Used to setup a deployment on localhost.
+# This should build on both OS X and Debian.
+
+- name: clone all repositories
+  hosts: local
+  tasks:
+    - include: tasks/checkout.yml

@@ -1,0 +1,59 @@
+---
+# Clone all repositories to a ``source_root`` location.
+
+- name: make source directory
+  file: state=directory path={{ source_root }}
+
+- name: clone cnx-query-grammar
+  git:
+    repo: git@github.com:Connexions/cnx-query-grammar.git
+    dest: "{{ source_root }}/cnx-query-grammar"
+    version: HEAD
+
+- name: clone rhaptos.cnxmlutils
+  git:
+    repo: git@github.com:Connexions/rhaptos.cnxmlutils.git
+    dest: "{{ source_root }}/rhaptos.cnxmlutils"
+    version: HEAD
+
+- name: clone cnx-epub
+  git:
+    repo: git@github.com:Connexions/cnx-epub.git
+    dest: "{{ source_root }}/cnx-epub"
+    version: HEAD
+
+- name: clone plpydbapi
+  git:
+    repo: git@github.com:Connexions/plpydbapi.git
+    dest: "{{ source_root }}/plpydbapi"
+    version: HEAD
+
+- name: clone plxslt
+  git:
+    repo: git@github.com:petere/plxslt.git
+    dest: "{{ source_root }}/plxslt"
+    version: HEAD
+
+- name: clone cnx-archive
+  git:
+    repo: git@github.com:Connexions/cnx-archive.git
+    dest: "{{ source_root }}/cnx-archive"
+    version: HEAD
+
+- name: clone openstax-accounts
+  git:
+    repo: git@github.com:Connexions/openstax-accounts.git
+    dest: "{{ source_root }}/openstax-accounts"
+    version: HEAD
+
+- name: clone cnx-publishing
+  git:
+    repo: git@github.com:Connexions/cnx-publishing.git
+    dest: "{{ source_root }}/cnx-publishing"
+    version: HEAD
+
+- name: clone cnx-authoring
+  git:
+    repo: git@github.com:Connexions/cnx-authoring.git
+    dest: "{{ source_root }}/cnx-authoring"
+    version: HEAD
