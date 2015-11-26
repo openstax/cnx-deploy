@@ -2,7 +2,49 @@
 # Used to setup a deployment on localhost.
 # This should build on both OS X and Debian.
 
+# Note, 'local' (the host name in the inventory)
+#   should be assigned ``ansible_connection=local``.
+
+# +++
+# Source gathering
+# +++
+
 - name: clone all repositories
   hosts: local
   tasks:
     - include: tasks/checkout.yml
+
+# +++
+# Persistence services
+# +++
+
+- name: install postgres database
+  hosts: local
+  tasks:
+    - include: tasks/install_postgres.yml
+
+- name: install memcached
+  hosts: local
+  tasks:
+    - include: tasks/install_memcached.yml
+
+# +++
+# Applications
+# +++
+
+- name: install archive and publishing
+  hosts: arclishing
+  tasks:
+    - include: tasks/install_arclishing.yml
+
+- name: install frontend
+  hosts: frontend
+  tasks:
+    - include: tasks/ensure_shared_fs.yml
+    - include: tasks/install_nginx.yml
+    - include: tasks/install_webview.yml
+
+- name: install authoring
+  hosts: authoring
+  tasks:
+    - include: tasks/install_authoring.yml
