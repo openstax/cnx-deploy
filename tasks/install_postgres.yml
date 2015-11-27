@@ -1,6 +1,13 @@
 ---
 # Installs and configures Postgres.
 
+# Note, the darwin install was made slightly easier by following...
+#   http://www.sorescode.com/2013/05/17/installing-postgresql-93-beta-using-homebrew.html
+
+# +++
+# Install
+# +++
+
 - name: install postgres (on Debian)
   when: ansible_os_family == "Debian"
   become: yes
@@ -15,11 +22,78 @@
     # We'll assume plpython is required...
     - "postgresql-plpython-{{ postgres_version }}"
 
+- name: install postgres tap (on Darwin)
+  when: ansible_os_family == "Darwin"
+  command: brew tap petere/postgresql
+
 - name: install postgres (on Darwin)
   when: ansible_os_family == "Darwin"
   homebrew:
-    # FIXME Homebrew doesn't create virtual packages for the latest stable of postgresql.
-    #       If you find yourself with version 9.5, then the following needs changed.
-    name: "postgresql{{ postgres_version != 9.4 and str(postgres_version).replace('.', '') or '' }}"
+    name: "postgresql-{{ postgres_version }}"
     state: present
-    update_homebrew: yes
+
+# +++
+# Initialize
+# +++
+
+- name: does the database directory exist? (on Darwin)
+  stat: path="/usr/local/var/postgres-{{ postgres_version }}/"
+  register: postgres_db_dir
+
+- name: initialize postgres db (on Darwin)
+  when: ansible_os_family == "Darwin" and not postgres_db_dir.stat.exists
+  shell: "/usr/local/opt/postgresql-{{ postgres_version }}/bin/initdb /usr/local/var/postgres-{{ postgres_version }} -E utf8"
+
+# +++
+# Configure
+# +++
+
+# Running into a missing ``files/`` file? Make sure you have the version of this file available.
+
+- name: configure postgres (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  copy:
+    src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    mode: 0600
+
+- name: configure postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  copy:
+    src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    dest: "/usr/local/var/postgres-{{ postgres_version }}/pg_hba.conf"
+    mode: 0600
+
+# +++
+# Init service
+# +++
+
+# Note for Darwin,
+# this homebrew tap doesn't have launchd configs installed with it.
+# Keep an eye on https://github.com/petere/homebrew-postgresql/issues/6 for updates.
+# I believe this is purposeful, since the install only includes the app,
+# not a premade instance.
+
+- name: does the postgres launchd plist file exist? (on Darwin)
+  stat: path="/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
+  register: plist_file
+
+- name: install postgres launchd config (on Darwin)
+  when: ansible_os_family == "Darwin" and not plist_file.stat.exists
+  template:
+    src: "osx/usr/local/var/postgres-_._/homebrew.mxcl.postgresql.plist"
+    dest: "/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
+    mode: 0600
+
+- name: link plist to launchd directory (on Darwin)
+  when: ansible_os_family == "Darwin"
+  file:
+    src: "/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
+    dest: "~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
+    state: link
+
+# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+- name: load the postgres launchd config (on Darwin)
+  when: ansible_os_family == "Darwin" and not plist_file.stat.exists
+  shell: "launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
