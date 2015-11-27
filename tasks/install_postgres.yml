@@ -1,1 +1,25 @@
 ---
+# Installs and configures Postgres.
+
+- name: install postgres (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "postgresql-{{ postgres_version }}"
+    - "postgresql-server-dev-{{ postgres_version }}"
+    - "postgresql-client-{{ postgres_version }}"
+    - "postgresql-contrib-{{ postgres_version }}"
+    # We'll assume plpython is required...
+    - "postgresql-plpython-{{ postgres_version }}"
+
+- name: install postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  homebrew:
+    # FIXME Homebrew doesn't create virtual packages for the latest stable of postgresql.
+    #       If you find yourself with version 9.5, then the following needs changed.
+    name: "postgresql{{ postgres_version != 9.4 and str(postgres_version).replace('.', '') or '' }}"
+    state: present
+    update_homebrew: yes
