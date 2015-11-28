@@ -22,6 +22,8 @@
   hosts: local
   tasks:
     - include: tasks/install_postgres.yml
+  roles:
+    - multimac.launchd
 
 - name: install memcached
   hosts: local
@@ -43,6 +45,8 @@
     - include: tasks/ensure_shared_fs.yml
     - include: tasks/install_nginx.yml
     - include: tasks/install_webview.yml
+  roles:
+    - multimac.launchd
 
 - name: install authoring
   hosts: authoring

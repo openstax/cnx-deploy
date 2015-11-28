@@ -21,7 +21,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
-
 import json
 import plistlib
 
@@ -355,7 +354,7 @@ def main():
             state=dict(default='loaded', choices=state_choices, type='str'),
             domain=dict(required=True, type='str'),
             label=dict(default=None, alias=['name'], type='str'),
-            path=dict(default=None, type='str'),
+            path=dict(default=None, type='path'),
             auto_enable=dict(default='yes', type='bool'),
             force_kill=dict(default='no', type='bool')
         ),
