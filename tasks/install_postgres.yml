@@ -94,6 +94,19 @@
     state: link
 
 # Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
 - name: load the postgres launchd config (on Darwin)
-  when: ansible_os_family == "Darwin" and not plist_file.stat.exists
-  shell: "launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    path: "~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
+    state: loaded
+# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.postgresl-<postgres_version>.plist``
+
+# FIXME Doing some/all of this as a role would allow for better restarting of the service.
+- name: restart the postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.postgresql-{{ postgres_version }}"
+    state: restarted
