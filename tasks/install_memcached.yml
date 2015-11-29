@@ -1,1 +1,46 @@
 ---
+# Installs and configures Memcached.
+
+# +++
+# Install
+# +++
+
+# - name: install memcached (on Debian)
+#   when: ansible_os_family == "Debian"
+#   become: yes
+#   apt:
+#     name: memcached
+#     state: present
+
+- name: install memcached (on Darwin)
+  when: ansible_os_family == "Darwin"
+  homebrew:
+    name: memcached
+    state: present
+
+# +++
+# Init service
+# +++
+
+- name: link plist to launchd directory (on Darwin)
+  when: ansible_os_family == "Darwin"
+  copy:
+    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.memcached.plist"
+    dest: "~/Library/LaunchAgents/homebrew.mxcl.memcached.plist"
+
+# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
+- name: load the memcached launchd config (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    path: "~/Library/LaunchAgents/homebrew.mxcl.memcached.plist"
+    state: loaded
+# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist``
+
+- name: restart memcached (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.memcached"
+    state: restarted
