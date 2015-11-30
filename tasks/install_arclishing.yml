@@ -1,2 +1,77 @@
 ---
 # Installs archive and publishing with all the dependencies.
+#
+# The virtualenvs are installed to /usr/local/var/cnx/venvs
+# and the configuration is installed to /usr/local/etc/cnx/.
+
+
+# +++
+# Install virtualenv(s)
+# +++
+
+- stat: path=/usr/local/var/cnx/venvs
+  register: venvs_dir
+
+- name: ensure the venvs directory exists
+  when: not venvs_dir.stat.exists
+  file:
+    path: /usr/local/var/cnx/venvs
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+
+- name: create the archive virtualenv
+  pip:
+    name: pip
+    virtualenv: /usr/local/var/cnx/venvs/archive
+    virtualenv_python: python2
+    virtualenv_site_packages: yes
+
+- name: create the publishing virtualenv
+  pip:
+    name: pip
+    virtualenv: /usr/local/var/cnx/venvs/publishing
+    virtualenv_python: python2
+    virtualenv_site_packages: yes
+
+# +++
+# Install
+# +++
+
+- name: install archive packages
+  pip:
+    name: "{{ source_dir }}/{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/archive
+    state: present
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - plpydbapi
+    - cnx-archive
+
+- name: install publishing packages
+  pip:
+    name: "{{ source_dir }}/{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/publishing
+    state: present
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - plpydbapi
+    - cnx-archive
+    - openstax-accounts
+    - cnx-publishing
+
+# +++
+# Configure
+# +++
+
+# /usr/local/etc/cnx/*.ini
+
+# +++
+# Init service
+# +++
+
+# TODO ... via supervisor
