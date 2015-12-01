@@ -4,6 +4,20 @@
 # The virtualenvs are installed to /usr/local/var/cnx/venvs
 # and the configuration is installed to /usr/local/etc/cnx/.
 
+# +++
+# Prerequisites
+# +++
+
+# Installed for the postgresql_* ansible modules.
+- when: ansible_os_family == "Debian"
+  apt:
+    name: python-psycopg2
+    state: present
+
+- when: ansible_os_family == "Darwin"
+  pip:
+    name: psycopg2
+    state: present
 
 # +++
 # Install virtualenv(s)
@@ -38,7 +52,26 @@
 # Install
 # +++
 
-- name: install archive packages
+- name: install plxslt
+  shell: "make PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config && make PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config install"
+  args:
+    chdir: "{{ source_dir }}/plxslt"
+
+- name: install session_exec
+  shell: "make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config && make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config install"
+  args:
+    chdir: "{{ source_dir }}/session_exec"
+
+# ---
+- name: restart the postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.postgresql-{{ postgres_version }}"
+    state: restarted
+# ---
+
+- name: install (local) archive packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: /usr/local/var/cnx/venvs/archive
@@ -50,7 +83,15 @@
     - plpydbapi
     - cnx-archive
 
-- name: install publishing packages
+- name: install archive packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/archive
+    state: present
+  with_items:
+    - pyramid_sawing
+
+- name: install (local) publishing packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: /usr/local/var/cnx/venvs/publishing
@@ -64,11 +105,84 @@
     - openstax-accounts
     - cnx-publishing
 
+- name: install publishing packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/publishing
+    state: present
+  with_items:
+    - pyramid_sawing
+
+
 # +++
 # Configure
 # +++
 
-# /usr/local/etc/cnx/*.ini
+- name: ensure the etc directories exists
+  file:
+    path: "/usr/local/etc/{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - cnx
+    - cnx/archive
+    - cnx/publishing
+
+- name: render configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0700
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - {src: "usr/local/etc/cnx/archive/app.ini",
+       dest: "/usr/local/etc/cnx/archive/app.ini"}
+    - {src: "usr/local/etc/cnx/publishing/app.ini",
+       dest: "/usr/local/etc/cnx/publishing/app.ini"}
+
+# +++
+# Init databases
+# +++
+
+- name: create the archive db user
+  postgresql_user:
+    # FIXME These settings are Darwin specific
+    db: postgres
+    login_user: "{{ ansible_user_id }}"
+    login_unix_socket: "/tmp"
+    # /FIXME
+    name: "{{ archive_db_user }}"
+    password: "{{ archive_db_password }}"
+    # FIXME There is no reason to make this user a SUPERUSER
+    role_attr_flags: SUPERUSER
+
+- name: create the archive db
+  postgresql_db:
+    # FIXME These settings are Darwin specific
+    login_user: "{{ ansible_user_id }}"
+    login_unix_socket: "/tmp"
+    # /FIXME
+    name: "{{ archive_db_name }}"
+    encoding: "utf-8"
+    # FIXME The owner should be the same as the user.
+    owner: "{{ archive_db_user }}"
+    state: present
+
+# Note, the setup current **assumes** that the publishing and archive database
+# is the same database. There has been no reason to split these yet, so we won't.
+
+# FIXME These initialize tasks run to failures. Ideally, it's be nice if
+#       they gracefully bailed out with a meaningful message.
+
+- name: initialize archive db
+  command: "/usr/local/var/cnx/venvs/archive/bin/cnx-archive-initdb /usr/local/etc/cnx/archive/app.ini"
+  register: archive_initdb_cmd
+  failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
+
+- name: initialize publishing db
+  when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
+  command: "/usr/local/var/cnx/venvs/publishing/bin/cnx-publishing-initdb /usr/local/etc/cnx/publishing/app.ini"
 
 # +++
 # Init service

@@ -34,6 +34,12 @@
     dest: "{{ source_root }}/plxslt"
     version: HEAD
 
+- name: clone session_exec
+  git:
+    repo: git@github.com:okbob/session_exec.git
+    dest: "{{ source_root }}/session_exec"
+    version: HEAD
+
 - name: clone cnx-archive
   git:
     repo: git@github.com:Connexions/cnx-archive.git

@@ -1,3 +1,15 @@
 ---
 postgres_version: 9.4
 source_dir: ~/cnx/src
+
+archive_db_name: cnxarchive
+archive_db_user: cnxarchive
+archive_db_password: cnxarchive
+archive_db_host: localhost
+archive_db_port: 5432
+
+# FIXME Not really yaml'ish to use space separated values...
+# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
+# 'hosts' is a space separated value containing hostnames or ip addresses
+# where a memcached instance is running.
+memcached_hosts: localhost
