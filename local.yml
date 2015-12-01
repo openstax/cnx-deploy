@@ -5,6 +5,13 @@
 # Note, 'local' (the host name in the inventory)
 #   should be assigned ``ansible_connection=local``.
 
+- name: "*slaps osx with a fish*"
+  hosts: local
+  tasks:
+    - when: ansible_os_family == "Darwin"
+      # This assumes that python was Homebrew installed.
+      set_fact: ansible_python_interpreter=/usr/local/bin/python
+
 # +++
 # Source gathering
 # +++
