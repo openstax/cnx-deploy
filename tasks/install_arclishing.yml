@@ -39,14 +39,12 @@
     name: pip
     virtualenv: /usr/local/var/cnx/venvs/archive
     virtualenv_python: python2
-    virtualenv_site_packages: yes
 
 - name: create the publishing virtualenv
   pip:
     name: pip
     virtualenv: /usr/local/var/cnx/venvs/publishing
     virtualenv_python: python2
-    virtualenv_site_packages: yes
 
 # +++
 # Install
@@ -141,6 +139,8 @@
     - {src: "usr/local/etc/cnx/publishing/app.ini",
        dest: "/usr/local/etc/cnx/publishing/app.ini"}
 
+# TODO make logging configuration files for pyramid_sawing
+
 # +++
 # Init databases
 # +++
@@ -188,4 +188,14 @@
 # Init service
 # +++
 
-# TODO ... via supervisor
+- name: configure archive under supervisor
+  copy:
+    src: etc/supervisor/conf.d/archive.conf
+    dest: /usr/local/etc/supervisor/conf.d/archive.conf
+    mode: 0644
+
+- name: configure publishing under supervisor
+  copy:
+    src: etc/supervisor/conf.d/publishing.conf
+    dest: /usr/local/etc/supervisor/conf.d/publishing.conf
+    mode: 0644
