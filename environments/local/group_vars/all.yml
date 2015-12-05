@@ -1,0 +1,5 @@
+---
+archive_host: 0.0.0.0
+archive_port: 6789
+publishing_host: 0.0.0.0
+publishing_port: 6543
