@@ -1,0 +1,69 @@
+---
+
+# +++
+# Install
+# +++
+
+- name: install nginx (on Debian)
+  when: ansible_os_family == 'Debian'
+  apt: name=nginx state=present
+
+- name: install nginx (on Darwin)
+  when: ansible_os_family == 'Darwin'
+  homebrew:
+    name: nginx
+    state: present
+
+# +++
+# Configure
+# +++
+
+# FIXME This puts a toy (but functional) config in place
+- name: install nginx.conf (on Darwin)
+  when: ansible_os_family == "Darwin"
+  copy:
+    src: "etc/nginx/nginx.conf"
+    dest: "/usr/local/etc/nginx/nginx.conf"
+    mode: 0644
+
+- name: ensure nginx/sites-{available,enabled} & nginx/conf.d (on Darwin)
+  when: ansible_os_family == "Darwin"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /usr/local/etc/nginx/sites-available
+    - /usr/local/etc/nginx/sites-enabled
+    - /usr/local/etc/nginx/conf.d
+
+# +++
+# Init serivce
+# +++
+# (On Darwin) We use a custom plist file here so that we won't have
+# nginx start on system startup.
+
+- name: copy plist to launchd directory (on Darwin)
+  when: ansible_os_family == "Darwin"
+  copy:
+    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    dest: "~/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    mode: 0600
+
+# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
+- name: load the nginx launchd config (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    path: "~/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    state: loaded
+# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist``
+
+# FIXME Doing some/all of this as a role would allow for better restarting of the service.
+- name: restart the nginx (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.nginx"
+    state: restarted
