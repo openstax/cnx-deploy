@@ -58,6 +58,12 @@
     dest: "{{ source_root }}/cnx-publishing"
     version: HEAD
 
+- name: clone webview
+  git:
+    repo: git@github.com:Connexions/webview.git
+    dest: "{{ source_root }}/webview"
+    version: HEAD
+
 - name: clone cnx-authoring
   git:
     repo: git@github.com:Connexions/cnx-authoring.git
