@@ -1,0 +1,149 @@
+---
+# Installs archive and publishing with all the dependencies.
+#
+# The virtualenvs are installed to /usr/local/var/cnx/venvs
+# and the configuration is installed to /usr/local/etc/cnx/.
+
+# +++
+# Prerequisites
+# +++
+
+# Installed for the postgresql_* ansible modules.
+- when: ansible_os_family == "Debian"
+  apt:
+    name: python-psycopg2
+    state: present
+
+- when: ansible_os_family == "Darwin"
+  pip:
+    name: psycopg2
+    state: present
+
+# +++
+# Install virtualenv(s)
+# +++
+
+- stat: path=/usr/local/var/cnx/venvs
+  register: venvs_dir
+
+- name: ensure the venvs directory exists
+  when: not venvs_dir.stat.exists
+  file:
+    path: /usr/local/var/cnx/venvs
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+
+- name: create the authoring virtualenv
+  pip:
+    name: pip
+    virtualenv: /usr/local/var/cnx/venvs/authoring
+    virtualenv_python: python2
+
+# +++
+# Install
+# +++
+
+- name: install session_exec
+  shell: "make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config && make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config install"
+  args:
+    chdir: "{{ source_dir }}/session_exec"
+
+# ---
+- name: restart the postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.postgresql-{{ postgres_version }}"
+    state: restarted
+# ---
+
+- name: install (local) authoring packages
+  pip:
+    name: "{{ source_dir }}/{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/authoring
+    state: present
+  with_items:
+    - cnx-query-grammar
+    - cnx-epub
+    - cnx-authoring
+
+- name: install authoring packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: /usr/local/var/cnx/venvs/authoring
+    state: present
+  with_items:
+    - pyramid_sawing
+
+# +++
+# Configure
+# +++
+
+- name: ensure the etc directories exists
+  file:
+    path: "/usr/local/etc/{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - cnx
+    - cnx/authoring
+
+- name: render configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0700
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - {src: "usr/local/etc/cnx/authoring/app.ini",
+       dest: "/usr/local/etc/cnx/authoring/app.ini"}
+
+# TODO make logging configuration files for pyramid_sawing
+
+# +++
+# Init databases
+# +++
+
+- name: create the authoring db user
+  postgresql_user:
+    # FIXME These settings are Darwin specific
+    db: postgres
+    login_user: "{{ ansible_user_id }}"
+    login_unix_socket: "/tmp"
+    # /FIXME
+    name: "{{ authoring_db_user }}"
+    password: "{{ authoring_db_password }}"
+    # FIXME There is no reason to make this user a SUPERUSER
+    role_attr_flags: SUPERUSER
+
+- name: create the authoring db
+  postgresql_db:
+    # FIXME These settings are Darwin specific
+    login_user: "{{ ansible_user_id }}"
+    login_unix_socket: "/tmp"
+    # /FIXME
+    name: "{{ authoring_db_name }}"
+    encoding: "utf-8"
+    # FIXME The owner should be the same as the user.
+    owner: "{{ authoring_db_user }}"
+    state: present
+
+# FIXME Runs to failure... Ideally, it's be nice if
+#       they gracefully bailed out with a meaningful message.
+
+- name: initialize authoring db
+  command: "/usr/local/var/cnx/venvs/authoring/bin/cnx-authoring-initialize_db /usr/local/etc/cnx/authoring/app.ini"
+  register: initdb_cmd
+  failed_when: "initdb_cmd.rc > 0 and 'relation \"document\" already exists' not in initdb_cmd.stderr"
+
+# +++
+# Init service
+# +++
+
+- name: configure authoring under supervisor
+  copy:
+    src: etc/supervisor/conf.d/authoring.conf
+    dest: /usr/local/etc/supervisor/conf.d/authoring.conf
+    mode: 0644

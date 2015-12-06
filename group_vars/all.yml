@@ -13,3 +13,9 @@ archive_db_port: 5432
 # 'hosts' is a space separated value containing hostnames or ip addresses
 # where a memcached instance is running.
 memcached_hosts: localhost
+
+authoring_db_name: cnxauthoring
+authoring_db_user: cnxauthoring
+authoring_db_password: cnxauthoring
+authoring_db_host: localhost
+authoring_db_port: 5432
