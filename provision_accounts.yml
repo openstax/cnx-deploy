@@ -16,15 +16,15 @@
   hosts: local
   tasks:
     - pip:
-        requirements: "{{ source_root }}/tutor-deployment/requirements.txt"
-        virtualenv: "{{ source_root }}/tutor-deployment"
+        requirements: "{{ source_dir }}/tutor-deployment/requirements.txt"
+        virtualenv: "{{ source_dir }}/tutor-deployment"
 
 - name: generate a self-signed certificate
   hosts: local
   vars:
     cert_password: "password"
     cert_domain: "accounts.local.openstax.org"
-    cert_dir: "{{ source_root }}/tutor-deployment/environments/local-accounts-vm/secrets/certs/ost"
+    cert_dir: "{{ source_dir }}/tutor-deployment/environments/local-accounts-vm/secrets/certs/ost"
     cert_crt_filepath: "{{ cert_dir }}/ost.crt"
     cert_key_filepath: "{{ cert_dir }}/ost.key"
   tasks:
@@ -44,20 +44,20 @@
         # FIXME Use the commented out source after this feature gets merged
         # repo: git@github.com:openstax/tutor-deployment.git
         repo: git@github.com:pumazi/tutor-deployment.git
-        dest: "{{ source_root }}/tutor-deployment"
+        dest: "{{ source_dir }}/tutor-deployment"
         # version: HEAD
         version: local-accounts-vm
     - name: checkout accounts
       git:
         repo: git@github.com:openstax/accounts.git
-        dest: "{{ source_root }}/accounts"
+        dest: "{{ source_dir }}/accounts"
         version: HEAD
     # There doesn't seem to be a good reason to create a personal virtualenv
     # for this, so let's just use this environment.
     - name: install tutor-deployment
       command: bin/ansible-playbook -vvv -i environments/local-accounts-vm/inventory accounts_only.yml
       args:
-        chdir: "{{ source_root }}/tutor-deployment"
+        chdir: "{{ source_dir }}/tutor-deployment"
 
 # - name: customize the accounts server
 #     - include: tasks/install_supervisor

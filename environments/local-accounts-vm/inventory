@@ -2,7 +2,7 @@
 127.0.0.1  ansible_connection=local
 
 [local:vars]
-source_root=~/cnx/src
+source_dir=~/cnx/src
 
 [accounts]
 accounts.local.openstax.org
