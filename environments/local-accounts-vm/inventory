@@ -6,3 +6,6 @@ source_dir=~/cnx/src
 
 [accounts]
 accounts.local.openstax.org
+
+[accounts:vars]
+email_api_key=instant-ramen

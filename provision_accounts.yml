@@ -63,8 +63,31 @@
   hosts: accounts
   tasks:
     - include: tasks/install_supervisor.yml
-    # - name: setup local smtp service
-    # - name: configure smtp service as a supervisor job
-    # - name: start smtp service
-    # - name: adjust accounts configuration
-    # - name: restart accounts
+    - name: setup local smtp service
+      become: yes
+      template:
+        src: "misc/smtp_server.py"
+        dest: "/usr/local/bin/smtp_server.py"
+        owner: root
+        mode: 0755
+    - name: configure smtp service as a supervisor job
+      become: yes
+      copy:
+        src: etc/supervisor/conf.d/smtp_server.conf
+        dest: /etc/supervisor/conf.d/smtp_server.conf
+    - name: restart supervisor to start the smtp service
+      become: yes
+      service:
+        name: supervisor
+        state: restarted
+    - name: adjust accounts configuration
+      become: yes
+      lineinfile:
+        dest: /home/ostaccounts/www/accounts/config/environments/production.rb
+        regexp: "  config.action_mailer.delivery_method = :[\\w]+"
+        line: "  config.action_mailer.delivery_method = :smtp"
+    - name: restart accounts
+      become: yes
+      service:
+        name: unicorn_accounts
+        state: restarted
