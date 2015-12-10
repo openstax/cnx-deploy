@@ -59,10 +59,12 @@
       args:
         chdir: "{{ source_dir }}/tutor-deployment"
 
-# - name: customize the accounts server
-#     - include: tasks/install_supervisor
-#     - name: setup local smtp service
-#     - name: configure smtp service as a supervisor job
-#     - name: start smtp service
-#     - name: adjust accounts configuration
-#     - name: restart accounts
+- name: customize the accounts server
+  hosts: accounts
+  tasks:
+    - include: tasks/install_supervisor.yml
+    # - name: setup local smtp service
+    # - name: configure smtp service as a supervisor job
+    # - name: start smtp service
+    # - name: adjust accounts configuration
+    # - name: restart accounts
