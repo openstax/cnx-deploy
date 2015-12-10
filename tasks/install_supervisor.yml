@@ -8,39 +8,51 @@
   when: ansible_os_family == "Darwin"
   pip: name=supervisor
 
+- name: install supervisor (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: supervisor
+    state: present
+
 # +++
 # Initialize
 # +++
 
-- stat: path=/usr/local/etc/supervisord.conf
+- stat: path="{{ root_prefix }}/etc/supervisor/supervisord.conf"
   register: supervisord_conf
 
 - name: create supervisord.conf
   when: not supervisord_conf.stat.exists
-  shell: echo_supervisord_conf > /usr/local/etc/supervisord.conf
+  shell: echo_supervisord_conf > "{{ root_prefix }}/etc/supervisor/supervisord.conf"
 
-- file:
-    path: /usr/local/etc/supervisord.conf
-    state: touch
-    mode: 0700
-
-- name: ensure /usr/local/etc/supervisord/conf.d exists
+- name: "ensure {{ root_prefix }}/etc/supervisor/conf.d exists"
   file:
-    path: /usr/local/etc/supervisor/conf.d
+    path: "{{ root_prefix }}/etc/supervisor/conf.d"
     state: directory
-    mode: 0700
 
 # +++
 # Configure
 # +++
 
-- name: configure supervisor.d/*
-  blockinfile:
-    dest: /usr/local/etc/supervisord.conf
-    block: |
-      [include]
-      files = supervisor/conf.d/*
+- name: configure supervisor include section
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/supervisor/supervisord.conf"
+    regexp: "^\\[include\\]$"
+    line: "[include]"
     insertafter: EOF
+    state: present
+
+
+- name: configure supervisor include files path
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/supervisor/supervisord.conf"
+    regexp: "^files = [\\w/]+etc/supervisor/conf.d/\\*(.conf)?$"
+    line: "files = {{ root_prefix }}/etc/supervisor/conf.d/*.conf"
+    insertafter: "^\\[include\\]$"
+    state: present
 
 # +++
 # Init service
@@ -71,9 +83,16 @@
 # # If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/org.cnx.supervisor.plist``
 
 # # FIXME Doing some/all of this as a role would allow for better restarting of the service.
-# - name: restart the supervisor (on Darwin)
+# - name: restart supervisor (on Darwin)
 #   when: ansible_os_family == "Darwin"
 #   launchd:
 #     domain: "gui/{{ ansible_user_uid }}"
 #     label: "org.cnx.supervisor"
 #     state: started
+
+- name: restart supervisor (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: supervisor
+    state: restarted

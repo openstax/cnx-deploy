@@ -43,6 +43,9 @@
 
 - name: install supervisor
   hosts: local
+  vars:
+    # FIXME Need to set /usr/local root_prefix for Darwin a few layers up
+    root_prefix: "{{ ansible_os_family == 'Darwin' and '/usr/local' or '' }}"
   tasks:
     - include: tasks/install_supervisor.yml
 

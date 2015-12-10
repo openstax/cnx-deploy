@@ -1,4 +1,6 @@
 ---
+root_prefix: ""
+
 postgres_version: 9.4
 source_dir: ~/cnx/src
 
