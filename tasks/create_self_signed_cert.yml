@@ -1,4 +1,14 @@
 ---
+# Creates a self-signed certificate.
+# The certificate key is signed with ``cert_password``,
+# this property is required for the creation of the certificate.
+# However, the resulting certificate key file will be unencrypted for convenience.
+
+# Properties:
+#  - cert_password: used when creating the certificate signing key
+#  - cert_domain: a string for the domain (e.g. example.com)
+#  - cert_crt_filepath: where to put the created crt file
+#  - cert_key_filepath: where to put the created signing key file
 
 - file:
     path: tmp
