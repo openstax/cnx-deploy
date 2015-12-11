@@ -15,38 +15,23 @@
     state: directory
 
 - name: generate a private key
-  expect:
-    command: "openssl genrsa -des3 -out server.key 1024"
+  command: "openssl genrsa -des3 -out server.key -passout pass:{{ cert_password }} 1024"
+  args:
     chdir: tmp
-    responses:
-      "Enter pass phrase for server.key:": "{{ cert_password }}"
 
 - name: generate a csr
-  expect:
-    command: "openssl req -new -key server.key -out server.csr"
+  command: "openssl req -new -key server.key -out server.csr -passin pass:{{ cert_password }} -subj '/countryName=US/stateOrProvinceName=TX/localityName=Houston/organizationName=OpenStax/commonName={{ cert_domain }}/'"
+  args:
     chdir: tmp
-    responses:
-      "Enter pass phrase for server.key:": "{{ cert_password }}"        
-      "Country Name \\(2 letter code\\) \\[AU\\]\\:": "US"
-      "State or Province Name \\(full name\\) \\[Some-State\\]\\:": "TX" 
-      "Locality Name \\(eg, city\\) \\[\\]:": "Houston"
-      "Organization Name \\(eg, company\\) \\[Internet Widgits Pty Ltd\\]\\:": "OpenStax"
-      "Organizational Unit Name \\(eg, section\\) \\[\\]\\:": ""
-      "Common Name \\(e.g. server FQDN or YOUR name\\) \\[\\]\\:": "{{ cert_domain }}"
-      "Email Address \\[\\]\\:": ""
-      "A challenge password \\[\\]\\:": ""
-      "An optional company name \\[\\]\\:": ""
 
 - copy:
     src: tmp/server.key
     dest: tmp/server.key.orig
 
 - name: remove passphrase from key
-  expect:
-    command: "openssl rsa -in server.key.orig -out server.key"
+  command: "openssl rsa -in server.key.orig -out server.key -passin pass:{{ cert_password }}"
+  args:
     chdir: tmp
-    responses:
-      "Enter pass phrase for server.key.orig:": "{{ cert_password }}"        
 
 - name: generate a self-signed certificate
   command: "openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt"
