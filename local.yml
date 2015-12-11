@@ -72,3 +72,5 @@
   hosts: authoring
   tasks:
     - include: tasks/install_authoring.yml
+  roles:
+    - multimac.launchd
