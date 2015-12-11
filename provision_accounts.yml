@@ -70,12 +70,16 @@
         dest: "/usr/local/bin/smtp_server.py"
         owner: root
         mode: 0755
+    - stat: path="/etc/supervisor/conf.d/smtp_server.conf"
+      register: conf_file
     - name: configure smtp service as a supervisor job
+      when: not conf_file.stat.exists
       become: yes
       copy:
         src: etc/supervisor/conf.d/smtp_server.conf
         dest: /etc/supervisor/conf.d/smtp_server.conf
     - name: restart supervisor to start the smtp service
+      when: not conf_file.stat.exists
       become: yes
       service:
         name: supervisor
@@ -86,7 +90,9 @@
         dest: /home/ostaccounts/www/accounts/config/environments/production.rb
         regexp: "  config.action_mailer.delivery_method = :[\\w]+"
         line: "  config.action_mailer.delivery_method = :smtp"
+      register: config_change
     - name: restart accounts
+      when: config_change.changed
       become: yes
       service:
         name: unicorn_accounts
