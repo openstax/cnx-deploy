@@ -25,6 +25,8 @@
 # Persistence services
 # +++
 
+# TODO (mocked) NFS mount
+
 - name: install postgres database
   hosts: local
   tasks:
@@ -40,6 +42,9 @@
 # +++
 # Applications
 # +++
+
+# TODO HAProxy
+# TODO Prerender
 
 - name: install supervisor
   hosts: local
