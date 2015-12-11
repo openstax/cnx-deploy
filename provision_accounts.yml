@@ -97,3 +97,12 @@
       service:
         name: unicorn_accounts
         state: restarted
+    - name: create an admin user
+      become: yes
+      become_user: ostaccounts
+      environment:
+        RAILS_ENV: production
+        RBENV_ROOT: /home/ostaccounts/.rbenv
+      command: rbenv exec bundle exec rake accounts:create_admin[nimda,password]
+      args:
+        chdir: ~/www/accounts
