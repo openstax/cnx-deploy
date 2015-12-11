@@ -64,9 +64,19 @@
   args:
     chdir: "{{ source_dir }}/webview"
 
+- name: build webview dist
+  command: npm run-script dist
+  args:
+    chdir: "{{ source_dir }}/webview"
+
 # +++
 # Configure
 # +++
+
+- name: configure webview settings.js
+  template:
+    src: var/www/cnx/scripts/settings.js
+    dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
 
 - name: configure the cnx frontend nginx site
   template:
@@ -80,15 +90,17 @@
     state: link
 
 # +++
-# Compile
+# Deploy
 # +++
 
-- name: build webview dist
-  command: npm run-script dist
-  args:
-    chdir: "{{ source_dir }}/webview"
-
-# TODO Move dist to accessible location
+# TODO We need to copy the built files to a staging location,
+#      make the config changes,
+#      then use a symlink to designate the active build.
+- name: copy dist to var/www
+  copy:
+    src: "{{ source_dir }}/webview/dist"
+    # FIXME This is copying to .../www/cnx/dist, which isn't correct
+    dest: /usr/local/var/www/cnx
 
 # +++
 # Init service
