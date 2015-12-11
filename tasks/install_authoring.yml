@@ -97,7 +97,7 @@
     mode: 0700
     owner: "{{ ansible_user_id }}"
   with_items:
-    - {src: "usr/local/etc/cnx/authoring/app.ini",
+    - {src: "etc/cnx/authoring/app.ini",
        dest: "/usr/local/etc/cnx/authoring/app.ini"}
 
 # TODO make logging configuration files for pyramid_sawing
