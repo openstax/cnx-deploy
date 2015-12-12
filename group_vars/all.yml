@@ -1,23 +1,26 @@
 ---
-root_prefix: ""
+# root_prefix: ""
 
 postgres_version: 9.4
-source_dir: ~/cnx/src
+source_dir: "{{ '~/cnx/src' | expanduser }}"
 
-archive_db_name: cnxarchive
-archive_db_user: cnxarchive
-archive_db_password: cnxarchive
-archive_db_host: localhost
-archive_db_port: 5432
+# archive_db_name: cnxarchive
+# archive_db_user: cnxarchive
+# archive_db_password: cnxarchive
+# archive_db_host: localhost
+# archive_db_port: 5432
 
-# FIXME Not really yaml'ish to use space separated values...
-# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
-# 'hosts' is a space separated value containing hostnames or ip addresses
-# where a memcached instance is running.
-memcached_hosts: localhost
+# memcached_hosts: localhost, foobar, goocar
 
-authoring_db_name: cnxauthoring
-authoring_db_user: cnxauthoring
-authoring_db_password: cnxauthoring
-authoring_db_host: localhost
-authoring_db_port: 5432
+# authoring_db_name: cnxauthoring
+# authoring_db_user: cnxauthoring
+# authoring_db_password: cnxauthoring
+# authoring_db_host: localhost
+# authoring_db_port: 5432
+
+# archive_host: 0.0.0.0
+# archive_port: 6789
+# publishing_host: 0.0.0.0
+# publishing_port: 6543
+# authoring_host: 0.0.0.0
+# authoring_port: 8080
