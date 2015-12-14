@@ -5,9 +5,9 @@
 
 server {
     listen          8081;
-    server_name     cnx.org;
+    server_name     localhost;
     # FIXME How about putting the built distribution in /var/www?
-    root            {{ source_dir }}/webview/dist/;
+    root            {{ source_dir | expand_user }}/webview/dist/;
     index           index.html;
     # try_files       $uri @prerender;
 
