@@ -78,15 +78,15 @@
     src: var/www/cnx/scripts/settings.js
     dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
 
-- name: configure the cnx frontend nginx site
+- name: configure the webview nginx site
   template:
-    src: etc/nginx/sites-available/cnx
-    dest: /usr/local/etc/nginx/sites-available/cnx
+    src: etc/nginx/sites-available/webview
+    dest: /usr/local/etc/nginx/sites-available/webview
 
-- name: enable the nginx site
+- name: enable the webview nginx site
   file:
-    src: /usr/local/etc/nginx/sites-available/cnx
-    dest: /usr/local/etc/nginx/sites-enabled/cnx
+    src: /usr/local/etc/nginx/sites-available/webview
+    dest: /usr/local/etc/nginx/sites-enabled/webview
     state: link
 
 # +++
@@ -98,9 +98,9 @@
 #      then use a symlink to designate the active build.
 - name: copy dist to var/www
   copy:
-    src: "{{ source_dir }}/webview/dist"
+    src: "{{ source_dir }}/webview/dist/"
     # FIXME This is copying to .../www/cnx/dist, which isn't correct
-    dest: /usr/local/var/www/cnx
+    dest: /usr/local/var/www/webview
 
 # +++
 # Init service
