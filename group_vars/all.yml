@@ -24,3 +24,7 @@ source_dir: "{{ '~/cnx/src' | expanduser }}"
 # publishing_port: 6543
 # authoring_host: 0.0.0.0
 # authoring_port: 8080
+
+# arclishing_domain: archive.cnx.org
+# frontend_domain: cnx.org
+# accounts_domain: accounts.openstax.org

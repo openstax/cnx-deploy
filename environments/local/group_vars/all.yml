@@ -25,3 +25,7 @@ publishing_host: 0.0.0.0
 publishing_port: 6543
 authoring_host: 0.0.0.0
 authoring_port: 8080
+
+arclishing_domain: archive.local.cnx.org
+frontend_domain: local.cnx.org
+accounts_domain: accounts.local.openstax.org
