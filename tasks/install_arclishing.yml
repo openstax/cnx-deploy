@@ -8,6 +8,8 @@
 # Prerequisites
 # +++
 
+- include_vars: "{{ inventory_dir }}/vars/secrets.yml"
+
 # Installed for the postgresql_* ansible modules.
 - when: ansible_os_family == "Debian"
   apt:
