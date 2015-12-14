@@ -48,7 +48,7 @@
         'introductory-statistics': '30189442-6998-4686-ac05-ed152b91b9de@17.20'
       },
 
-      accountProfile: 'https://accounts.cnx.org/profile',
+      accountProfile: 'https://{{ accounts_domain }}/profile',
 
       terpUrl: function (itemCode) {
         return 'https://openstaxtutor.org/terp/' + itemCode + '/quiz_start';
