@@ -1,0 +1,67 @@
+---
+
+# +++
+# Install
+# +++
+
+- name: install varnish (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: varnish
+    state: present
+
+- name: install varnish (on Darwin)
+  when: ansible_os_family == "Darwin"
+  homebrew:
+    name: "homebrew/versions/varnish3"
+    state: present
+
+# +++
+# Configure
+# +++
+
+- name: configure default backend
+  blockinfile:
+    dest: "{{ root_prefix }}/etc/varnish/default.vcl"
+    content: |
+      backend default {
+          .host = "127.0.0.1";
+          .port = "8080";
+      }
+
+- name: configure varnish
+  template:
+    src: etc/varnish/varnish.vcl
+    dest: "{{ root_prefix }}/etc/varnish/varnish.vcl"
+
+# +++
+# Init service
+# +++
+# (On Darwin) We use a custom plist file here so that we won't have
+# varish start on system startup.
+
+- name: copy plist to launchd directory (on Darwin)
+  when: ansible_os_family == "Darwin"
+  copy:
+    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+    dest: "~/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+    mode: 0600
+
+# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
+- name: load the varnish launchd config (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    path: "~/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+    state: loaded
+# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.varnish3.plist``
+
+# FIXME Doing some/all of this as a role would allow for better restarting of the service.
+- name: restart the varnish (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.varnish3"
+    state: restarted

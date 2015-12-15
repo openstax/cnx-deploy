@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>homebrew.mxcl.varnish3</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/opt/varnish3/sbin/varnishd</string>
+    <string>-n</string>
+    <string>/usr/local/var/varnish</string>
+    <string>-f</string>
+    <string>/usr/local/etc/varnish/varnish.vcl</string>
+    <string>-s</string>
+    <string>malloc,1G</string>
+    <string>-T</string>
+    <string>localhost:6082</string>
+    <string>-a</string>
+    <string>:{{ varnish_port }}</string>
+  </array>
+  <!-- <key>KeepAlive</key> -->
+  <!-- <true/> -->
+  <!-- <key>RunAtLoad</key> -->
+  <!-- <true/> -->
+  <key>WorkingDirectory</key>
+  <string>/usr/local</string>
+  <key>StandardErrorPath</key>
+  <string>/usr/local/var/varnish/varnish.log</string>
+  <key>StandardOutPath</key>
+  <string>/usr/local/var/varnish/varnish.log</string>
+</dict>
+</plist>

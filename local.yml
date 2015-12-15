@@ -64,6 +64,7 @@
   tasks:
     - include: tasks/ensure_shared_fs.yml
     - include: tasks/install_nginx.yml
+    - include: tasks/install_varnish.yml
     - include: tasks/install_webview.yml
   roles:
     - multimac.launchd
