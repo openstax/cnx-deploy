@@ -1,5 +1,5 @@
 ---
-root_prefix: ""
+root_prefix: "{{ ansible_os_family == 'Darwin' and '/usr/local' or '' }}"
 
 archive_db_name: cnxarchive
 archive_db_user: cnxarchive
