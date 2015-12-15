@@ -10,7 +10,8 @@
   tasks:
     - when: ansible_os_family == "Darwin"
       # This assumes that python was Homebrew installed.
-      set_fact: ansible_python_interpreter=/usr/local/bin/python
+      set_fact:
+        ansible_python_interpreter: /usr/local/bin/python
 
 # +++
 # Source gathering
@@ -43,7 +44,6 @@
 # Applications
 # +++
 
-# TODO HAProxy
 # TODO Prerender
 
 - name: install supervisor
