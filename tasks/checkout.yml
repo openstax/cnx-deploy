@@ -62,7 +62,8 @@
   git:
     repo: git@github.com:Connexions/webview.git
     dest: "{{ source_root }}/webview"
-    version: HEAD
+    # FIXME ¡¡ production branch !!
+    version: production
 
 - name: clone cnx-authoring
   git:
