@@ -1,0 +1,7 @@
+# Build #
+#########
+tmp
+
+# Secrets #
+###########
+environments/*/secrets
