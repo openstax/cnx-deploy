@@ -13,8 +13,7 @@ archive_db_port: 5432
 # where a memcached instance is running.
 memcached_hosts: localhost
 
-# Oops, Darwin won't let varnish run on port 80 without running as root.
-varnish_port: "{{ ansible_os_family == 'Darwin' and 6081 or 80 }}"
+varnish_port: 80
 
 authoring_db_name: cnxauthoring
 authoring_db_user: cnxauthoring
