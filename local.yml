@@ -64,9 +64,9 @@
   vars:
     cert_password: "password"
     cert_domain: "*.{{ frontend_domain }}"
-    cert_dir: "{{ inventory_dir }}/local/secrets/certs/cnx"
-    cert_crt_filepath: "{{ cert_dir }}/ost.crt"
-    cert_key_filepath: "{{ cert_dir }}/ost.key"
+    cert_dir: "{{ inventory_dir }}/secrets/certs/cnx"
+    cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
+    cert_key_filepath: "{{ cert_dir }}/cnx.key"
   tasks:
     - file:
         path: "{{ cert_dir }}"
@@ -82,8 +82,8 @@
     cert_password: "password"
     cert_domain: "*.{{ frontend_domain }}"
     cert_dir: "{{ inventory_dir }}/secrets/certs/cnx"
-    cert_crt_filepath: "{{ cert_dir }}/ost.crt"
-    cert_key_filepath: "{{ cert_dir }}/ost.key"
+    cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
+    cert_key_filepath: "{{ cert_dir }}/cnx.key"
   tasks:
     - include: tasks/ensure_shared_fs.yml
     - include: tasks/install_nginx.yml
