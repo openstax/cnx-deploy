@@ -106,9 +106,10 @@
 # Init service
 # +++
 
-- name: restart the nginx (on Darwin)
+- name: restart nginx (on Darwin)
   when: ansible_os_family == "Darwin"
+  become: yes
   launchd:
-    domain: "gui/{{ ansible_user_uid }}"
+    domain: "system"
     label: "homebrew.mxcl.nginx"
     state: restarted

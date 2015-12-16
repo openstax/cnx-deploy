@@ -31,9 +31,10 @@
     state: link
 
 # FIXME Doing some/all of this as a role would allow for better restarting of the service.
-- name: restart the nginx (on Darwin)
+- name: restart nginx (on Darwin)
   when: ansible_os_family == "Darwin"
+  become: yes
   launchd:
-    domain: "gui/{{ ansible_user_uid }}"
+    domain: "system"
     label: "homebrew.mxcl.nginx"
     state: restarted

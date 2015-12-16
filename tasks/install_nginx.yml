@@ -42,28 +42,33 @@
 # +++
 # (On Darwin) We use a custom plist file here so that we won't have
 # nginx start on system startup.
+# (On Darwin) nginx is setup to run under root privileges so that it
+# can use port 443.
 
 - name: copy plist to launchd directory (on Darwin)
   when: ansible_os_family == "Darwin"
+  become: yes
   copy:
-    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
-    dest: "~/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    src: "osx/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    dest: "/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
     mode: 0600
 
 # Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
 # If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
 - name: load the nginx launchd config (on Darwin)
   when: ansible_os_family == "Darwin"
+  become: yes
   launchd:
-    domain: "gui/{{ ansible_user_uid }}"
-    path: "~/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
+    domain: "system"
+    path: "/Library/LaunchAgents/homebrew.mxcl.nginx.plist"
     state: loaded
-# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist``
+# If you ever need to remove this use: ``sudo launchctl bootout system /Library/LaunchAgents/homebrew.mxcl.nginx.plist``
 
 # FIXME Doing some/all of this as a role would allow for better restarting of the service.
-- name: restart the nginx (on Darwin)
+- name: restart nginx (on Darwin)
   when: ansible_os_family == "Darwin"
+  become: yes
   launchd:
-    domain: "gui/{{ ansible_user_uid }}"
+    domain: "system"
     label: "homebrew.mxcl.nginx"
     state: restarted
