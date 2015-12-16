@@ -1,0 +1,39 @@
+---
+# Configures SSL sites for archive and webview nginx sites.
+
+- name: ensure the ssl directories exists
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ root_prefix }}/etc/ssl/certs"
+    - "{{ root_prefix }}/etc/ssl/private"
+
+- name: install certificate pem
+  copy:
+    src: "{{ cert_crt_filepath }}"
+    dest: "{{ root_prefix }}/etc/ssl/certs/cnx.pem"
+
+- name: install certificate key
+  copy:
+    src: "{{ cert_key_filepath }}"
+    dest: "{{ root_prefix }}/etc/ssl/private/cnx.key"
+
+- name: install nginx site
+  template:
+    src: "etc/nginx/sites-available/ssl"
+    dest: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
+
+- name: enable the nginx site
+  file:
+    src: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
+    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/ssl"
+    state: link
+
+# FIXME Doing some/all of this as a role would allow for better restarting of the service.
+- name: restart the nginx (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.nginx"
+    state: restarted
