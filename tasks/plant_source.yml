@@ -1,0 +1,16 @@
+---
+# Unarchives the archived source packages on the host machine
+
+- name: ensure source directory
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/lib/cnx"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+
+- name: plant the source archives
+  unarchive:
+    src: "{{ archives_dir }}/{{ item.name }}.tgz"
+    dest: "{{ root_prefix }}/var/lib/cnx/"
+    copy: yes
+  with_items: source
