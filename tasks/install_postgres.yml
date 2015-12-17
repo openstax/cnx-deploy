@@ -37,12 +37,12 @@
 # +++
 
 - name: does the database directory exist? (on Darwin)
-  stat: path="/usr/local/var/postgres-{{ postgres_version }}/"
+  stat: path="{{ root_prefix }}/var/postgres-{{ postgres_version }}/"
   register: postgres_db_dir
 
 - name: initialize postgres db (on Darwin)
   when: ansible_os_family == "Darwin" and not postgres_db_dir.stat.exists
-  shell: "/usr/local/opt/postgresql-{{ postgres_version }}/bin/initdb /usr/local/var/postgres-{{ postgres_version }} -E utf8"
+  shell: "{{ root_prefix }}/opt/postgresql-{{ postgres_version }}/bin/initdb /usr/local/var/postgres-{{ postgres_version }} -E utf8"
 
 # +++
 # Configure
@@ -55,19 +55,26 @@
   become: yes
   copy:
     src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    dest: "{{ root_prefix }}/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     mode: 0600
 
 - name: configure postgres (on Darwin)
   when: ansible_os_family == "Darwin"
   copy:
     src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    dest: "/usr/local/var/postgres-{{ postgres_version }}/pg_hba.conf"
+    dest: "{{ root_prefix }}/var/postgres-{{ postgres_version }}/pg_hba.conf"
     mode: 0600
 
 # +++
 # Init service
 # +++
+
+- name: restart postgres (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: postgresql
+    state: started
 
 # Note for Darwin,
 # this homebrew tap doesn't have launchd configs installed with it.
