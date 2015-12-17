@@ -2,6 +2,7 @@
 # Configures SSL sites for archive and webview nginx sites.
 
 - name: ensure the ssl directories exists
+  when: ansible_os_family == "Darwin"
   file:
     path: "{{ item }}"
     state: directory
@@ -10,21 +11,45 @@
     - "{{ root_prefix }}/etc/ssl/private"
 
 - name: install certificate pem
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   copy:
     src: "{{ cert_crt_filepath }}"
     dest: "{{ root_prefix }}/etc/ssl/certs/cnx.pem"
 
 - name: install certificate key
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   copy:
     src: "{{ cert_key_filepath }}"
     dest: "{{ root_prefix }}/etc/ssl/private/cnx.key"
 
 - name: install nginx site
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: "etc/nginx/sites-available/ssl"
     dest: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
 
+- name: configure ssl
+  # FIXME This should also work for Darwin, but it's not configured to do so.
+  when: ansible_os_family == "Debian"
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "{{ item.regexp }}"
+    insertafter: "^[\t]+ssl_prefer_server_ciphers on;"
+    line: "{{ item.line }}"
+  with_items:
+    # - regexp: "^[\t]+ssl_prefer_server_ciphers on;"
+    #   line: "\tssl_prefer_server_ciphers on;"
+    - regexp: "^[\t]+ssl_session_timeout 5m;"
+      line: "\tssl_session_timeout 5m;"
+    - regexp: "^[\t]+ssl_ciphers AES256\\+EECDH:AES256\\+EDH;"
+      line: "\tssl_ciphers AES256+EECDH:AES256+EDH;"
+    - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
+      line: "\tssl_session_cache shared:SSL:10m;"
+
+
 - name: enable the nginx site
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   file:
     src: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
     dest: "{{ root_prefix }}/etc/nginx/sites-enabled/ssl"
@@ -38,3 +63,10 @@
     domain: "system"
     label: "homebrew.mxcl.nginx"
     state: restarted
+
+- name: reload nginx (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: nginx
+    state: reloaded
