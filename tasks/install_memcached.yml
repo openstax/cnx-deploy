@@ -5,12 +5,12 @@
 # Install
 # +++
 
-# - name: install memcached (on Debian)
-#   when: ansible_os_family == "Debian"
-#   become: yes
-#   apt:
-#     name: memcached
-#     state: present
+- name: install memcached (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: memcached
+    state: present
 
 - name: install memcached (on Darwin)
   when: ansible_os_family == "Darwin"
@@ -21,6 +21,13 @@
 # +++
 # Init service
 # +++
+
+- name: start memcached (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: memcached
+    state: started
 
 - name: link plist to launchd directory (on Darwin)
   when: ansible_os_family == "Darwin"
@@ -43,4 +50,5 @@
   launchd:
     domain: "gui/{{ ansible_user_uid }}"
     label: "homebrew.mxcl.memcached"
+    # FIXME This should should be 'started' rather than 'restarted'
     state: restarted
