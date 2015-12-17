@@ -90,9 +90,9 @@
 #     label: "org.cnx.supervisor"
 #     state: started
 
-- name: restart supervisor (on Debian)
+- name: start supervisor (on Debian)
   when: ansible_os_family == "Debian"
   become: yes
   service:
     name: supervisor
-    state: restarted
+    state: started
