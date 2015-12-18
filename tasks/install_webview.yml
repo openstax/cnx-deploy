@@ -2,72 +2,13 @@
 # Installs webview with all the dependencies.
 
 # +++
-# Prerequisites
-# +++
-
-- name: install nodejs and npm packages (on Debian)
-  when: ansible_os_family == "Debian"
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-     - nodejs-dev
-     - nodejs-legacy
-     - npm
-
-- name: install nodejs and npm packages (on Darwin)
-  when: ansible_os_family == "Darwin"
-  homebrew:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - nodejs
-    - npm
-
-- name: install js build tool
-  npm:
-    name: "{{ item }}"
-    global: yes
-    state: present
-  with_items:
-    - bower
-    - grunt-cli
-
-# +++
 # Install
 # +++
 
-- name: is this a new build?
-  stat: path="{{ source_dir }}/webivew/node_modules"
-  register: modules_dir
-
-# FIXME conditionally run this
-- name: install webview
-  when: not modules_dir.stat.exists
-  npm:
-    path: "{{ source_dir }}/webview"
-    global: no
-
-# FIXME npm >= 3.x changed it's behavior for peer dependencies
-#       the webview readme needs updated to reflect this cryptic issue.
-#       https://docs.npmjs.com/files/package.json#peerdependencies
-- name: install coffeelint
-  npm:
-    path: "{{ source_dir }}/webview"
-    name: coffeelint@^1
-    global: no
-    state: present
-
-- name: update webview
-  when: modules_dir.stat.exists
-  command: npm run-script upgrade
-  args:
-    chdir: "{{ source_dir }}/webview"
-
-- name: build webview dist
-  command: npm run-script dist
-  args:
-    chdir: "{{ source_dir }}/webview"
+- name: copy dist build to source
+  copy:
+    src: "{{ local_source_dir }}/webview/dist"
+    dest: "{{ source_dir }}/webview"
 
 # +++
 # Configure
@@ -79,14 +20,16 @@
     dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
 
 - name: configure the webview nginx site
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: etc/nginx/sites-available/webview
-    dest: /usr/local/etc/nginx/sites-available/webview
+    dest: "{{ root_prefix }}/etc/nginx/sites-available/webview"
 
 - name: enable the webview nginx site
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   file:
-    src: /usr/local/etc/nginx/sites-available/webview
-    dest: /usr/local/etc/nginx/sites-enabled/webview
+    src: "{{ root_prefix }}/etc/nginx/sites-available/webview"
+    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/webview"
     state: link
 
 # +++
@@ -96,11 +39,13 @@
 # TODO We need to copy the built files to a staging location,
 #      make the config changes,
 #      then use a symlink to designate the active build.
-- name: copy dist to var/www
-  copy:
-    src: "{{ source_dir }}/webview/dist/"
+- name: link dist to var/www
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  file:
+    src: "{{ source_dir }}/webview/dist"
     # FIXME This is copying to .../www/cnx/dist, which isn't correct
-    dest: /usr/local/var/www/webview
+    dest: "{{ root_prefix }}/var/www/webview"
+    state: link
 
 # +++
 # Init service
@@ -113,3 +58,10 @@
     domain: "system"
     label: "homebrew.mxcl.nginx"
     state: restarted
+
+- name: reload nginx (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: nginx
+    state: reloaded
