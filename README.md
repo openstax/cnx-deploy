@@ -12,7 +12,7 @@ If you need help setting up Accounts locally, see the info labeled Installing Op
 
 If you are running Accounts locally, you can setup the key/secret pair yourself.
 
-## Darwin (aka OS X)
+### Darwin (aka OS X)
 
 You will need to install [XCode](https://developer.apple.com/xcode/) and the XCode tools. After you've installed XCode, the XCode tools can be installed via the commandline using: ``xcode-select --install``
 
