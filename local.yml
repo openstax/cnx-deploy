@@ -76,6 +76,11 @@
     - include: tasks/create_self_signed_cert.yml
       when: not crt_file.stat.exists
 
+- name: build webview
+  hosts: local
+  tasks:
+    - include: tasks/build_webview.yml
+
 - name: install frontend
   hosts: frontend
   vars:

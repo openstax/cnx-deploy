@@ -11,11 +11,11 @@
     name: varnish
     state: present
 
-# - name: install varnish (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   homebrew:
-#     name: "homebrew/versions/varnish3"
-#     state: present
+- name: install varnish (on Darwin)
+  when: ansible_os_family == "Darwin"
+  homebrew:
+    name: "varnish"
+    state: present
 
 # +++
 # Configure
@@ -53,37 +53,34 @@
 # (On Darwin) We use a custom plist file here so that we won't have
 # varish start on system startup.
 
-# - name: copy plist to launchd directory (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   become: yes
-#   template:
-#     src: "osx/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-#     dest: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-#     mode: 0600
+- name: copy plist to launchd directory (on Darwin)
+  when: ansible_os_family == "Darwin"
+  template:
+    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
+    dest: "~/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
+    mode: 0600
 
-# # Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
-# # If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
-# - name: load the varnish launchd config (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   become: yes
-#   launchd:
-#     domain: "system"
-#     path: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-#     state: loaded
-# # If you ever need to remove this use: ``sudo launchctl bootout system /Library/LaunchAgents/homebrew.mxcl.varnish3.plist``
+# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
+- name: load the varnish launchd config (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    path: "~/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
+    state: loaded
+# If you ever need to remove this use: ``sudo launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.varnish.plist``
 
-# # FIXME Doing some/all of this as a role would allow for better restarting of the service.
-# # Note, launchd doesn't keep track of varnishd (probably because of some
-# # strange way it starts up). But running varnishd again won't hurt anything
-# # because it finds itself and moves on. If you want to stop the process,
-# # you'll need to manually kill it (i.e. ``sudo pkill varnishd``)
-# - name: restart varnish (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   become: yes
-#   launchd:
-#     domain: "system"
-#     label: "homebrew.mxcl.varnish3"
-#     state: restarted
+# FIXME Doing some/all of this as a role would allow for better restarting of the service.
+# Note, launchd doesn't keep track of varnishd (probably because of some
+# strange way it starts up). But running varnishd again won't hurt anything
+# because it finds itself and moves on. If you want to stop the process,
+# you'll need to manually kill it (i.e. ``sudo pkill varnishd``)
+- name: restart varnish (on Darwin)
+  when: ansible_os_family == "Darwin"
+  launchd:
+    domain: "gui/{{ ansible_user_uid }}"
+    label: "homebrew.mxcl.varnish"
+    state: restarted
 
 - name: restart varnish (on Debian)
   when: ansible_os_family == "Debian" and (varnish_config.changed or service_config.changed)

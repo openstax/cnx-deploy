@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>homebrew.mxcl.varnish3</string>
+  <string>homebrew.mxcl.varnish</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/local/opt/varnish3/sbin/varnishd</string>
+    <string>/usr/local/opt/varnish/sbin/varnishd</string>
     <string>-n</string>
     <string>/usr/local/var/varnish</string>
     <string>-f</string>
@@ -14,7 +14,7 @@
     <string>-s</string>
     <string>malloc,1G</string>
     <string>-T</string>
-    <string>localhost:6082</string>
+    <string>127.0.0.1:2000</string>
     <string>-a</string>
     <string>:{{ varnish_port }}</string>
   </array>
