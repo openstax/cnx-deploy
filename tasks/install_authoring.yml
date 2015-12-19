@@ -1,14 +1,26 @@
 ---
 # Installs archive and publishing with all the dependencies.
 #
-# The virtualenvs are installed to /usr/local/var/cnx/venvs
-# and the configuration is installed to /usr/local/etc/cnx/.
+# The virtualenvs are installed to {{ root_prefix }}/var/cnx/venvs
+# and the configuration is installed to {{ root_prefix }}/etc/cnx/.
 
 # +++
 # Prerequisites
 # +++
 
 - include_vars: "{{ inventory_dir }}/vars/secrets.yml"
+
+- name: install build utilities
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - libxml2-dev
+    - libxslt-dev
+    - python-dev
 
 # Installed for the postgresql_* ansible modules.
 - when: ansible_os_family == "Debian"
@@ -21,17 +33,26 @@
     name: psycopg2
     state: present
 
+- name: install virtualenv (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: virtualenv
+    state: present
+
 # +++
 # Install virtualenv(s)
 # +++
 
-- stat: path=/usr/local/var/cnx/venvs
+- stat:
+    path: "{{ root_prefix }}/var/cnx/venvs"
   register: venvs_dir
 
 - name: ensure the venvs directory exists
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   when: not venvs_dir.stat.exists
   file:
-    path: /usr/local/var/cnx/venvs
+    path: "{{ root_prefix }}/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: "{{ ansible_user_id }}"
@@ -39,7 +60,7 @@
 - name: create the authoring virtualenv
   pip:
     name: pip
-    virtualenv: /usr/local/var/cnx/venvs/authoring
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
     virtualenv_python: python2
 
 # +++
@@ -47,7 +68,8 @@
 # +++
 
 - name: install session_exec
-  shell: "make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config && make USE_PGXS=1 PG_CONFIG=/usr/local/opt/postgresql-{{ postgres_version }}/bin/pg_config install"
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  shell: "make USE_PGXS=1 PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} && make USE_PGXS=1 PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} install"
   args:
     chdir: "{{ source_dir }}/session_exec"
 
@@ -60,39 +82,40 @@
     state: restarted
 # ---
 
+- name: install authoring packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    state: present
+  with_items:
+    - pyramid_sawing
+
 - name: install (local) authoring packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
-    virtualenv: /usr/local/var/cnx/venvs/authoring
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
     state: present
   with_items:
     - cnx-query-grammar
     - cnx-epub
     - cnx-authoring
 
-- name: install authoring packages
-  pip:
-    name: "{{ item }}"
-    virtualenv: /usr/local/var/cnx/venvs/authoring
-    state: present
-  with_items:
-    - pyramid_sawing
-
 # +++
 # Configure
 # +++
 
 - name: ensure the etc directories exists
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   file:
-    path: "/usr/local/etc/{{ item }}"
+    path: "{{ root_prefix }}/etc/{{ item }}"
     state: directory
     mode: 0755
-    owner: "{{ ansible_user_id }}"
   with_items:
     - cnx
     - cnx/authoring
 
 - name: render configuration
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -100,7 +123,7 @@
     owner: "{{ ansible_user_id }}"
   with_items:
     - {src: "etc/cnx/authoring/app.ini",
-       dest: "/usr/local/etc/cnx/authoring/app.ini"}
+       dest: "{{ root_prefix }}/etc/cnx/authoring/app.ini"}
 
 # TODO make logging configuration files for pyramid_sawing
 
@@ -110,11 +133,9 @@
 
 - name: create the authoring db user
   postgresql_user:
-    # FIXME These settings are Darwin specific
     db: postgres
-    login_user: "{{ ansible_user_id }}"
-    login_unix_socket: "/tmp"
-    # /FIXME
+    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
+    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
     name: "{{ authoring_db_user }}"
     password: "{{ authoring_db_password }}"
     # FIXME There is no reason to make this user a SUPERUSER
@@ -122,21 +143,19 @@
 
 - name: create the authoring db
   postgresql_db:
-    # FIXME These settings are Darwin specific
-    login_user: "{{ ansible_user_id }}"
-    login_unix_socket: "/tmp"
-    # /FIXME
+    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
+    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
     name: "{{ authoring_db_name }}"
     encoding: "utf-8"
-    # FIXME The owner should be the same as the user.
+    # FIXME The owner should not be the same as the user.
     owner: "{{ authoring_db_user }}"
     state: present
 
-# FIXME Runs to failure... Ideally, it's be nice if
-#       they gracefully bailed out with a meaningful message.
+# FIXME Runs to failure... Ideally, it would be nice if
+#       this gracefully bailed out with a meaningful message and return code.
 
 - name: initialize authoring db
-  command: "/usr/local/var/cnx/venvs/authoring/bin/cnx-authoring-initialize_db /usr/local/etc/cnx/authoring/app.ini"
+  command: "{{ root_prefix }}/var/cnx/venvs/authoring/bin/cnx-authoring-initialize_db {{ root_prefix }}/etc/cnx/authoring/app.ini"
   register: initdb_cmd
   failed_when: "initdb_cmd.rc > 0 and 'relation \"document\" already exists' not in initdb_cmd.stderr"
 
@@ -145,7 +164,17 @@
 # +++
 
 - name: configure authoring under supervisor
-  copy:
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  template:
     src: etc/supervisor/conf.d/authoring.conf
-    dest: /usr/local/etc/supervisor/conf.d/authoring.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/authoring.conf"
     mode: 0644
+
+# Unforntuately supervisor's init script doesn't support reload,
+# but supervisorctl does... so maybe there is a way to reload?
+- name: restart supervisor
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  when: ansible_os_family == "Debian"
+  service:
+    name: supervisor
+    state: restarted
