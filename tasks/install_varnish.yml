@@ -11,29 +11,41 @@
     name: varnish
     state: present
 
-- name: install varnish (on Darwin)
-  when: ansible_os_family == "Darwin"
-  homebrew:
-    name: "homebrew/versions/varnish3"
-    state: present
+# - name: install varnish (on Darwin)
+#   when: ansible_os_family == "Darwin"
+#   homebrew:
+#     name: "homebrew/versions/varnish3"
+#     state: present
 
 # +++
 # Configure
 # +++
 
-- name: configure default backend
-  blockinfile:
-    dest: "{{ root_prefix }}/etc/varnish/default.vcl"
-    content: |
-      backend default {
-          .host = "127.0.0.1";
-          .port = "8080";
-      }
-
-- name: configure varnish
+- name: configure varnish logic
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: etc/varnish/varnish.vcl
     dest: "{{ root_prefix }}/etc/varnish/varnish.vcl"
+  register: varnish_config
+
+# FIXME Maybe we should make our own service file and link it to
+#       /etc/systemd/system/multi-user.target.wants/varnish.service
+#       These files actually live at /lib/systemd/system/*.service
+- name: configure varnish runtime
+  when: ansible_os_family == "Debian"
+  become: yes
+  lineinfile:
+    dest: /etc/systemd/system/multi-user.target.wants/varnish.service
+    regexp: "ExecStart=/usr/sbin/varnishd -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,256m( -p vcc_allow_inline_c=on)?"
+    line: "ExecStart=/usr/sbin/varnishd -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,256m -p vcc_allow_inline_c=on"
+    insertafter: "^ExecStartPre.*"
+  register: service_config
+
+- name: reload daemon tools
+  when: ansible_os_family == "Debian" and service_config.changed
+  become: yes
+  # This makes our service file changes available for use.
+  shell: systemctl daemon-reload
 
 # +++
 # Init service
@@ -41,34 +53,41 @@
 # (On Darwin) We use a custom plist file here so that we won't have
 # varish start on system startup.
 
-- name: copy plist to launchd directory (on Darwin)
-  when: ansible_os_family == "Darwin"
-  become: yes
-  template:
-    src: "osx/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-    dest: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-    mode: 0600
+# - name: copy plist to launchd directory (on Darwin)
+#   when: ansible_os_family == "Darwin"
+#   become: yes
+#   template:
+#     src: "osx/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+#     dest: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+#     mode: 0600
 
-# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
-# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
-- name: load the varnish launchd config (on Darwin)
-  when: ansible_os_family == "Darwin"
-  become: yes
-  launchd:
-    domain: "system"
-    path: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
-    state: loaded
-# If you ever need to remove this use: ``sudo launchctl bootout system /Library/LaunchAgents/homebrew.mxcl.varnish3.plist``
+# # Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
+# # If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
+# - name: load the varnish launchd config (on Darwin)
+#   when: ansible_os_family == "Darwin"
+#   become: yes
+#   launchd:
+#     domain: "system"
+#     path: "/Library/LaunchAgents/homebrew.mxcl.varnish3.plist"
+#     state: loaded
+# # If you ever need to remove this use: ``sudo launchctl bootout system /Library/LaunchAgents/homebrew.mxcl.varnish3.plist``
 
-# FIXME Doing some/all of this as a role would allow for better restarting of the service.
-# Note, launchd doesn't keep track of varnishd (probably because of some
-# strange way it starts up). But running varnishd again won't hurt anything
-# because it finds itself and moves on. If you want to stop the process,
-# you'll need to manually kill it (i.e. ``sudo pkill varnishd``)
-- name: restart varnish (on Darwin)
-  when: ansible_os_family == "Darwin"
+# # FIXME Doing some/all of this as a role would allow for better restarting of the service.
+# # Note, launchd doesn't keep track of varnishd (probably because of some
+# # strange way it starts up). But running varnishd again won't hurt anything
+# # because it finds itself and moves on. If you want to stop the process,
+# # you'll need to manually kill it (i.e. ``sudo pkill varnishd``)
+# - name: restart varnish (on Darwin)
+#   when: ansible_os_family == "Darwin"
+#   become: yes
+#   launchd:
+#     domain: "system"
+#     label: "homebrew.mxcl.varnish3"
+#     state: restarted
+
+- name: restart varnish (on Debian)
+  when: ansible_os_family == "Debian" and (varnish_config.changed or service_config.changed)
   become: yes
-  launchd:
-    domain: "system"
-    label: "homebrew.mxcl.varnish3"
+  service:
+    name: varnish
     state: restarted
