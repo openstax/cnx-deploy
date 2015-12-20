@@ -48,6 +48,12 @@
 # Configure
 # +++
 
+- name: configure postgres role connection trust
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    regexp: "^local\\s+all\\s+postgres\\s+(peer|trust)$"
+    line: "local   all             postgres                                trust"
 - name: configure local connection trust
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   lineinfile:
