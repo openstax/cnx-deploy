@@ -48,22 +48,24 @@
 # Configure
 # +++
 
-# Running into a missing ``files/`` file? Make sure you have the version of this file available.
-
-- name: configure postgres (on Debian)
-  when: ansible_os_family == "Debian"
-  become: yes
-  copy:
-    src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    dest: "{{ root_prefix }}/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    mode: 0600
-
-- name: configure postgres (on Darwin)
-  when: ansible_os_family == "Darwin"
-  copy:
-    src: "etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    dest: "{{ root_prefix }}/var/postgres-{{ postgres_version }}/pg_hba.conf"
-    mode: 0600
+- name: configure local connection trust
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    regexp: "^local\\s+all\\s+(all)?\\s+(peer|trust)$"
+    line: "local   all             all                                     trust"
+- name: configure local host connection trust ipv4
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
+    line: "host    all             all             127.0.0.1/32            trust"
+- name: configure local host connection trust ipv6
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    regexp: "^host\\s+all\\s+all\\s+::1/128\\s+(md5|trust)$"
+    line: "host    all             all             ::1/128                 trust"
 
 # +++
 # Init service
@@ -74,7 +76,7 @@
   become: yes
   service:
     name: postgresql
-    state: started
+    state: restarted
 
 # Note for Darwin,
 # this homebrew tap doesn't have launchd configs installed with it.
