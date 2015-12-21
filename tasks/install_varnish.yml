@@ -83,8 +83,8 @@
     state: restarted
 
 - name: restart varnish (on Debian)
-  when: ansible_os_family == "Debian" and (varnish_config.changed or service_config.changed)
+  when: ansible_os_family == "Debian"
   become: yes
   service:
     name: varnish
-    state: restarted
+    state: "{{ (varnish_config.changed or service_config.changed) and 'reloaded' or 'started' }}"
