@@ -222,6 +222,7 @@
     src: etc/supervisor/conf.d/archive.conf
     dest: "{{ root_prefix }}/etc/supervisor/conf.d/archive.conf"
     mode: 0644
+  register: supervisor_archive_conf
 
 - name: configure publishing under supervisor
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
@@ -229,12 +230,13 @@
     src: etc/supervisor/conf.d/publishing.conf
     dest: "{{ root_prefix }}/etc/supervisor/conf.d/publishing.conf"
     mode: 0644
+  register: supervisor_publishing_conf
 
 # Unforntuately supervisor's init script doesn't support reload,
 # but supervisorctl does... so maybe there is a way to reload?
 - name: restart supervisor
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   when: ansible_os_family == "Debian"
+  become: yes
   service:
     name: supervisor
-    state: restarted
+    state: "{{ (supervisor_archive_conf.changed or supervisor_publishing_conf.changed) and 'restarted' or 'started' }}"
