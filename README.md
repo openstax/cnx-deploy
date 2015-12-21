@@ -2,6 +2,12 @@
 
 The Darwin deployments are experimental at best.
 
+The currently supported operating systems (OS) are:
+
+- Debian 8.2 (Jessie) -- (recommended)
+- Ubuntu 15.10 (Wily)
+- OS X 10.11 (El Capitan)
+
 ## Prerequisites
 
 ### OpenStax Accounts
@@ -79,7 +85,7 @@ This can be tricky for some... If you have questions, just ask. This VM will nee
 
 ### Installing OpenStax Accounts
 
-Create a virtual machine (VM). 
+Create a virtual machine (VM). As of writing this, it will only install on Ubuntu 14.02.
 
 Find the IP address of the VM and then make the following registration in your ``/etc/hosts`` file:
 
