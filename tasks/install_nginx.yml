@@ -26,6 +26,7 @@
   file:
     path: "{{ root_prefix }}/etc/nginx/sites-enabled/default"
     state: absent
+  register: disabled_default_site
 
 # FIXME This puts a toy (but functional) config in place
 - name: install nginx.conf (on Darwin)
@@ -87,4 +88,4 @@
   become: yes
   service:
     name: nginx
-    state: started
+    state: "{{ disabled_default_site.changed and 'reloaded' or 'started' }}"
