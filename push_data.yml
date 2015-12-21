@@ -1,0 +1,47 @@
+---
+# This forcibly wipes and loads data from files/cnxarchive_dump.tar.gz.
+
+- name: forcibly push data
+  hosts: database
+  vars_prompt:
+    - name: "db_name"
+      prompt: "What database are we pushing to?"
+      default: cnxarchive
+    - name: "db_user"
+      prompt: "What database user should we use?"
+      default: postgres
+  tasks:
+    - name: create directory for database dump
+      file:
+        path: /tmp/cnxarchive_dump
+        state: directory
+    - unarchive:
+        src: "cnxarchive_dump.tar.gz"
+        dest: "/tmp/cnxarchive_dump"
+    - name: drop database
+      become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+      become_user: "{{ ansible_os_family == 'Darwin' and 'no' or 'postgres' }}"
+      shell: "dropdb {{ db_name }}"
+      ignore_errors: yes
+    - name: create database
+      become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+      become_user: "{{ ansible_os_family == 'Darwin' and 'no' or 'postgres' }}"
+      shell: "createdb -O {{ db_user }} {{ db_name }}"
+    - name: load database without files
+      shell: "psql -U {{ db_user }} {{ db_name }} < /tmp/cnxarchive_dump/cnxarchive_dump_without_files.sql"
+    - name: load files table
+      shell: psql -U {{ db_user }} {{ db_name }} -c "\copy files FROM '/tmp/cnxarchive_dump/cnxarchive_index_files.txt'"
+    - name: insert dummy file
+      shell: psql -A -U {{ db_user }} {{ db_name }} -c "INSERT INTO files (file) VALUES ('dummy file') RETURNING fileid" | sed -n '2 p'
+      register: dummy_file
+    - name: replace files with dummy file
+      replace:
+        dest: /tmp/cnxarchive_dump/cnxarchive_index_module_files.txt
+        regexp: "<dummy-file-id>"
+        replace: "{{ dummy_file.stdout }}"
+    - name: load module files table
+      shell: psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER ALL; COPY module_files FROM '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt'; ALTER TABLE module_files ENABLE TRIGGER ALL;"
+    - name: remove dump files
+      file:
+        path: /tmp/cnxarchive_dump
+        state: absent
