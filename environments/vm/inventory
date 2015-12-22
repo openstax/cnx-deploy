@@ -1,0 +1,22 @@
+[local]
+127.0.0.1  ansible_connection=local
+
+[local.cnx.org]
+local.cnx.org
+
+# Grouped Hosts
+
+[database:children]
+local.cnx.org
+
+[arclishing:children]
+local.cnx.org
+
+[authoring:children]
+local.cnx.org
+
+[frontend:children]
+local.cnx.org
+
+[worker:children]
+local.cnx.org
