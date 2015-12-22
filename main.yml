@@ -1,0 +1,114 @@
+---
+# Used to setup a deployment on localhost.
+
+# Note, 'local' (the host name in the inventory)
+#   should be assigned ``ansible_connection=local``.
+
+# +++
+# Source gathering
+# +++
+
+- name: package up source for shipment
+  hosts: local
+  tasks:
+    - include: tasks/checkout.yml
+    - include: tasks/archive_source.yml
+
+- name: send source to hosts
+  hosts:
+    - arclishing
+    - authoring
+    - frontend
+    - worker
+  tasks:
+    - include: tasks/plant_source.yml
+
+- name: build webview
+  hosts: local
+  tasks:
+    - include: tasks/build_webview.yml
+
+# +++
+# Persistence services
+# +++
+
+# TODO (mocked) NFS mount
+
+- name: install postgres database
+  hosts:
+    - arclishing
+    - authoring
+  tasks:
+    - include: tasks/install_postgres.yml
+  roles:
+    - multimac.launchd
+
+- name: install memcached
+  hosts:
+    - arclishing
+    - authoring
+  tasks:
+    - include: tasks/install_memcached.yml
+  roles:
+    - multimac.launchd
+
+# +++
+# Applications
+# +++
+
+# TODO Prerender
+
+- name: install supervisor
+  hosts:
+    - arclishing
+    - authoring
+  tasks:
+    - include: tasks/install_supervisor.yml
+
+- name: install archive and publishing
+  hosts: arclishing
+  tasks:
+    - include: tasks/install_arclishing.yml
+  roles:
+    - multimac.launchd
+
+- name: generate a self-signed certificate
+  hosts: local
+  vars:
+    cert_password: "password"
+    cert_domain: "*.{{ frontend_domain }}"
+    cert_dir: "{{ inventory_dir }}/secrets/certs/cnx"
+    cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
+    cert_key_filepath: "{{ cert_dir }}/cnx.key"
+  tasks:
+    - file:
+        path: "{{ cert_dir }}"
+        state: directory
+    - stat: path="{{ cert_crt_filepath }}"
+      register: crt_file
+    - include: tasks/create_self_signed_cert.yml
+      when: not crt_file.stat.exists
+
+- name: install frontend
+  hosts: frontend
+  vars:
+    cert_password: "password"
+    cert_domain: "*.{{ frontend_domain }}"
+    cert_dir: "{{ inventory_dir }}/secrets/certs/cnx"
+    cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
+    cert_key_filepath: "{{ cert_dir }}/cnx.key"
+  tasks:
+    - include: tasks/ensure_shared_fs.yml
+    - include: tasks/install_nginx.yml
+    - include: tasks/install_varnish.yml
+    - include: tasks/install_webview.yml
+    - include: tasks/configure_ssl.yml
+  roles:
+    - multimac.launchd
+
+- name: install authoring
+  hosts: authoring
+  tasks:
+    - include: tasks/install_authoring.yml
+  roles:
+    - multimac.launchd
