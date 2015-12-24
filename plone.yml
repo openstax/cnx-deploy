@@ -1,0 +1,35 @@
+---
+# Builds the cnx plone site.
+
+- name: build python 2.4
+  hosts: local
+  tasks:
+    - name: check if python 2.4 is installed
+      shell: which python2.4
+      register: python24_path
+    - include: tasks/install_python24.yml
+      when: not python24_path.stdout
+
+- name: install postgres database
+  hosts: local
+  vars:
+    postgres_version: "9.3"
+  tasks:
+    - include: tasks/install_postgres.yml
+  roles:
+    - multimac.launchd
+
+- name: checkout cnx-buildout
+  hosts: local
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:karenc/cnx-buildout.git
+        default_version: HEAD
+  tasks:
+    - include: tasks/checkout.yml
+
+- name: install cnx plone site
+  hosts: local
+  tasks:
+    - include: tasks/install_cnx_buildout.yml

@@ -1,0 +1,58 @@
+- name: download python 2.4.6 gzip-compressed source code
+  unarchive:
+    src: https://www.python.org/ftp/python/2.4.6/Python-2.4.6.tgz
+    dest: .
+    copy: no
+
+- name: patch python 2.4.6 setup.py to add ubuntu library path
+  replace:
+    dest: Python-2.4.6/setup.py
+    regexp: '^(\s*lib_dirs = .*)$'
+    replace: '\1 "/usr/lib/x86_64-linux-gnu",'
+
+- name: build python 2.4.6
+  shell: chdir=Python-2.4.6 ./configure && make
+
+- name: install python 2.4.6
+  shell: chdir=Python-2.4.6 make install
+  become: yes
+
+- name: remove python 2.4.6 source code
+  become: yes
+  file:
+    path: Python-2.4.6
+    state: absent
+
+- name: download setuptools
+  get_url:
+    url: https://bitbucket.org/pypa/setuptools/raw/bootstrap-py24/ez_setup.py
+    dest: .
+
+- name: install setuptools
+  become: yes
+  shell: python2.4 ez_setup.py
+
+- name: delete ez_setup.py
+  file:
+    path: ez_setup.py
+    state: absent
+
+- name: delete setuptools source code
+  file:
+    path: setuptools-1.4.2.tar.gz
+    state: absent
+
+- name: download pip 1.1
+  unarchive:
+    src: https://pypi.python.org/packages/source/p/pip/pip-1.1.tar.gz#md5=62a9f08dd5dc69d76734568a6c040508
+    dest: .
+    copy: no
+
+- name: install pip
+  shell: chdir=pip-1.1 python2.4 setup.py install
+  become: yes
+
+- name: delete pip source code
+  file:
+    path: pip-1.1
+    state: absent

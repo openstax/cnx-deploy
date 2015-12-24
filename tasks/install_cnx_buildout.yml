@@ -1,0 +1,96 @@
+---
+# Installs cnx plone site with all the dependencies.
+
+# +++
+# Prerequisites
+# +++
+
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - openjdk-7-jre-headless
+    - libjpeg-dev
+    - libpng-dev
+    - build-essential
+    # lxml dependencies
+    - libxml2-dev
+    - libxslt1-dev
+
+
+# +++
+# Install virtualenv
+# +++
+
+- stat:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+  register: venvs_dir
+
+- name: ensure the venvs directory exists
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  when: not venvs_dir.stat.exists
+  file:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+
+- shell: which python2.4
+  register: python24_path
+
+- name: download virtualenv 1.7
+  unarchive:
+    src: https://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.tar.gz#md5=dcc105e5a3907a9dcaa978f813a4f526
+    dest: .
+    copy: no
+
+- name: create the cnx-buildout virtualenv
+  shell: "{{ python24_path.stdout }} virtualenv-1.7/virtualenv.py {{ root_prefix }}/var/cnx/venvs/cnx-buildout"
+
+- name: delete virtualenv 1.7 source code
+  file:
+    path: virtualenv-1.7
+    state: absent
+
+# +++
+# Install cnx-buildout
+# +++
+
+- name: copy some cached python packages to cnx-buildout downloads directory
+  copy:
+    src: src/cnx-buildout/downloads
+    dest: "{{ source_dir }}/cnx-buildout"
+
+- name: run bootstrap
+  shell: "{{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
+- name: install simplejson 1.9.2
+  pip:
+    name: simplejson
+    version: 1.9.2
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/cnx-buildout"
+    virtualenv_python: python2
+
+- name: run buildout
+  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee buildout_output.txt"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
+- name: install lxml 3.2.1
+  shell: ". bin/libs.sh && {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/pip install lxml==3.2.1"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
+# +++
+# Start server
+# +++
+
+- name: start zeoserver
+  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver start
+
+- name: start instance
+  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance start
