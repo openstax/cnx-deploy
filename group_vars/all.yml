@@ -19,6 +19,8 @@ archives_dir: "{{ '~/cnx/archives' | expanduser }}"
 # authoring_db_host: localhost
 # authoring_db_port: 5432
 
+# zope_host: 0.0.0.0
+# zope_port: 8888
 # archive_host: 0.0.0.0
 # archive_port: 6789
 # publishing_host: 0.0.0.0

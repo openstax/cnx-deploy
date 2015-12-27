@@ -21,6 +21,8 @@ authoring_db_password: "solitarily64670059:imprecations"
 authoring_db_host: localhost
 authoring_db_port: 5432
 
+zope_host: legacy.cnx.org
+zope_port: 8888
 archive_host: archive.cnx.mulich.com
 archive_port: 6789
 publishing_host: archive.cnx.mulich.com

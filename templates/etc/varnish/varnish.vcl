@@ -24,8 +24,8 @@ acl block {
 
 # haproxy load balancing for zope
 backend backend_0 {
-.host = "127.0.0.1";
-.port = "8888";
+.host = "{{ zope_host }}";
+.port = "{{ zope_port }}";
 .connect_timeout = 0.4s;
 .first_byte_timeout = 1200s;
 .between_bytes_timeout = 600s;
@@ -209,7 +209,7 @@ sub vcl_recv {
         elseif ( req.url ~ "^/aboutus/" ) {
             /*  avoid multiple rewrites on restart */
             if (req.url !~ "VirtualHostBase" ) {
-                set req.url = "/VirtualHostBase/https/legacy.cnx.org:443/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/https/{{ zope_host }}:443/plone/VirtualHostRoot" + req.url;
             }
             set req.backend_hint = backend_0;
         }
@@ -242,14 +242,14 @@ sub vcl_recv {
     elsif (req.http.host ~ "^siyavula.cnx.org") {
         set req.url = "/VirtualHostBase/http/siyavula.cnx.org:80/plone/VirtualHostRoot" + req.url;
     }
-    elsif (req.http.host ~ "^legacy.cnx.org") {
+    elsif (req.http.host ~ "^{{ zope_host }}") {
         /*  avoid multiple rewrites on restart */
         if (req.url !~ "VirtualHostBase" ) {
             if  ( req.http.X-Secure ) {
-                set req.url = "/VirtualHostBase/https/legacy.cnx.org:443/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/https/{{ zope_host }}:443/plone/VirtualHostRoot" + req.url;
                 }
             else {
-                set req.url = "/VirtualHostBase/http/legacy.cnx.org:80/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/http/{{ zope_host }}:80/plone/VirtualHostRoot" + req.url;
             }
         }
         set req.backend_hint = backend_0;
