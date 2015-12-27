@@ -30,6 +30,7 @@ publishing_port: 6543
 authoring_host: authoring.cnx.mulich.com
 authoring_port: 6420
 
+zope_domain: legacy.cnx.org
 arclishing_domain: archive.cnx.mulich.com
 frontend_domain: cnx.mulich.com
 accounts_domain: accounts.mulich.com

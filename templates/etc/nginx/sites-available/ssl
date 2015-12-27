@@ -32,14 +32,14 @@ server {
 
 server {
     listen 443 ssl;
-    server_name legacy.cnx.org;
+    server_name {{ zope_domain }};
     client_max_body_size 50m;
 
     ssl on;
 
     location / {
-        proxy_pass http://legacy.cnx.org;
-        proxy_set_header host legacy.cnx.org;
+        proxy_pass http://{{ zope_domain }};
+        proxy_set_header host {{ zope_domain }};
         proxy_set_header X-Secure true;
     }
 }

@@ -33,7 +33,7 @@
       // URLs are concatenated using the following logic: location.protocol + '//' + legacy + '/' + view.url
       //   Example: 'http:' + '//' + 'cnx.org' + '/' + 'contents'
       // Do not include the protocol or a trailing slash
-      legacy: '{{ zope_host }}',
+      legacy: '{{ zope_domain }}',
 
       // Webmaster E-mail address
       webmaster: 'cnx@cnx.org',

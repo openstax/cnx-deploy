@@ -209,7 +209,7 @@ sub vcl_recv {
         elseif ( req.url ~ "^/aboutus/" ) {
             /*  avoid multiple rewrites on restart */
             if (req.url !~ "VirtualHostBase" ) {
-                set req.url = "/VirtualHostBase/https/{{ zope_host }}:443/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
             }
             set req.backend_hint = backend_0;
         }
@@ -242,14 +242,14 @@ sub vcl_recv {
     elsif (req.http.host ~ "^siyavula.cnx.org") {
         set req.url = "/VirtualHostBase/http/siyavula.cnx.org:80/plone/VirtualHostRoot" + req.url;
     }
-    elsif (req.http.host ~ "^{{ zope_host }}") {
+    elsif (req.http.host ~ "^{{ zope_domain }}") {
         /*  avoid multiple rewrites on restart */
         if (req.url !~ "VirtualHostBase" ) {
             if  ( req.http.X-Secure ) {
-                set req.url = "/VirtualHostBase/https/{{ zope_host }}:443/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
                 }
             else {
-                set req.url = "/VirtualHostBase/http/{{ zope_host }}:80/plone/VirtualHostRoot" + req.url;
+                set req.url = "/VirtualHostBase/http/{{ zope_domain }}:80/plone/VirtualHostRoot" + req.url;
             }
         }
         set req.backend_hint = backend_0;
