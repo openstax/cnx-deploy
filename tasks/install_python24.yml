@@ -53,6 +53,7 @@
   become: yes
 
 - name: delete pip source code
+  become: yes
   file:
     path: pip-1.1
     state: absent
