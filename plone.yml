@@ -7,6 +7,7 @@
     - name: check if python 2.4 is installed
       shell: which python2.4
       register: python24_path
+      ignore_errors: yes
     - include: tasks/install_python24.yml
       when: not python24_path.stdout
 
