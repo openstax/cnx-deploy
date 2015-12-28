@@ -89,6 +89,22 @@
 # Start server
 # +++
 
+- stat:
+    path: "{{ source_dir }}/cnx-buildout/var/instance.pid"
+  register: instance_pid
+
+- name: stop instance
+  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance stop
+  when: instance_pid.stat.exists
+
+- stat:
+    path: "{{ source_dir }}/cnx-buildout/var/zeoserver.pid"
+  register: zeoserver_pid
+
+- name: stop zeoserver
+  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver stop
+  when: zeoserver_pid.stat.exists
+
 - name: start zeoserver
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver start
 
