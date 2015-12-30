@@ -7,18 +7,34 @@
 # Prerequisites
 # +++
 
-# FIXME NOT IMPLEMENTED o Debian
+# FIXME Debian nodejs package is too old
 
-# - name: install nodejs and npm packages (on Debian)
-#   when: ansible_os_family == "Debian"
-#   become: yes
-#   apt:
-#     name: "{{ item }}"
-#     state: present
-#   with_items:
-#      - nodejs-dev
-#      - nodejs-legacy
-#      - npm
+- name: download nodejs (on Debian)
+  when: ansible_os_family == "Debian"
+  unarchive:
+    src: https://nodejs.org/dist/v4.2.4/node-v4.2.4-linux-x64.tar.gz
+    dest: /tmp/
+    copy: no
+
+- name: install nodejs and npm packages (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  shell: "for f in {{ item }}/*; do rm -rf /usr/local/{{ item }}/$(basename $f); mv $f /usr/local/{{ item }}; done"
+  args:
+    chdir: /tmp/node-v4.2.4-linux-x64
+  with_items:
+    - bin
+    - include
+    - lib
+    - share/doc
+    - share/man/man1
+    - share/systemtap/tapset
+
+- name: remove nodejs source code (on Debian)
+  become: yes
+  file:
+    path: /tmp/node-v4.2.4-linux-x64
+    state: absent
 
 - name: install nodejs and npm packages (on Darwin)
   when: ansible_os_family == "Darwin"
