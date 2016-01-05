@@ -1,0 +1,6 @@
+---
+# Include one task.
+
+- hosts: "{{ host }}"
+  tasks:
+    - include: "tasks/{{ task }}.yml"
