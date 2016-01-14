@@ -40,18 +40,18 @@
 - shell: which python2.4
   register: python24_path
 
-- name: download virtualenv 1.7
+- name: download virtualenv 1.7.2 (for python 2.4)
   unarchive:
-    src: https://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.tar.gz#md5=dcc105e5a3907a9dcaa978f813a4f526
+    src: https://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.2.tar.gz#md5=b5d63b05373a4344ae099a68875aae78
     dest: .
     copy: no
 
 - name: create the cnx-buildout virtualenv
-  shell: "{{ python24_path.stdout }} virtualenv-1.7/virtualenv.py {{ root_prefix }}/var/cnx/venvs/cnx-buildout"
+  shell: "{{ python24_path.stdout }} virtualenv-1.7.2/virtualenv.py {{ root_prefix }}/var/cnx/venvs/cnx-buildout"
 
-- name: delete virtualenv 1.7 source code
+- name: delete virtualenv 1.7.2 source code
   file:
-    path: virtualenv-1.7
+    path: virtualenv-1.7.2
     state: absent
 
 # +++
