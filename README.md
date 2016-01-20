@@ -100,3 +100,15 @@ Run the custom play!
 ```sh
 ansible-playbook -i environments/local-accounts-vm/inventory provision_accounts.yml
 ```
+
+### Install Zope/Plone
+
+Create a VM or server that is passwordless (via an ssh key) and has passwordless sudo.
+
+```sh
+ansible-playbook -i environments/vm/inventory plone.yml
+```
+
+The ``plone.yml`` file is the playbook which installs the zope/plone instance.
+
+You may need to run the playbood several times if you find that it is taking a very long time on the "run buildout" task. It should take awhile, but not several hours. Best thing to do would be to shell in and ``tail -f /var/lib/cnx/cnx-buildout/buildout_output.txt``.

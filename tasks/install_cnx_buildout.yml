@@ -41,6 +41,7 @@
 - shell: which python2.4
   register: python24_path
 
+# virtualenv 1.7.2 is the last known version to work with Python 2.4.
 - name: download virtualenv 1.7.2 (for python 2.4)
   unarchive:
     src: https://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.2.tar.gz#md5=b5d63b05373a4344ae099a68875aae78
@@ -59,7 +60,7 @@
 # Install cnx-buildout
 # +++
 
-- name: copy some cached python packages to cnx-buildout downloads directory
+- name: copy cached python packages downloads directory
   copy:
     src: src/cnx-buildout/downloads
     dest: "{{ source_dir }}/cnx-buildout"
