@@ -18,7 +18,8 @@
     # lxml dependencies
     - libxml2-dev
     - libxslt1-dev
-
+    # required by mr.developer
+    - git
 
 # +++
 # Install virtualenv
