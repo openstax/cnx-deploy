@@ -4,12 +4,10 @@
 - name: build python 2.4
   hosts: zope-plone
   tasks:
-    - name: check if python 2.4 is installed
-      shell: which python2.4
-      register: python24_path
-      ignore_errors: yes
+    - stat: path=/usr/local/bin/python2.4
+      register: python24_binary
     - include: tasks/install_python24.yml
-      when: not python24_path.stdout
+      when: not python24_binary.stat.exists
 
 - name: install postgres database
   hosts: zope-plone

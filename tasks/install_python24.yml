@@ -1,3 +1,28 @@
+---
+# Installs Python 2.4.6
+
+# Only use this with the Ubuntu Linux distrobution.
+
+# +++
+# Prerequisites
+# +++
+
+- name: install prerequisites
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    # Required for zlib support in python.
+    # See also, http://fnch.users.sourceforge.net/pythononubuntu1104.html
+    - dpkg-dev
+    - zlib1g-dev
+
+# +++
+# Install
+# +++
+
 - name: download python 2.4.6 gzip-compressed source code
   unarchive:
     src: https://www.python.org/ftp/python/2.4.6/Python-2.4.6.tgz
@@ -11,11 +36,15 @@
     replace: '\1 "/usr/lib/x86_64-linux-gnu",'
 
 - name: build python 2.4.6
-  shell: chdir=Python-2.4.6 ./configure && make
+  shell: ./configure && make
+  args:
+    chdir: Python-2.4.6
 
 - name: install python 2.4.6
-  shell: chdir=Python-2.4.6 make install
   become: yes
+  command: make install
+  args:
+    chdir: Python-2.4.6
 
 - name: remove python 2.4.6 source code
   become: yes
@@ -49,8 +78,10 @@
     copy: no
 
 - name: install pip
-  shell: chdir=pip-1.1 python2.4 setup.py install
   become: yes
+  command: python2.4 setup.py install
+  args:
+    chdir: pip-1.1
 
 - name: delete pip source code
   become: yes
