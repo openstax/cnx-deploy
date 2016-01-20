@@ -21,7 +21,7 @@ memcached_hosts: localhost
 
 varnish_port: 80
 
-zope_host: legacy.cnx.org
+zope_host: legacy.local.cnx.org
 zope_port: 8888
 archive_host: archive.local.cnx.org
 archive_port: 6789

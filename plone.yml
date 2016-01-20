@@ -2,7 +2,7 @@
 # Builds the cnx plone site.
 
 - name: build python 2.4
-  hosts: local
+  hosts: zope-plone
   tasks:
     - name: check if python 2.4 is installed
       shell: which python2.4
@@ -12,7 +12,7 @@
       when: not python24_path.stdout
 
 - name: install postgres database
-  hosts: local
+  hosts: zope-plone
   vars:
     postgres_version: "9.3"
   tasks:
@@ -31,6 +31,6 @@
     - include: tasks/checkout.yml
 
 - name: install cnx plone site
-  hosts: local
+  hosts: zope-plone
   tasks:
     - include: tasks/install_cnx_buildout.yml

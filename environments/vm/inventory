@@ -4,6 +4,9 @@
 [local.cnx.org]
 local.cnx.org
 
+[legacy.local.cnx.org]
+legacy.local.cnx.org
+
 # Grouped Hosts
 
 [database:children]
@@ -20,3 +23,6 @@ local.cnx.org
 
 [worker:children]
 local.cnx.org
+
+[zope-plone:children]
+legacy.local.cnx.org

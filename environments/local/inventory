@@ -17,3 +17,6 @@ local
 
 [database:children]
 local
+
+[zope-plone:children]
+local
