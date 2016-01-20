@@ -29,6 +29,17 @@
         default_version: HEAD
   tasks:
     - include: tasks/checkout.yml
+    - include: tasks/archive_source.yml
+
+- name: send source to hosts
+  hosts: zope-plone
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:karenc/cnx-buildout.git
+        default_version: HEAD
+  tasks:
+    - include: tasks/plant_source.yml
 
 - name: install cnx plone site
   hosts: zope-plone
