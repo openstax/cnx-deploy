@@ -18,6 +18,8 @@
     # See also, http://fnch.users.sourceforge.net/pythononubuntu1104.html
     - dpkg-dev
     - zlib1g-dev
+    # Build with SSL support because cnx-buildout contacts PyPI over SSL.
+    - libssl-dev
 
 # +++
 # Install
