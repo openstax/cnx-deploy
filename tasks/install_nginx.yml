@@ -28,6 +28,15 @@
     state: absent
   register: disabled_default_site
 
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: make var/www available (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/www"
+    state: directory
+    mode: 0755
+
 # FIXME This puts a toy (but functional) config in place
 - name: install nginx.conf (on Darwin)
   when: ansible_os_family == "Darwin"

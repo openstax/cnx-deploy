@@ -4,6 +4,23 @@
 # Install
 # +++
 
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: add apt-key for varnish repository (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt_key:
+    url: https://repo.varnish-cache.org/GPG-key.txt
+    state: present
+
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: add varnish repository (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt_repository:
+    repo: "deb https://repo.varnish-cache.org/ubuntu/ trusty varnish-4.0"
+    state: present
+    update_cache: yes
+
 - name: install varnish (on Debian)
   when: ansible_os_family == "Debian"
   become: yes
@@ -54,7 +71,9 @@
   register: service_config
 
 - name: reload daemon tools
-  when: ansible_os_family == "Debian" and service_config.changed
+  # BBB (1-Feb-2016) ubuntu 14.04
+  ##when: ansible_os_family == "Debian" and service_config.changed
+  when: (ansible_os_family == "Debian" and ansible_distribution_release != "trusty") and service_config.changed
   become: yes
   # This makes our service file changes available for use.
   shell: systemctl daemon-reload
