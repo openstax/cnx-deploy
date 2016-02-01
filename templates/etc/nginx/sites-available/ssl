@@ -1,8 +1,8 @@
 # HTTPS
-upstream arclishing {
+upstream frontend {
     server {{ frontend_domain }}{{ varnish_port == 80 and '' or ':{}'.format(varnish_port) }} weight=5;
 }
-upstream frontend {
+upstream arclishing {
     server {{ arclishing_domain }}{{ varnish_port == 80 and '' or ':{}'.format(varnish_port) }} weight=5;
 }
 
