@@ -11,6 +11,7 @@
   apt:
     name: "apt-transport-https"
     state: present
+    force: yes
 
 # BBB (1-Feb-2016) ubuntu 14.04
 - name: add apt-key for varnish repository (on Ubuntu 14.04)
