@@ -1,0 +1,28 @@
+[local]
+127.0.0.1  ansible_connection=local
+
+[cte-cnx-dev]
+cte-cnx-dev.cnx.org
+
+[cte-legacy-dev]
+cte-legacy-dev.cnx.org
+
+# Grouped Hosts
+
+[database:children]
+cte-cnx-dev
+
+[arclishing:children]
+cte-cnx-dev
+
+[authoring:children]
+cte-cnx-dev
+
+[frontend:children]
+cte-cnx-dev
+
+[worker:children]
+cte-cnx-dev
+
+[zope-plone:children]
+cte-legacy-dev
