@@ -18,7 +18,7 @@
 
 # BBB (1-Feb-2016) ubuntu 14.04
 - name: add pgdg repository (on Ubuntu 14.04)
-  when: ansible_os_family == "Ubuntu" and ansible_distribution_release == "trusty"
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
   become: yes
   apt_repository:
     repo: "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
