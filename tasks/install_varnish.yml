@@ -4,6 +4,14 @@
 # Install
 # +++
 
+# BBB (1-Feb-2016 ubuntu 14.04, only needed for the BBB tasks that follow.
+- name: install apt-transport-https (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt:
+    name: "apt-transport-https"
+    state: present
+
 # BBB (1-Feb-2016) ubuntu 14.04
 - name: add apt-key for varnish repository (on Ubuntu 14.04)
   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
