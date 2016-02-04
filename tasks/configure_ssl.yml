@@ -28,9 +28,11 @@
     src: "etc/nginx/sites-available/ssl"
     dest: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
 
-- name: configure ssl
+- name: configure ssl (on Debian)
   # FIXME This should also work for Darwin, but it's not configured to do so.
-  when: ansible_os_family == "Debian"
+  # BBB (3-Feb-2016) ubuntu 14.04
+  ##when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_distribution_release != "trusty"
   become: yes
   lineinfile:
     dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
@@ -47,6 +49,25 @@
     - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
       line: "\tssl_session_cache shared:SSL:10m;"
 
+# BBB (3-Feb-2016) ubuntu 14.04
+- name: configure ssl (on Ubuntu 14.04)
+  # FIXME This should also work for Darwin, but it's not configured to do so.
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "{{ item.regexp }}"
+    insertafter: "^[\\t]+include /etc/nginx/sites-enabled/\\*;"
+    line: "{{ item.line }}"
+  with_items:
+    # - regexp: "^[\t]+ssl_prefer_server_ciphers on;"
+    #   line: "\tssl_prefer_server_ciphers on;"
+    - regexp: "^[\t]+ssl_session_timeout 5m;"
+      line: "\tssl_session_timeout 5m;"
+    - regexp: "^[\t]+ssl_ciphers AES256\\+EECDH:AES256\\+EDH;"
+      line: "\tssl_ciphers AES256+EECDH:AES256+EDH;"
+    - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
+      line: "\tssl_session_cache shared:SSL:10m;"
 
 - name: enable the nginx site
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
