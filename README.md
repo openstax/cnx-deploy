@@ -7,6 +7,7 @@ The currently supported operating systems (OS) are:
 - Debian 8.2 (Jessie) -- (recommended)
 - Ubuntu 15.10 (Wily)
 - OS X 10.11 (El Capitan)
+- Ubuntu 14.04 (Trusty) -- (backwards compatible shims; tobe removed)
 
 ## Prerequisites
 
@@ -46,16 +47,7 @@ If you have questions, put those in a github issue as well.
 
 ## Environments
 
-### Local
-
-Deploying the system locally:
-
-```sh
-ansible-playbook -i environments/local/inventory local.yml --ask-become-pass
-```
-
-The ``local.yml`` file is the playbook which installs the system locally (your machine), which is defined in the ``environments/local/inventory`` file.
-The ``--ask-become-pass`` will ask for your sudo password once and use it many times throughout the playbook.
+To view the available environments, run ``ls environments/``. Within the environment directory, look for documentation in a ``README.md`` file or at the head of the ``inventory`` file.
 
 ## Q&A
 
