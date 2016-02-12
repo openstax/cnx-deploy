@@ -96,19 +96,46 @@
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
-    state: present
+    state: latest
   with_items:
     - pyramid_sawing
+
+# FIXME (11-Feb-2016) Ansible >=2.1.0 required
+# In order to use the pip module's ``state: forcereinstall`` option,
+# we must upgrade to 2.1.0, which is not release yet.
+#
+# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
+# work because they reinstall **everything**,
+# which doesn't work because it tries to install some of our
+# unreleased packages and then fails to find them.
+#
+# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
+# as soon as possible. And this FIXME block ends with the closing /FIXME
+
+# XXX
+- name: uninstall (local) authoring packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    state: absent
+  with_items:
+    - cnx-query-grammar
+    - cnx-epub
+    - cnx-authoring
+# /XXX
 
 - name: install (local) authoring packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    ##state: forcereinstall
     state: present
   with_items:
     - cnx-query-grammar
     - cnx-epub
     - cnx-authoring
+
+# /FIXME
 
 # +++
 # Configure

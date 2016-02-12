@@ -111,18 +111,46 @@
     state: restarted
 # ---
 
+
+# FIXME (11-Feb-2016) Ansible >=2.1.0 required
+# In order to use the pip module's ``state: forcereinstall`` option,
+# we must upgrade to 2.1.0, which is not release yet.
+#
+# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
+# work because they reinstall **everything**,
+# which doesn't work because it tries to install some of our
+# unreleased packages and then fails to find them.
+#
+# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
+# as soon as possible. And this FIXME block ends with the closing /FIXME
+
 - name: install archive packages
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
-    state: present
+    state: latest
   with_items:
     - pyramid_sawing
+
+# XXX
+- name: uninstall (local) archive packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    state: absent
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - plpydbapi
+    - cnx-archive
+# /XXX
 
 - name: install (local) archive packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    ##state: forcereinstall
     state: present
   with_items:
     - cnx-query-grammar
@@ -135,14 +163,31 @@
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
-    state: present
+    state: latest
   with_items:
     - pyramid_sawing
+
+# XXX
+- name: uninstall (local) publishing packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    state: absent
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - plpydbapi
+    - cnx-archive
+    - openstax-accounts
+    - cnx-publishing
+# /XXX
 
 - name: install (local) publishing packages
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    ##state: forcereinstall
     state: present
   with_items:
     - cnx-query-grammar
@@ -152,6 +197,8 @@
     - cnx-archive
     - openstax-accounts
     - cnx-publishing
+
+# /FIXME
 
 # +++
 # Configure
