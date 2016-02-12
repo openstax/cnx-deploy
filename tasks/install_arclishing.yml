@@ -130,6 +130,7 @@
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
     state: latest
   with_items:
+    - db-migrator
     - pyramid_sawing
 
 # XXX
@@ -165,6 +166,7 @@
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
     state: latest
   with_items:
+    - db-migrator
     - pyramid_sawing
 
 # XXX
@@ -268,6 +270,16 @@
 - name: initialize publishing db
   when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
   command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/cnx-publishing-initdb {{ root_prefix }}/etc/cnx/publishing/app.ini"
+
+- name: initialize db-migrator
+  when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive init"
+
+- name: migrate archive database
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive migrate"
+
+- name: migrate publishing publishing
+  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-publishing migrate"
 
 # +++
 # Init service
