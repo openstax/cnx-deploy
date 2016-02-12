@@ -31,6 +31,7 @@
     - share/systemtap/tapset
 
 - name: remove nodejs source code (on Debian)
+  when: ansible_os_family == "Debian"
   become: yes
   file:
     path: /tmp/node-v4.2.4-linux-x64
