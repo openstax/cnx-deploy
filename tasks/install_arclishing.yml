@@ -273,13 +273,10 @@
 
 - name: initialize db-migrator
   when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive init"
+  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
 
-- name: migrate archive database
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive migrate"
-
-- name: migrate publishing publishing
-  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-publishing migrate"
+- name: migrate database
+  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing migrate"
 
 # +++
 # Init service
