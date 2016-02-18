@@ -156,8 +156,9 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0700
-    owner: "{{ ansible_user_id }}"
+    mode: 0744
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'root' }}"
+    group: "{{ ansible_os_family == 'Darwin' and 'staff' or 'root' }}"
   with_items:
     - {src: "etc/cnx/authoring/app.ini",
        dest: "{{ root_prefix }}/etc/cnx/authoring/app.ini"}
