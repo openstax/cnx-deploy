@@ -4,8 +4,8 @@
 [local.cnx.org]
 local.cnx.org
 
-[legacy.local.cnx.org]
-legacy.local.cnx.org
+[zope.local.cnx.org]
+zope.local.cnx.org
 
 # Grouped Hosts
 
@@ -25,4 +25,4 @@ local.cnx.org
 local.cnx.org
 
 [zope-plone:children]
-legacy.local.cnx.org
+zope.local.cnx.org
