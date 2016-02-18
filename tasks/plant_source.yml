@@ -6,11 +6,13 @@
   file:
     path: "{{ root_prefix }}/var/lib/cnx"
     state: directory
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 - name: plant the source archives
+  become: yes
   unarchive:
     src: "{{ archives_dir }}/{{ item.name }}.tgz"
     dest: "{{ root_prefix }}/var/lib/cnx/"
     copy: yes
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   with_items: source
