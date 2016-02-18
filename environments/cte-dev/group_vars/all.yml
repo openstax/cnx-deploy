@@ -30,6 +30,7 @@ publishing_port: 6543
 authoring_host: authoring-cte-cnx-dev.cnx.org
 authoring_port: 6420
 
+zope_domain: legacy-cte-cnx-dev.local.cnx.org
 arclishing_domain: archive-cte-cnx-dev.cnx.org
 frontend_domain: cte-cnx-dev.cnx.org
 accounts_domain: accounts-cte-cnx-dev.openstax.org
