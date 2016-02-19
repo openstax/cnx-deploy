@@ -65,9 +65,20 @@
     path: "{{ root_prefix }}/var/cnx/venvs"
     state: directory
     mode: 0755
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+
+- name: set the owner of venvs directory (on Debian)
+  when: ansible_os_family == 'Debian'
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+    state: directory
+    recurse: yes
+    owner: www-data
 
 - name: create the authoring virtualenv
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: pip
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
@@ -93,6 +104,8 @@
 # ---
 
 - name: install authoring packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
@@ -114,6 +127,8 @@
 
 # XXX
 - name: uninstall (local) authoring packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
@@ -125,6 +140,8 @@
 # /XXX
 
 - name: install (local) authoring packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"

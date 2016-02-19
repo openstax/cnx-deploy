@@ -72,15 +72,28 @@
     path: "{{ root_prefix }}/var/cnx/venvs"
     state: directory
     mode: 0755
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+
+- name: set the owner of venvs directory (on Debian)
+  when: ansible_os_family == 'Debian'
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+    state: directory
+    recurse: yes
+    owner: www-data
 
 - name: create the archive virtualenv
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: pip
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
     virtualenv_python: python2
 
 - name: create the publishing virtualenv
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: pip
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
@@ -125,6 +138,8 @@
 # as soon as possible. And this FIXME block ends with the closing /FIXME
 
 - name: install archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -135,6 +150,8 @@
 
 # XXX
 - name: uninstall (local) archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -148,6 +165,8 @@
 # /XXX
 
 - name: install (local) archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -161,6 +180,8 @@
     - cnx-archive
 
 - name: install publishing packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
@@ -171,6 +192,8 @@
 
 # XXX
 - name: uninstall (local) publishing packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
@@ -186,6 +209,8 @@
 # /XXX
 
 - name: install (local) publishing packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
