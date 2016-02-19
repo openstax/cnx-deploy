@@ -6,24 +6,29 @@
 # +++
 
 - name: copy dist build to source
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   copy:
     src: "{{ local_source_dir }}/webview/dist"
     dest: "{{ source_dir }}/webview"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 # +++
 # Configure
 # +++
 
 - name: configure webview settings.js
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: var/www/cnx/scripts/settings.js
     dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 - name: configure the webview nginx site
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   template:
     src: etc/nginx/sites-available/webview
     dest: "{{ root_prefix }}/etc/nginx/sites-available/webview"
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 - name: enable the webview nginx site
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
@@ -31,6 +36,7 @@
     src: "{{ root_prefix }}/etc/nginx/sites-available/webview"
     dest: "{{ root_prefix }}/etc/nginx/sites-enabled/webview"
     state: link
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 # +++
 # Deploy
@@ -46,6 +52,7 @@
     # FIXME This is copying to .../www/cnx/dist, which isn't correct
     dest: "{{ root_prefix }}/var/www/webview"
     state: link
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
 
 # +++
 # Init service
