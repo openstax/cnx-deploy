@@ -16,26 +16,8 @@
     dest: /tmp/
     copy: no
 
-- name: install nodejs and npm packages (on Debian)
-  when: ansible_os_family == "Debian"
-  become: yes
-  shell: "for f in {{ item }}/*; do rm -rf /usr/local/{{ item }}/$(basename $f); if [ ! -d /usr/local/{{ item }} ]; then mkdir -p /usr/local/{{ item }}; fi; mv $f /usr/local/{{ item }}; done"
-  args:
-    chdir: /tmp/node-v4.2.4-linux-x64
-  with_items:
-    - bin
-    - include
-    - lib
-    - share/doc
-    - share/man/man1
-    - share/systemtap/tapset
-
-- name: remove nodejs source code (on Debian)
-  when: ansible_os_family == "Debian"
-  become: yes
-  file:
-    path: /tmp/node-v4.2.4-linux-x64
-    state: absent
+- register: modified_path
+  shell: echo "{{ ansible_os_family == 'Darwin' and ansible_env.PATH or ansible_env.PATH + ':/tmp/node-v4.2.4-linux-x64/bin' }}"
 
 - name: install nodejs and npm packages (on Darwin)
   when: ansible_os_family == "Darwin"
@@ -47,7 +29,6 @@
     - npm
 
 - name: install js build tool
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   npm:
     name: "{{ item }}"
     global: yes
@@ -55,6 +36,8 @@
   with_items:
     - bower
     - grunt-cli
+  environment:
+    PATH: "{{ modified_path.stdout }}"
 
 # +++
 # Build
@@ -70,25 +53,38 @@
   npm:
     path: "{{ source_dir }}/webview"
     global: no
+  environment:
+    PATH: "{{ modified_path.stdout }}"
 
 # FIXME npm >= 3.x changed it's behavior for peer dependencies
 #       the webview readme needs updated to reflect this cryptic issue.
 #       https://docs.npmjs.com/files/package.json#peerdependencies
 - name: install coffeelint
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   npm:
     path: "{{ source_dir }}/webview"
     name: coffeelint@^1
     global: no
     state: present
+  environment:
+    PATH: "{{ modified_path.stdout }}"
 
 - name: update webview
   when: modules_dir.stat.exists
   command: npm run-script upgrade
   args:
     chdir: "{{ source_dir }}/webview"
+  environment:
+    PATH: "{{ modified_path.stdout }}"
 
 - name: build webview dist
   command: npm run-script dist
   args:
     chdir: "{{ source_dir }}/webview"
+  environment:
+    PATH: "{{ modified_path.stdout }}"
+
+- name: remove nodejs source code (on Debian)
+  when: ansible_os_family == "Debian"
+  file:
+    path: /tmp/node-v4.2.4-linux-x64
+    state: absent
