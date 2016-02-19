@@ -92,6 +92,13 @@
     regexp: "^host\\s+all\\s+all\\s+::1/128\\s+(md5|trust)$"
     line: "host    all             all             ::1/128                 trust"
 
+- name: allow remote connections to the database
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
+    regexp: "^#?listen_addresses = '(localhost|\\*)'\\s.*$"
+    line: "listen_addresses = '*'"
+
 # +++
 # Init service
 # +++
