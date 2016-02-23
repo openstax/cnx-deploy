@@ -85,6 +85,15 @@
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
     line: "host    all             all             127.0.0.1/32            trust"
+- name: configure local host connection trust ipv4
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  lineinfile:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    regexp: "^host\\s+all\\s+all\\s+{{ item }}/32\\s+(md5|trust)$"
+    insertafter: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
+    line: "host    all             all             {{ item }}/32            trust"
+  with_items:
+    - "{{ lookup('dig', zope_host) }}"
 - name: configure local host connection trust ipv6
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   lineinfile:
