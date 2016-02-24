@@ -1,0 +1,35 @@
+---
+root_prefix: ""
+
+archive_db_name: cnxarchive
+archive_db_user: cnxarchive
+archive_db_password: cnxarchive
+archive_db_host: localhost
+archive_db_port: 5432
+
+authoring_db_name: cnxauthoring
+authoring_db_user: cnxauthoring
+authoring_db_password: cnxauthoring
+authoring_db_host: localhost
+authoring_db_port: 5432
+
+# FIXME Not really yaml'ish to use space separated values...
+# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
+# 'hosts' is a space separated value containing hostnames or ip addresses
+# where a memcached instance is running.
+memcached_hosts: localhost
+
+varnish_port: 80
+
+zope_host: legacy.local.cnx.org
+zope_port: 8888
+archive_host: archive.local.cnx.org
+archive_port: 6789
+publishing_host: archive.local.cnx.org
+publishing_port: 6543
+authoring_host: authoring.local.cnx.org
+authoring_port: 6420
+
+arclishing_domain: archive.local.cnx.org
+frontend_domain: local.cnx.org
+accounts_domain: accounts.local.openstax.org

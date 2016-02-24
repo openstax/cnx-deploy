@@ -1,0 +1,6 @@
+---
+- name: create cnx user
+  user: name=cnx group=www-data home=/opt/cnx
+
+- name: create src dir
+  file: name=/opt/cnx/src state=directory owner=cnx group=www-data

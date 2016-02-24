@@ -8,11 +8,11 @@
 # Source gathering
 # +++
 
-- name: package up source for shipment
-  hosts: local
-  tasks:
-    - include: tasks/checkout.yml
-    - include: tasks/archive_source.yml
+#- name: package up source for shipment
+#  hosts: local
+#  tasks:
+#    - include: tasks/checkout.yml
+#    - include: tasks/archive_source.yml
 
 - name: send source to hosts
   hosts:
@@ -23,10 +23,10 @@
   tasks:
     - include: tasks/plant_source.yml
 
-- name: build webview
-  hosts: local
-  tasks:
-    - include: tasks/build_webview.yml
+#- name: build webview
+#  hosts: local
+#  tasks:
+#    - include: tasks/build_webview.yml
 
 # +++
 # Persistence services
@@ -100,7 +100,7 @@
   tasks:
     - include: tasks/ensure_shared_fs.yml
     - include: tasks/install_nginx.yml
-    - include: tasks/install_varnish.yml
+#    - include: tasks/install_varnish.yml
     - include: tasks/install_webview.yml
     - include: tasks/configure_ssl.yml
   roles:
