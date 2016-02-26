@@ -8,5 +8,5 @@
   git:
     repo: "{{ item.repo }}"
     dest: "{{ source_dir }}/{{ item.name }}"
-    version: "{{ (source_versions is defined and source_versions[item.name]) and source_versions[item.name] or item.default_version }}"
+    version: "{{ (source_versions is defined and source_versions.get(item.name)) and source_versions[item.name] or item.default_version }}"
   with_items: source
