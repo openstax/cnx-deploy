@@ -23,7 +23,7 @@
     - name: dump database files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
       shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT * FROM files WHERE fileid IN (SELECT fileid FROM module_files WHERE filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') ) ) TO 'cnxarchive_index_files.txt'"
     - name: dump database module files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
-      shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT module_ident, CASE WHEN filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') THEN fileid::text ELSE '<dummy-file-id>' END, filename, mimetype FROM module_files ) TO 'cnxarchive_index_module_files.txt'"
+      shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT module_ident, CASE WHEN filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') THEN fileid::text ELSE '<dummy-file-id>' END, filename FROM module_files ) TO 'cnxarchive_index_module_files.txt'"
     - name: produce dump filename
       shell: echo "cnxarchive_dump.$(date +'%Y-%m-%d').tar.gz"
       register: dump_filename
