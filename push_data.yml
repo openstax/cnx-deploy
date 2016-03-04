@@ -29,16 +29,10 @@
       shell: "createdb -O {{ db_user }} {{ db_name }}"
     - name: load database without files
       shell: "psql -U {{ db_user }} {{ db_name }} < /tmp/cnxarchive_dump/cnxarchive_dump_without_files.sql"
+
     - name: load files table
-      shell: psql -U {{ db_user }} {{ db_name }} -c "\copy files FROM '/tmp/cnxarchive_dump/cnxarchive_index_files.txt'"
-    - name: insert dummy file
-      shell: psql -A -U {{ db_user }} {{ db_name }} -c "INSERT INTO files (file) VALUES ('dummy file') RETURNING fileid" | sed -n '2 p'
-      register: dummy_file
-    - name: replace files with dummy file
-      replace:
-        dest: /tmp/cnxarchive_dump/cnxarchive_index_module_files.txt
-        regexp: "<dummy-file-id>"
-        replace: "{{ dummy_file.stdout }}"
+      shell: psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE files DISABLE TRIGGER ALL; COPY files FROM '/tmp/cnxarchive_dump/cnxarchive_index_files.txt'; COPY files (fileid, md5, sha1, file, media_type) FROM '/tmp/cnxarchive_dump/cnxarchive_other_files.txt'; ALTER TABLE files ENABLE TRIGGER ALL;"
+
     - name: load module files table
       shell: psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER ALL; COPY module_files FROM '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt'; ALTER TABLE module_files ENABLE TRIGGER ALL;"
     - name: remove dump files

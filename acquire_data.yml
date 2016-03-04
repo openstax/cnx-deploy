@@ -22,13 +22,16 @@
       shell: nice -n {{ nice_priority }} pg_dump -U {{ db_user }} --exclude-table-data=files --exclude-table-data=module_files {{ db_name }} >cnxarchive_dump_without_files.sql
     - name: dump database files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
       shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT * FROM files WHERE fileid IN (SELECT fileid FROM module_files WHERE filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') ) ) TO 'cnxarchive_index_files.txt'"
+    - name: dump database files table for other files
+      shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT fileid, md5, sha1, 'dummy file', media_type FROM files WHERE fileid NOT IN (SELECT fileid FROM module_files WHERE filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') ) ) TO 'cnxarchive_other_files.txt'"
+
     - name: dump database module files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
-      shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT module_ident, CASE WHEN filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') THEN fileid::text ELSE '<dummy-file-id>' END, filename FROM module_files ) TO 'cnxarchive_index_module_files.txt'"
+      shell: nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c "\copy ( SELECT module_ident, fileid, filename FROM module_files ) TO 'cnxarchive_index_module_files.txt'"
     - name: produce dump filename
       shell: echo "cnxarchive_dump.$(date +'%Y-%m-%d').tar.gz"
       register: dump_filename
     - name: create dump .tar.gz file
-      shell: nice -n {{ nice_priority }} tar czf {{ dump_filename.stdout }} --remove-files cnxarchive_dump_without_files.sql cnxarchive_index_files.txt cnxarchive_index_module_files.txt
+      shell: nice -n {{ nice_priority }} tar czf {{ dump_filename.stdout }} --remove-files cnxarchive_dump_without_files.sql cnxarchive_index_files.txt cnxarchive_other_files.txt cnxarchive_index_module_files.txt
     - name: download dump .tar.gz file
       fetch:
         src: "{{ dump_filename.stdout }}"
