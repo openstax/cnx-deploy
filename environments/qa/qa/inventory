@@ -1,0 +1,25 @@
+[local]
+127.0.0.1  ansible_connection=local
+
+[qa.cnx.org]
+128.42.169.69 ansible_user=administrator
+
+# Grouped Hosts
+
+[database:children]
+qa.cnx.org
+
+[arclishing:children]
+qa.cnx.org
+
+[authoring:children]
+qa.cnx.org
+
+[frontend:children]
+qa.cnx.org
+
+[worker:children]
+qa.cnx.org
+
+[zope-plone:children]
+qa.cnx.org

@@ -2,9 +2,9 @@
 upstream frontend {
     server {{ frontend_domain }}{{ varnish_port == 80 and '' or ':{}'.format(varnish_port) }} weight=5;
 }
-upstream arclishing {
-    server {{ arclishing_domain }}{{ varnish_port == 80 and '' or ':{}'.format(varnish_port) }} weight=5;
-}
+#upstream arclishing {
+#    server {{ arclishing_domain }}{{ varnish_port == 80 and '' or ':{}'.format(varnish_port) }} weight=5;
+#}
 
 
 ssl_certificate {{ root_prefix }}/etc/ssl/certs/cnx.pem;
@@ -17,18 +17,18 @@ proxy_send_timeout          300;
 proxy_read_timeout          300;
 send_timeout                300;
 
-server {
-    listen 443 ssl;
-    server_name {{ arclishing_domain }};
+#server {
+#    listen 443 ssl;
+#    server_name {{ arclishing_domain }};
 
-    ssl on;
+#    ssl on;
 
-    location / {
-        proxy_pass http://arclishing;
-        proxy_set_header host {{ arclishing_domain }};
-        proxy_set_header X-Secure true;
-    }
-}
+#    location / {
+#        proxy_pass http://arclishing;
+#        proxy_set_header host {{ arclishing_domain }};
+#        proxy_set_header X-Secure true;
+#    }
+#}
 
 server {
     listen 443 ssl;

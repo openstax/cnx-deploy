@@ -107,7 +107,7 @@
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   shell: "make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} && make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} install"
   args:
-    chdir: "{{ source_dir }}/plxslt"
+    chdir: "{{source_dir }}/plxslt"
 
 - name: install session_exec
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
@@ -263,15 +263,17 @@
 # +++
 
 - name: create the archive db user
+  become: yes
+  become_user: postgres
   postgresql_user:
     db: postgres
-    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
-    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
+    login_user: postgres
+#    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
+#    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
     name: "{{ archive_db_user }}"
     password: "{{ archive_db_password }}"
     # FIXME There is no reason to make this user a SUPERUSER
     role_attr_flags: SUPERUSER
-
 - name: create the archive db
   postgresql_db:
     login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
