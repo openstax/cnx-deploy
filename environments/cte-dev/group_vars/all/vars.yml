@@ -33,4 +33,7 @@ authoring_port: 6420
 zope_domain: legacy-cte-cnx-dev.cnx.org
 arclishing_domain: archive-cte-cnx-dev.cnx.org
 frontend_domain: cte-cnx-dev.cnx.org
-accounts_domain: accounts-cte-cnx-dev.openstax.org
+accounts_domain: accounts-qa1.openstax.org
+
+accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
+accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
