@@ -13,6 +13,64 @@ server {
     # try_files       $uri @prerender;
     try_files       $uri $uri/ /index.html;
 
+    location /login {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /callback {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /logout {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /users/profile {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /users/contents {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /users/search {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location /publish {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location ~ ^/contents/.*@draft\.json {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location ~ ^/contents/.*@draft/users/me {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location ~ ^/contents/.*@draft/acceptance {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    location ~ ^/resources$ {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
+    # Try to fetch resources from archive (most common)
+    # and if they do not exist, fall back to cnx-authoring
+    # from http://linuxplayer.org/2013/06/nginx-try-files-on-multiple-named-location-or-server
+    location ~ ^/resources/.+ {
+        proxy_pass http://{{ archive_host }}:{{ archive_port }};
+        proxy_intercept_errors on;
+        recursive_error_pages on;
+        error_page 404 = @authoring;
+    }
+
+    location @authoring {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+
     location /resources/ {
         proxy_pass  http://{{ archive_host }}:{{ archive_port }};
     }

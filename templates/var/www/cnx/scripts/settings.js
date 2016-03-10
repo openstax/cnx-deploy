@@ -15,7 +15,7 @@
 
       // Hostname and port for the cnx-authoring server
       cnxauthoring: {
-        host: '{{ authoring_host }}'
+        host: location.hostname
       },
 
       // Prefix to prepend to page titles
