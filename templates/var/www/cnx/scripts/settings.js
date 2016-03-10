@@ -10,7 +10,7 @@
 
       // Hostname and port for the cnx-archive server
       cnxarchive: {
-        host: '{{ archive_host }}'
+        host: '{{ arclishing_domain }}'
       },
 
       // Hostname and port for the cnx-authoring server
