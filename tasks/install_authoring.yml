@@ -228,9 +228,12 @@
 
 # Unforntuately supervisor's init script doesn't support reload,
 # but supervisorctl does... so maybe there is a way to reload?
+# FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
+# managed processes
 - name: restart supervisor
   when: ansible_os_family == "Debian"
   become: yes
   service:
     name: supervisor
-    state: "{{ supervisor_authoring_conf.changed and 'restarted' or 'started' }}"
+    state: restarted
+    sleep: 5
