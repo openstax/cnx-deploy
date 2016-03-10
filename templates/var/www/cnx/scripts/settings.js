@@ -10,14 +10,12 @@
 
       // Hostname and port for the cnx-archive server
       cnxarchive: {
-        host: '{{ archive_host }}',
-        port: {{ archive_port }}
+        host: '{{ archive_host }}'
       },
 
       // Hostname and port for the cnx-authoring server
       cnxauthoring: {
-        host: '{{ authoring_host }}',
-        port: {{ authoring_port }}
+        host: '{{ authoring_host }}'
       },
 
       // Prefix to prepend to page titles
