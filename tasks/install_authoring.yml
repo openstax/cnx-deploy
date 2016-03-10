@@ -136,6 +136,7 @@
   with_items:
     - cnx-query-grammar
     - cnx-epub
+    - openstax-accounts
     - cnx-authoring
 # /XXX
 
@@ -150,6 +151,7 @@
   with_items:
     - cnx-query-grammar
     - cnx-epub
+    - openstax-accounts
     - cnx-authoring
 
 # /FIXME
