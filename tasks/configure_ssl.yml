@@ -10,13 +10,21 @@
     - "{{ root_prefix }}/etc/ssl/certs"
     - "{{ root_prefix }}/etc/ssl/private"
 
+- name: check if certificate is expiring in the next 24 hours
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  shell: "openssl x509 -checkend $((24 * 60 * 60)) -noout -in {{ root_prefix }}/etc/ssl/certs/cnx.pem"
+  ignore_errors: yes
+  register: certificate_expired
+
 - name: install certificate pem
+  when: "{{ certificate_expired.rc != 0 }}"
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   copy:
     src: "{{ cert_crt_filepath }}"
     dest: "{{ root_prefix }}/etc/ssl/certs/cnx.pem"
 
 - name: install certificate key
+  when: "{{ certificate_expired.rc != 0 }}"
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   copy:
     src: "{{ cert_key_filepath }}"
