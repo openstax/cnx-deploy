@@ -46,9 +46,6 @@ source:
   - name: cnx-epub
     repo: git@github.com:Connexions/cnx-epub.git
     default_version: HEAD
-  - name: plpydbapi
-    repo: git@github.com:Connexions/plpydbapi.git
-    default_version: HEAD
   - name: plxslt
     repo: git@github.com:petere/plxslt.git
     default_version: HEAD
