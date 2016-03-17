@@ -1,0 +1,53 @@
+---
+root_prefix: ""
+
+archive_db_name: cnxarchive
+archive_db_user: cnxarchive
+archive_db_password: cnxarchive
+archive_db_host: localhost
+archive_db_port: 5432
+
+standalone_archive_install: yes
+
+
+source:
+  # - name:
+  #   repo:
+  #   default_version: HEAD
+  - name: cnx-query-grammar
+    repo: git@github.com:Connexions/cnx-query-grammar.git
+    default_version: HEAD
+  - name: rhaptos.cnxmlutils
+    repo: git@github.com:Connexions/rhaptos.cnxmlutils.git
+    default_version: HEAD
+  - name: cnx-epub
+    repo: git@github.com:Connexions/cnx-epub.git
+    default_version: HEAD
+  - name: plxslt
+    repo: git@github.com:petere/plxslt.git
+    default_version: HEAD
+  - name: session_exec
+    repo: git@github.com:okbob/session_exec.git
+    default_version: HEAD
+  - name: cnx-archive
+    repo: git@github.com:Connexions/cnx-archive.git
+    default_version: HEAD
+
+# Change this to pin to specific tag or changeset (default is HEAD)
+source_versions:
+  "cnx-archive": production
+
+
+# The following aren't really important in this usecase,
+# but they may be needed in the generation of config files.
+memcached_hosts:
+
+zope_host: legacy.cnx.org
+zope_port: 8888
+archive_host: archive.cnx.org
+archive_port: 6789
+
+zope_domain: legacy.cnx.org
+arclishing_domain: archive.cnx.org
+frontend_domain: cnx.org
+accounts_domain: accounts-qa1.openstax.org
