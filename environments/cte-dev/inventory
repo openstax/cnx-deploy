@@ -12,7 +12,10 @@ cte-legacy-dev.cnx.org
 [database:children]
 cte-cnx-dev
 
-[arclishing:children]
+[archive:children]
+cte-cnx-dev
+
+[publishing:children]
 cte-cnx-dev
 
 [authoring:children]

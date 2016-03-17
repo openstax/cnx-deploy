@@ -9,7 +9,10 @@
 [database:children]
 qa.cnx.org
 
-[arclishing:children]
+[archive:children]
+qa.cnx.org
+
+[publishing:children]
 qa.cnx.org
 
 [authoring:children]

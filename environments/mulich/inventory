@@ -9,7 +9,10 @@ cnx.mulich.com
 [database:children]
 mulich
 
-[arclishing:children]
+[archive:children]
+mulich
+
+[publishing:children]
 mulich
 
 [authoring:children]

@@ -55,7 +55,7 @@
     - include: tasks/install_supervisor.yml
 
 - name: install archive and publishing
-  hosts: arclishing
+  hosts: local
   tasks:
     - include: tasks/install_arclishing.yml
 

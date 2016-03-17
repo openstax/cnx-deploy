@@ -3,7 +3,10 @@
 
 # Grouped Hosts
 
-[arclishing:children]
+[archive:children]
+local
+
+[publishing:children]
 local
 
 [authoring:children]

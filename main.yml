@@ -16,7 +16,8 @@
 
 - name: send source to hosts
   hosts:
-    - arclishing
+    - archive
+    - publishing
     - authoring
     - frontend
     - worker
@@ -36,7 +37,8 @@
 
 - name: install postgres database
   hosts:
-    - arclishing
+    - archive
+    - publishing
     - authoring
   tasks:
     - include: tasks/install_postgres.yml
@@ -45,7 +47,8 @@
 
 - name: install memcached
   hosts:
-    - arclishing
+    - archive
+    - publishing
     - authoring
   tasks:
     - include: tasks/install_memcached.yml
@@ -60,13 +63,16 @@
 
 - name: install supervisor
   hosts:
-    - arclishing
+    - archive
+    - publishing
     - authoring
   tasks:
     - include: tasks/install_supervisor.yml
 
 - name: install archive and publishing
-  hosts: arclishing
+  hosts:
+    - archive
+    - publishing
   tasks:
     - include: tasks/install_arclishing.yml
   roles:
