@@ -37,6 +37,7 @@ accounts_domain: accounts-qa1.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
+accounts_disable_verify_ssl: no
 
 source_versions:
   webview: HEAD

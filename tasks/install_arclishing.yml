@@ -8,8 +8,6 @@
 # Prerequisites
 # +++
 
-- include_vars: "{{ inventory_dir }}/vars/secrets.yml"
-
 # FIXME (On Darwin) Missing prerequisites for libxml2 and libxslt.
 
 # TODO Kill this dependency by prebuilding or using packaged versions

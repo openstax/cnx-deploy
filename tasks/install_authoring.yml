@@ -8,8 +8,6 @@
 # Prerequisites
 # +++
 
-- include_vars: "{{ inventory_dir }}/vars/secrets.yml"
-
 - name: install build utilities
   when: ansible_os_family == "Debian"
   become: yes
