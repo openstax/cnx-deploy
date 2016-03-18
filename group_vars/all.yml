@@ -33,6 +33,8 @@ archives_dir: "{{ '~/cnx/archives' | expanduser }}"
 # frontend_domain: cnx.org
 # accounts_domain: accounts.openstax.org
 
+# deploy_key: "{{ vault_deploy_key }}"
+
 source:
   # - name:
   #   repo:

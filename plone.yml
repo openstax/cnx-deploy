@@ -1,6 +1,31 @@
 ---
 # Builds the cnx plone site.
 
+- name: copy deploy key
+  hosts: zope-plone
+  vars:
+    user: "www-data"
+    user_home: "/var/www"
+  tasks:
+    - name: create www-data home
+      become: yes
+      file:
+        path: "{{ user_home }}"
+        state: directory
+        owner: www-data
+        group: www-data
+    - include: tasks/copy_deploy_key.yml
+      when: deploy_key is defined
+
+- name: test git over ssh using the www-data user
+  hosts: zope-plone
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell: "ssh -T git@github.com"
+      register: git_test
+      failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
+
 - name: build python 2.4
   hosts: zope-plone
   tasks:

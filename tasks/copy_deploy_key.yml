@@ -1,0 +1,35 @@
+---
+
+- name: make sure ~/.ssh exists
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    state: directory
+    path: "{{ user_home }}/.ssh"
+    mode: 0700
+
+- name: copy deploy key
+  become: yes
+  become_user: "{{ user }}"
+  copy:
+    content: "{{ deploy_key }}"
+    dest: "{{ user_home }}/.ssh/cnx-devops_rsa"
+    mode: 0600
+
+- name: make sure ~/.ssh/config exists
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    state: touch
+    path: "{{ user_home }}/.ssh/config"
+    mode: 0600
+
+- name: configure ssh to use deploy key for github
+  become: yes
+  become_user: "{{ user }}"
+  blockinfile:
+    dest: "{{ user_home }}/.ssh/config"
+    content: |
+      HostName github.com
+      IdentityFile ~/.ssh/cnx-devops_rsa
+    validate: grep 'ANSIBLE MANAGED BLOCK' %s
