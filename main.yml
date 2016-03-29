@@ -21,6 +21,7 @@
     - authoring
     - frontend
     - worker
+    - database
   tasks:
     - include: tasks/plant_source.yml
 
@@ -33,13 +34,11 @@
 # Persistence services
 # +++
 
-# TODO (mocked) NFS mount
+# TODO NFS mount
 
 - name: install postgres database
   hosts:
-    - archive
-    - publishing
-    - authoring
+    - database
   tasks:
     - include: tasks/install_postgres.yml
   roles:
