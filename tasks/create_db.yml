@@ -1,6 +1,17 @@
 ---
 # Create a postgresql database.
 
+# Installed for the postgresql_* ansible modules.
+- when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: python-psycopg2
+    state: present
+- when: ansible_os_family == "Darwin"
+  pip:
+    name: psycopg2
+    state: present
+
 - name: create the archive db
   postgresql_db:
     login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"

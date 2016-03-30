@@ -61,18 +61,6 @@
     state: present
 
 
-# Installed for the postgresql_* ansible modules.
-- when: ansible_os_family == "Debian"
-  become: yes
-  apt:
-    name: python-psycopg2
-    state: present
-
-- when: ansible_os_family == "Darwin"
-  pip:
-    name: psycopg2
-    state: present
-
 - name: install virtualenv (on Debian)
   # BBB (1-Feb-2016) ubuntu 14.04
   ##when: ansible_os_family == "Debian"
