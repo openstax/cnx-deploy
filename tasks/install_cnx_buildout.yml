@@ -1,5 +1,10 @@
 ---
-# Installs cnx plone site with all the dependencies.
+# Installs cnx zope instance with all the dependencies.
+
+# Note, this task list does not work on Darwin.
+- name: pre-check system requirements
+  fail: msg="CNX's Zope instance can only be deployed to Linux systems"
+  when: ansible_system != 'Linux'
 
 # +++
 # Prerequisites
@@ -30,13 +35,13 @@
   register: venvs_dir
 
 - name: ensure the venvs directory exists
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   when: not venvs_dir.stat.exists
   file:
     path: "{{ root_prefix }}/var/cnx/venvs"
     state: directory
     mode: 0755
-    owner: "{{ ansible_user_id }}"
+    owner: www-data
 
 - shell: which python2.4
   register: python24_path
@@ -49,6 +54,7 @@
     copy: no
 
 - name: create the cnx-buildout virtualenv
+  become: yes
   shell: "{{ python24_path.stdout }} virtualenv-1.7.2/virtualenv.py {{ root_prefix }}/var/cnx/venvs/cnx-buildout"
 
 - name: delete virtualenv 1.7.2 source code
@@ -61,16 +67,21 @@
 # +++
 
 - name: copy cached python packages downloads directory
+  become: yes
+  become_user: www-data
   copy:
     src: src/cnx-buildout/downloads
     dest: "{{ source_dir }}/cnx-buildout"
 
 - name: run bootstrap
+  become: yes
+  become_user: www-data
   shell: "{{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
 - name: install simplejson 1.9.2
+  become: yes
   pip:
     name: simplejson
     version: 1.9.2
@@ -78,14 +89,26 @@
     virtualenv_python: python2
 
 - name: run buildout
+  become: yes
+  become_user: www-data
   shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee buildout_output.txt"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
 - name: install lxml 3.2.1
+  become: yes
   shell: ". bin/libs.sh && {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/pip install lxml==3.2.1"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
+
+- name: assign permissions group
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/lib/cnx/cnx-buildout"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
 
 # +++
 # Start server
@@ -96,6 +119,8 @@
   register: instance_pid
 
 - name: stop instance
+  become: yes
+  become_user: www-data
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance stop
   when: instance_pid.stat.exists
 
@@ -104,10 +129,14 @@
   register: zeoserver_pid
 
 - name: stop zeoserver
+  become: yes
+  become_user: www-data
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver stop
   when: zeoserver_pid.stat.exists
 
 - name: start zeoserver
+  become: yes
+  become_user: www-data
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver start
 
 # +++
@@ -128,4 +157,6 @@
   when: rhaptos_site|failed
 
 - name: start instance
+  become: yes
+  become_user: www-data
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance start
