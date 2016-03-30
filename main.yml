@@ -86,12 +86,24 @@
   tasks:
     - include: tasks/install_supervisor.yml
 
-- name: install archive and publishing
-  hosts:
-    - archive
-    - publishing
+- name: install archive
+  hosts: archive
   tasks:
-    - include: tasks/install_arclishing.yml
+    - include: tasks/install_archive.yml
+  roles:
+    - multimac.launchd
+
+- name: install publishing
+  hosts: publishing
+  tasks:
+    - include: tasks/install_publishing.yml
+  roles:
+    - multimac.launchd
+
+- name: install authoring
+  hosts: authoring
+  tasks:
+    - include: tasks/install_authoring.yml
   roles:
     - multimac.launchd
 
@@ -126,12 +138,5 @@
     - include: tasks/install_varnish.yml
     - include: tasks/install_webview.yml
     - include: tasks/configure_ssl.yml
-  roles:
-    - multimac.launchd
-
-- name: install authoring
-  hosts: authoring
-  tasks:
-    - include: tasks/install_authoring.yml
   roles:
     - multimac.launchd

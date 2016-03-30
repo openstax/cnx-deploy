@@ -1,0 +1,263 @@
+---
+# Installs archive with all the dependencies.
+
+# +++
+# Prerequisites
+# +++
+
+# FIXME (On Darwin) Missing prerequisites for libxml2 and libxslt.
+
+# TODO Kill this dependency by prebuilding or using packaged versions
+#      of the application/library.
+- name: install build utilities
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - libxml2-dev
+    - libxslt-dev
+    - python-dev
+
+
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: add apt-key for pgdg repository (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: add pgdg repository (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+    state: present
+    update_cache: yes
+
+- name: install postgres client (on Debian)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    # BBB (1-Feb-2016) ubuntu 14.04
+    force: "{{ (ansible_distribution == 'Ubuntu' and  ansible_distribution_release == 'trusty') and 'yes' or 'no' }}"
+  with_items:
+    # - "postgresql-{{ postgres_version }}"
+    - "postgresql-client-{{ postgres_version }}"
+
+- name: install postgres tap (on Darwin)
+  when: ansible_os_family == "Darwin"
+  command: brew tap petere/postgresql
+
+- name: install postgres (on Darwin)
+  when: ansible_os_family == "Darwin"
+  homebrew:
+    name: "postgresql-{{ postgres_version }}"
+    state: present
+
+
+# Installed for the postgresql_* ansible modules.
+- when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: python-psycopg2
+    state: present
+
+- when: ansible_os_family == "Darwin"
+  pip:
+    name: psycopg2
+    state: present
+
+- name: install virtualenv (on Debian)
+  # BBB (1-Feb-2016) ubuntu 14.04
+  ##when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_distribution_release != "trusty"
+  become: yes
+  apt:
+    name: virtualenv
+    state: present
+
+# BBB (1-Feb-2016) unbuntu 14.04
+- name: install virtualenv (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  apt:
+    name: python-virtualenv
+    state: present
+
+# +++
+# Install virtualenv(s)
+# +++
+
+- stat:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+  register: venvs_dir
+
+- name: ensure the venvs directory exists
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  when: not venvs_dir.stat.exists
+  file:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+
+- name: set the owner of venvs directory (on Debian)
+  when: ansible_os_family == 'Debian'
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/cnx/venvs"
+    state: directory
+    recurse: yes
+    owner: www-data
+
+- name: create the archive virtualenv
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  pip:
+    name: pip
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    virtualenv_python: python2
+
+# +++
+# Install
+# +++
+
+# FIXME (11-Feb-2016) Ansible >=2.1.0 required
+# In order to use the pip module's ``state: forcereinstall`` option,
+# we must upgrade to 2.1.0, which is not release yet.
+#
+# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
+# work because they reinstall **everything**,
+# which doesn't work because it tries to install some of our
+# unreleased packages and then fails to find them.
+#
+# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
+# as soon as possible. And this FIXME block ends with the closing /FIXME
+
+- name: install archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    state: latest
+  with_items:
+    - db-migrator
+    - pyramid_sawing
+
+# XXX
+- name: uninstall (local) archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    state: absent
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - cnx-archive
+# /XXX
+
+- name: install (local) archive packages
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  pip:
+    name: "{{ source_dir }}/{{ item }}"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    ##state: forcereinstall
+    state: present
+  with_items:
+    - cnx-query-grammar
+    - rhaptos.cnxmlutils
+    - cnx-epub
+    - cnx-archive
+
+# /FIXME
+
+# +++
+# Configure
+# +++
+
+- name: ensure the etc directories exists
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  file:
+    path: "{{ root_prefix }}/etc/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - cnx
+    - cnx/archive
+
+- name: render configuration
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0744
+    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'root' }}"
+    group: "{{ ansible_os_family == 'Darwin' and 'staff' or 'root' }}"
+  with_items:
+    - {src: "etc/cnx/archive/app.ini",
+       dest: "{{ root_prefix }}/etc/cnx/archive/app.ini"}
+
+# TODO make logging configuration files for pyramid_sawing
+
+# +++
+# Init databases
+# +++
+
+# Note, the setup current **assumes** that the publishing and archive database
+# is the same database. There has been no reason to split these yet, so we won't.
+
+# FIXME These initialize tasks run to failures. Ideally, it's be nice if
+#       they gracefully bailed out with a meaningful message.
+
+- name: initialize archive db
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-archive-initdb {{ root_prefix }}/etc/cnx/archive/app.ini"
+  register: archive_initdb_cmd
+  failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
+
+- name: initialize db-migrator
+  # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
+  #     the full picture of what archive is, but we'll roll with it for now.
+  when: "(standalone_archive_install is defined and standalone_archive_install) and 'Database is already initialized' not in archive_initdb_cmd.stderr"
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive init"
+
+- name: migrate database
+  # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
+  #     the full picture of what archive is, but we'll roll with it for now.
+  when: "standalone_archive_install is defined and standalone_archive_install"
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive migrate"
+
+# +++
+# Init service
+# +++
+
+- name: configure archive under supervisor
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  template:
+    src: etc/supervisor/conf.d/archive.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/archive.conf"
+    mode: 0644
+  register: supervisor_archive_conf
+
+# Unforntuately supervisor's init script doesn't support reload,
+# but supervisorctl does... so maybe there is a way to reload?
+# FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
+# managed processes
+- name: restart supervisor
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: supervisor
+    state: restarted
+    sleep: 5
