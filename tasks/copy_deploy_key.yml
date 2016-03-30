@@ -33,3 +33,13 @@
       HostName github.com
       IdentityFile ~/.ssh/cnx-devops_rsa
     validate: grep 'ANSIBLE MANAGED BLOCK' %s
+
+- name: ensure github.com is a known host
+  become: yes
+  become_user: "{{ user }}"
+  lineinfile:
+    dest: "{{ user_home }}/.ssh/known_hosts"
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
