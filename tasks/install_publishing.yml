@@ -213,11 +213,14 @@
 #       they gracefully bailed out with a meaningful message.
 
 - name: initialize publishing db
-  when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
   command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/cnx-publishing-initdb {{ root_prefix }}/etc/cnx/publishing/app.ini"
+  register: publishing_initdb_cmd
+  # FIXME (30-Mar-2016) We need to fail with a more reliable message, rather than
+  #       looking at the traceback line.
+  failed_when: "publishing_initdb_cmd.rc > 0 and 'psycopg2.ProgrammingError: type \"publication_states\" already exists' not in publishing_initdb_cmd.stderr"
 
 - name: initialize db-migrator
-  when: "'Database is already initialized' not in archive_initdb_cmd.stderr"
+  when: "'already exists' not in publishing_initdb_cmd.stderr"
   command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
 
 - name: migrate database
