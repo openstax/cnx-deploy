@@ -1,0 +1,124 @@
+---
+# Used to setup a deployment to legacy-staging#.cnx.org boxes.
+
+# Note, 'local' (the host name in the inventory)
+#   should be assigned ``ansible_connection=local``.
+
+# +++
+# Source gathering
+# +++
+
+- name: package up source for shipment
+  hosts: local
+  tasks:
+    - include: tasks/checkout.yml
+    - include: tasks/archive_source.yml
+
+- name: send source to hosts
+  hosts:
+    - archive
+    - database
+  tasks:
+    - include: tasks/plant_source.yml
+
+- name: checkout cnx-buildout
+  hosts: local
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:karenc/cnx-buildout.git
+        default_version: HEAD
+  tasks:
+    - include: tasks/checkout.yml
+    - include: tasks/archive_source.yml
+
+- name: send source to hosts
+  hosts: zope-plone
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:karenc/cnx-buildout.git
+        default_version: HEAD
+  tasks:
+    - include: tasks/plant_source.yml
+
+- name: copy deploy key
+  hosts: zope-plone
+  vars:
+    user: "www-data"
+    user_home: "/var/www"
+  tasks:
+    - name: create www-data home
+      become: yes
+      file:
+        path: "{{ user_home }}"
+        state: directory
+        owner: www-data
+        group: www-data
+    - include: tasks/copy_deploy_key.yml
+      when: deploy_key is defined
+
+- name: test git over ssh using the www-data user
+  hosts: zope-plone
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell: "ssh -T git@github.com"
+      register: git_test
+      failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
+
+# +++
+# Persistence services
+# +++
+
+- name: install postgres database
+  hosts:
+    - database
+  tasks:
+    - include: tasks/install_postgres.yml
+    - include: tasks/install_plxslt.yml
+    - include: tasks/install_session_exec.yml
+    - include: tasks/create_db_user.yml
+      vars:
+        db_user: "{{ archive_db_user }}"
+        db_password: "{{ archive_db_password }}"
+    - include: tasks/create_db.yml
+      vars:
+        db_owner: "{{ archive_db_user }}"
+        db_name: "{{ archive_db_name }}"
+  roles:
+    - multimac.launchd
+
+# +++
+# Applications
+# +++
+
+- name: build python 2.4
+  hosts: zope-plone
+  tasks:
+    - stat: path=/usr/local/bin/python2.4
+      register: python24_binary
+    - include: tasks/install_python24.yml
+      when: not python24_binary.stat.exists
+
+- name: install supervisor
+  hosts:
+    - archive
+  tasks:
+    - include: tasks/install_supervisor.yml
+  roles:
+    - multimac.launchd
+      
+- name: install archive
+  hosts: archive
+  vars:
+    standalone_archive_install: yes
+  tasks:
+    - include: tasks/install_archive.yml
+  roles:
+    - multimac.launchd
+
+- name: install cnx plone site
+  hosts: zope-plone
+  tasks:
+    - include: tasks/install_cnx_buildout.yml
