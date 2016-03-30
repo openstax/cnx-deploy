@@ -186,26 +186,6 @@
 # Init databases
 # +++
 
-- name: create the authoring db user
-  postgresql_user:
-    db: postgres
-    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
-    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
-    name: "{{ authoring_db_user }}"
-    password: "{{ authoring_db_password }}"
-    # FIXME There is no reason to make this user a SUPERUSER
-    role_attr_flags: SUPERUSER
-
-- name: create the authoring db
-  postgresql_db:
-    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
-    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
-    name: "{{ authoring_db_name }}"
-    encoding: "utf-8"
-    # FIXME The owner should not be the same as the user.
-    owner: "{{ authoring_db_user }}"
-    state: present
-
 # FIXME Runs to failure... Ideally, it would be nice if
 #       this gracefully bailed out with a meaningful message and return code.
 
