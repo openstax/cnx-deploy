@@ -41,6 +41,24 @@
     - database
   tasks:
     - include: tasks/install_postgres.yml
+    - include: tasks/install_plxslt.yml
+    - include: tasks/install_session_exec.yml
+    - include: tasks/create_db_user.yml
+      vars:
+        db_user: "{{ archive_db_user }}"
+        db_password: "{{ archive_db_password }}"
+    - include: tasks/create_db.yml
+      vars:
+        db_owner: "{{ archive_db_user }}"
+        db_name: "{{ archive_db_name }}"
+    - include: tasks/create_db_user.yml
+      vars:
+        db_user: "{{ authoring_db_user }}"
+        db_password: "{{ authoring_db_password }}"
+    - include: tasks/create_db.yml
+      vars:
+        db_owner: "{{ authoring_db_user }}"
+        db_name: "{{ authoring_db_name }}"
   roles:
     - multimac.launchd
 

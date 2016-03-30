@@ -1,0 +1,12 @@
+---
+# Create a postgresql database.
+
+- name: create the archive db
+  postgresql_db:
+    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
+    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
+    name: "{{ db_name }}"
+    encoding: "utf-8"
+    # FIXME The owner should not be the same as the user.
+    owner: "{{ db_owner }}"
+    state: present

@@ -1,0 +1,12 @@
+---
+# Create a postgresql database user with superuser privileges.
+
+- name: create the archive db user
+  postgresql_user:
+    db: postgres
+    login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
+    login_unix_socket: "{{ ansible_os_family == 'Darwin' and '/tmp' or '' }}"
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    # FIXME There is no reason to make this user a SUPERUSER
+    role_attr_flags: SUPERUSER

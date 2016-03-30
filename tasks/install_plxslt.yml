@@ -1,0 +1,29 @@
+---
+# Installs the postgresql plxslt extension.
+
+# +++
+# Prerequisites
+# +++
+
+- name: install build utilities
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - libxml2-dev
+    - libxslt-dev
+    # pkg-config is required for plxslt builds
+    - pkg-config
+
+# +++
+# Install
+# +++
+
+- name: install plxslt
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  shell: "make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} && make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} install"
+  args:
+    chdir: "{{ source_dir }}/plxslt"
