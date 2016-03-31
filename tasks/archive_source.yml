@@ -2,7 +2,9 @@
 # Archive all source packages
 
 - name: make archives directory
-  file: state=directory path={{ archives_dir }}
+  file:
+    path: "{{ archives_dir }}"
+    state: directory
 
 # FIXME It'd be nice to save all created archives as <name>-<rev>.tgz
 #       and link to the current one as <name>.tgz
@@ -11,4 +13,4 @@
   shell: "git archive --format tgz -o \"{{ archives_dir }}/{{ item.name }}.tgz\" --prefix \"{{ item.name }}/\" {{ (source_versions is defined and source_versions.get(item.name)) and source_versions[item.name] or item.default_version }}"
   args:
     chdir: "{{ source_dir }}/{{ item.name }}"
-  with_items: source
+  with_items: "{{ source }}"

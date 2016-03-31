@@ -2,11 +2,13 @@
 # Clone all repositories to a ``source_dir`` location.
 
 - name: make source directory
-  file: state=directory path={{ source_dir }}
+  file:
+    path: "{{ source_dir }}"
+    state: directory
 
 - name: clone source
   git:
     repo: "{{ item.repo }}"
     dest: "{{ source_dir }}/{{ item.name }}"
     version: "{{ (source_versions is defined and source_versions.get(item.name)) and source_versions[item.name] or item.default_version }}"
-  with_items: source
+  with_items: "{{ source }}"

@@ -15,4 +15,4 @@
     dest: "{{ root_prefix }}/var/lib/cnx/"
     copy: yes
     owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
-  with_items: source
+  with_items: "{{ source }}"
