@@ -228,10 +228,10 @@ sub vcl_recv {
             /*  avoid multiple rewrites on restart */
             if (req.url !~ "VirtualHostBase" ) {
                 if  ( req.http.X-Secure ) {
-                    set req.url = "/VirtualHostBase/https/cnx.org:443/plone/VirtualHostRoot" + req.url;
+                    set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
                 }
                 else {
-                    set req.url = "/VirtualHostBase/http/cnx.org:80/plone/VirtualHostRoot" + req.url;
+                    set req.url = "/VirtualHostBase/http/{{ zope_domain }}:80/plone/VirtualHostRoot" + req.url;
                 }
             }
         }
