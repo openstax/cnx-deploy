@@ -7,9 +7,6 @@ archive_db_password: cnxarchive
 archive_db_host: localhost
 archive_db_port: 5432
 
-standalone_archive_install: yes
-
-
 source:
   # - name:
   #   repo:
