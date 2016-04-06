@@ -70,6 +70,5 @@
   hosts: archive
   tasks:
     - include: tasks/install_archive.yml
-    - debug: msg="1. Manually upgrade the database schema 2. Initialize db-migrator 3. Run db-migrator migrations 4. Test"
   roles:
     - multimac.launchd
