@@ -151,7 +151,7 @@
   ignore_errors: True
 
 - name: create rhaptos site
-  shell: "./bin/instance run scripts/create_rhaptos_site.py site Portal postgres {{ archive_db_user }} {{ archive_db_name }} {{ archive_db_host }} {{ archive_db_port }}"
+  shell: "./bin/instance run scripts/create_rhaptos_site.py plone Portal postgres {{ archive_db_user }} {{ archive_db_name }} {{ archive_db_host }} {{ archive_db_port }}"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
   when: rhaptos_site|failed
