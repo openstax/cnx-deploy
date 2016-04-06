@@ -41,3 +41,5 @@ accounts_disable_verify_ssl: no
 
 source_versions:
   webview: HEAD
+
+deploy_key: "{{ vault_deploy_key }}"
