@@ -67,6 +67,11 @@
       register: git_test
       failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
 
+- name: install cnxml dtd pkgs
+  hosts: zope-plone
+  tasks:
+    - include: tasks/install_cnxml_dtd.yml
+
 # +++
 # Persistence services
 # +++
