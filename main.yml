@@ -59,6 +59,7 @@
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
+    - include: tasks/install_cnxml_dtd.yml
   roles:
     - multimac.launchd
 

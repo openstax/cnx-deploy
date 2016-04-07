@@ -1,0 +1,1 @@
+Acquire::https::packages.cnx.org::Verify-Peer "false";
