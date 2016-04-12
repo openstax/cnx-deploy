@@ -145,7 +145,7 @@
 
 - name: check whether rhaptos site exists
   register: rhaptos_site
-  shell: echo 'print(app.site)' | ./bin/instance debug | grep PloneSite
+  shell: echo 'print(app.plone)' | ./bin/instance debug | grep PloneSite
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
   ignore_errors: True
