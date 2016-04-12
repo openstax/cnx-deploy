@@ -15,7 +15,6 @@
         owner: www-data
         group: www-data
     - include: tasks/copy_deploy_key.yml
-      when: deploy_key is defined
 
 - name: test git over ssh using the www-data user
   hosts: zope-plone

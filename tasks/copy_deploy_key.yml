@@ -9,6 +9,7 @@
     mode: 0700
 
 - name: copy deploy key
+  when: deploy_key is defined
   become: yes
   become_user: "{{ user }}"
   copy:
@@ -17,6 +18,7 @@
     mode: 0600
 
 - name: make sure ~/.ssh/config exists
+  when: deploy_key is defined
   become: yes
   become_user: "{{ user }}"
   file:
@@ -25,6 +27,7 @@
     mode: 0600
 
 - name: configure ssh to use deploy key for github
+  when: deploy_key is defined
   become: yes
   become_user: "{{ user }}"
   blockinfile:
