@@ -29,6 +29,7 @@
   apt:
     name: "{{ item }}"
     state: present
+    force: yes
   with_items:
     - connexions-cnxml-0.7
     - connexions-mdml-0.5
