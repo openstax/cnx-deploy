@@ -26,6 +26,11 @@
       register: git_test
       failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
 
+- name: install cnxml dtd pkgs
+  hosts: zope-plone
+  tasks:
+    - include: tasks/install_cnxml_dtd.yml
+
 - name: build python 2.4
   hosts: zope-plone
   tasks:
@@ -48,7 +53,7 @@
   vars:
     source:
       - name: cnx-buildout
-        repo: git@github.com:karenc/cnx-buildout.git
+        repo: git@github.com:Rhaptos/cnx-buildout.git
         default_version: HEAD
   tasks:
     - include: tasks/checkout.yml
@@ -59,7 +64,7 @@
   vars:
     source:
       - name: cnx-buildout
-        repo: git@github.com:karenc/cnx-buildout.git
+        repo: git@github.com:Rhaptos/cnx-buildout.git
         default_version: HEAD
   tasks:
     - include: tasks/plant_source.yml
