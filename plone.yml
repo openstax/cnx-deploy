@@ -53,7 +53,7 @@
   vars:
     source:
       - name: cnx-buildout
-        repo: git@github.com:karenc/cnx-buildout.git
+        repo: git@github.com:Rhaptos/cnx-buildout.git
         default_version: HEAD
   tasks:
     - include: tasks/checkout.yml
@@ -64,7 +64,7 @@
   vars:
     source:
       - name: cnx-buildout
-        repo: git@github.com:karenc/cnx-buildout.git
+        repo: git@github.com:Rhaptos/cnx-buildout.git
         default_version: HEAD
   tasks:
     - include: tasks/plant_source.yml
