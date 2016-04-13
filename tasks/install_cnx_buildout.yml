@@ -90,7 +90,6 @@
 
 - name: run buildout
   become: yes
-  become_user: www-data
   shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee buildout_output.txt"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
