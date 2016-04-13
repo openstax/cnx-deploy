@@ -137,25 +137,3 @@
   become: yes
   become_user: www-data
   shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver start
-
-# +++
-# Create Rhaptos Site
-# +++
-
-- name: check whether rhaptos site exists
-  register: rhaptos_site
-  shell: echo 'print(app.plone)' | ./bin/instance debug | grep PloneSite
-  args:
-    chdir: "{{ source_dir }}/cnx-buildout"
-  ignore_errors: True
-
-- name: create rhaptos site
-  shell: "./bin/instance run scripts/create_rhaptos_site.py plone Portal postgres {{ archive_db_user }} {{ archive_db_name }} {{ archive_db_host }} {{ archive_db_port }}"
-  args:
-    chdir: "{{ source_dir }}/cnx-buildout"
-  when: rhaptos_site|failed
-
-- name: start instance
-  become: yes
-  become_user: www-data
-  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance start

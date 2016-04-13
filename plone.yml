@@ -73,3 +73,4 @@
   hosts: zope-plone
   tasks:
     - include: tasks/install_cnx_buildout.yml
+    - include: tasks/create_rhaptos_site.yml
