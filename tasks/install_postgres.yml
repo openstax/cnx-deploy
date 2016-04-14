@@ -67,6 +67,26 @@
 # Configure
 # +++
 
+- name: look up zope_host IP address using dig
+  set_fact:
+    zope_host_ip: "{{ lookup('dig', zope_host) }}"
+
+# For DNS lookup in /etc/hosts
+- name: look up zope_host IP address using getent (on Debian)
+  when: zope_host_ip == "NXDOMAIN" and ansible_os_family == "Debian"
+  shell: "getent hosts {{ zope_host }} | cut -d' ' -f1"
+  register: debian_zope_host_lookup
+
+- name: look up zope_host IP address using dscacheutil (on Darwin)
+  when: zope_host_ip == "NXDOMAIN" and ansible_os_family == "Darwin"
+  shell: "dscacheutil -q host -a name {{ zope_host }} | grep ip_address | cut -d' ' -f2"
+  register: darwin_zope_host_lookup
+
+- name: set zope_host IP address
+  when: zope_host_ip == "NXDOMAIN"
+  set_fact:
+    zope_host_ip: "{{ debian_zope_host_lookup.changed and debian_zope_host_lookup.stdout or darwin_zope_host_lookup.stdout }}"
+
 - name: configure postgres role connection trust
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   lineinfile:
@@ -93,7 +113,7 @@
     insertafter: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
     line: "host    all             all             {{ item }}/32            trust"
   with_items:
-    - "{{ lookup('dig', zope_host) }}"
+    - "{{ zope_host_ip }}"
 - name: configure local host connection trust ipv6
   become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
   lineinfile:
