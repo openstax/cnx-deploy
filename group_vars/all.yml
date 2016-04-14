@@ -70,3 +70,6 @@ source:
   - name: cnx-authoring
     repo: git@github.com:Connexions/cnx-authoring.git
     default_version: HEAD
+  - name: cnx-easybake
+    repo: git@github.com:Connexions/cnx-easybake.git
+    default_version: HEAD

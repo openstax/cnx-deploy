@@ -150,27 +150,52 @@
   with_items:
     - cnx-query-grammar
     - rhaptos.cnxmlutils
+    - cnx-easybake
     - cnx-epub
     - cnx-archive
     - openstax-accounts
     - cnx-publishing
 # /XXX
 
+# FIXME cssselect2-acquisition (12-Apr-2016)
+# cnx-easybake requires cssselect2, which is not released to PyPI.
+# To fix this we'll install it from the repo source.
+- name: install git for the following task
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: git
+    state: present
+- name: install cssselect2
+  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
+  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  pip:
+    name: "git+https://github.com/SimonSapin/cssselect2.git@c0a1e702f141675c60b5f970035a044f948f59ad#egg=cssselect2"
+    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    state: present
+# /FIXME cssselect2-acquisition
+
 - name: install (local) publishing packages
   become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
   become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
-    name: "{{ source_dir }}/{{ item }}"
+    name: ".{{ 'extras' in item and '[{}]'.format(','.join(item.extras)) or '' }}"
+    chdir: "{{ source_dir }}/{{ item.name }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
     ##state: forcereinstall
     state: present
   with_items:
-    - cnx-query-grammar
-    - rhaptos.cnxmlutils
-    - cnx-epub
-    - cnx-archive
-    - openstax-accounts
-    - cnx-publishing
+    - name: cnx-query-grammar
+    - name: rhaptos.cnxmlutils
+    - name: cnx-easybake
+    - name: cnx-epub
+      # FIXME (12-Apr-2016) The pip module can't install `.[feature]` at this time.
+      # https://github.com/ansible/ansible-modules-core/issues/3426
+      # extras:
+      #   - collation
+    - name: cnx-archive
+    - name: openstax-accounts
+    - name: cnx-publishing
 
 # /FIXME
 
