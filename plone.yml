@@ -41,8 +41,6 @@
 
 - name: install postgres database
   hosts: zope-plone
-  vars:
-    postgres_version: "9.3"
   tasks:
     - include: tasks/install_postgres.yml
   roles:
