@@ -7,11 +7,18 @@
     chdir: "{{ source_dir }}/cnx-buildout"
   ignore_errors: True
 
+- name: create rhaptos database user
+  when: rhaptos_site|failed
+  vars:
+    db_user: rhaptos
+    db_password: "{{ archive_db_password }}"
+  include: tasks/create_db_user.yml
+
 - name: create empty temporary rhaptos database
   when: rhaptos_site|failed
   vars:
     db_name: rhaptos
-    db_owner: "{{ archive_db_user }}"
+    db_owner: rhaptos
   include: tasks/create_db.yml
 
 - name: create rhaptos site
