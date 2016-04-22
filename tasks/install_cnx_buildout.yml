@@ -109,6 +109,13 @@
     owner: www-data
     group: www-data
 
+- name: update source code
+  become: yes
+  become_user: www-data
+  shell: "bin/develop up -f"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
 # +++
 # Start server
 # +++
