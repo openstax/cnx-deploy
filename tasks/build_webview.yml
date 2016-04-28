@@ -17,7 +17,7 @@
     copy: no
 
 - register: modified_path
-  shell: echo "{{ ansible_os_family == 'Darwin' and ansible_env.PATH or ansible_env.PATH + ':/tmp/node-v4.2.4-linux-x64/bin' }}"
+  shell: echo "{{ ansible_os_family == 'Darwin' and ansible_env.PATH or '/tmp/node-v4.2.4-linux-x64/bin:' + ansible_env.PATH }}"
 
 - name: install nodejs and npm packages (on Darwin)
   when: ansible_os_family == "Darwin"
