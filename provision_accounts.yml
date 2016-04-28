@@ -11,13 +11,15 @@
       set_fact:
         ansible_python_interpreter: "{{ ansible_env.VIRTUAL_ENV }}/bin/python"
 
-# FIXME tutor-deployment doesn't seem to work with ansible>=2.0.0
-- name: setup a virtualenv for tutor-deployment
+- name: checkout tutor-deployment
   hosts: local
+  vars:
+    source:
+      - name: tutor-deployment
+        repo: git@github.com:openstax/tutor-deployment.git
+        default_version: HEAD
   tasks:
-    - pip:
-        requirements: "{{ source_dir }}/tutor-deployment/requirements.txt"
-        virtualenv: "{{ source_dir }}/tutor-deployment"
+    - include: tasks/checkout.yml
 
 - name: generate a self-signed certificate
   hosts: local
@@ -39,14 +41,12 @@
 - name: install tutor-deployment
   hosts: local
   tasks:
-    - name: checkout tutor-deployment
-      git:
-        # FIXME Use the commented out source after this feature gets merged
-        # repo: git@github.com:openstax/tutor-deployment.git
-        repo: git@github.com:pumazi/tutor-deployment.git
-        dest: "{{ source_dir }}/tutor-deployment"
-        # version: HEAD
-        version: local-accounts-vm
+    # FIXME tutor-deployment doesn't seem to work with ansible>=2.0.0
+    - name: setup a virtualenv for tutor-deployment
+      pip:
+        requirements: "{{ source_dir }}/tutor-deployment/requirements.txt"
+        virtualenv: "{{ source_dir }}/tutor-deployment"
+
     - name: checkout accounts
       git:
         repo: git@github.com:openstax/accounts.git
