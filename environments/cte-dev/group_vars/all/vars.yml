@@ -1,9 +1,9 @@
 ---
 root_prefix: ""
 
-archive_db_name: cnxarchive
-archive_db_user: cnxarchive
-archive_db_password: cnxarchive
+archive_db_name: "{{ vault_archive_db_name }}"
+archive_db_user: "{{ vault_archive_db_user }}"
+archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: localhost
 archive_db_port: 5432
 
