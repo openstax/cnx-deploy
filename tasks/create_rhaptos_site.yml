@@ -34,6 +34,7 @@
     chdir: "{{ source_dir }}/cnx-buildout"
 
 - name: remove temporary rhaptos database
+  when: rhaptos_site|failed
   postgresql_db:
     name: rhaptos
     state: absent
