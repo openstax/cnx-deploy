@@ -39,6 +39,24 @@
   environment:
     PATH: "{{ modified_path.stdout }}"
 
+- name: nodejs version
+  command: node --version
+  environment:
+    PATH: "{{ modified_path.stdout }}"
+  register: nodejs_version
+
+- debug:
+    msg: "Using nodejs version {{ nodejs_version.stdout }}"
+
+- name: npm version
+  command: npm --version
+  environment:
+    PATH: "{{ modified_path.stdout }}"
+  register: npm_version
+
+- debug:
+    msg: "Using npm version {{ npm_version.stdout }}"
+
 # +++
 # Build
 # +++
