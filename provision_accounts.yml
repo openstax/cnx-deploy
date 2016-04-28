@@ -17,7 +17,9 @@
     source:
       - name: tutor-deployment
         repo: git@github.com:openstax/tutor-deployment.git
-        default_version: HEAD
+        # FIXME use "default_version: HEAD" when
+        # https://github.com/openstax/tutor-deployment/pull/234 is merged
+        default_version: local-accounts-vm
   tasks:
     - include: tasks/checkout.yml
 
