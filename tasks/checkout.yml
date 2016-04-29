@@ -7,8 +7,13 @@
     state: directory
 
 - name: clone source
-  git:
+  local_action:
+    module: git
     repo: "{{ item.repo }}"
     dest: "{{ source_dir }}/{{ item.name }}"
     version: "{{ (source_versions is defined and source_versions.get(item.name)) and source_versions[item.name] or item.default_version }}"
   with_items: "{{ source }}"
+  register: git_result
+  until: git_result|success
+  retries: 5
+  delay: 30
