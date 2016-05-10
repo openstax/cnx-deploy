@@ -43,3 +43,4 @@ source_versions:
   webview: HEAD
 
 deploy_key: "{{ vault_deploy_key }}"
+slack_token: "{{ vault_slack_token }}"
