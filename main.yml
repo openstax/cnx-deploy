@@ -4,6 +4,20 @@
 # Note, 'local' (the host name in the inventory)
 #   should be assigned ``ansible_connection=local``.
 
+- name: "notify #cnx-stream of the deployment (start)"
+  hosts:
+    - archive
+    - publishing
+    - authoring
+    - frontend
+    - worker
+    - database
+  vars:
+    msg: "Started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
+    channel: "#cnx-stream"
+  tasks:
+    - include: tasks/notify_slack.yml
+
 # +++
 # Source gathering
 # +++
@@ -141,3 +155,17 @@
     - include: tasks/configure_ssl.yml
   roles:
     - multimac.launchd
+
+- name: "notify #cnx-stream of the deployment (end)"
+  hosts:
+    - archive
+    - publishing
+    - authoring
+    - frontend
+    - worker
+    - database
+  vars:
+    msg: "Deploy to {{ inventory_hostname }} was successful :heavy_check_mark:"
+    channel: "#cnx-stream"
+  tasks:
+    - include: tasks/notify_slack.yml
