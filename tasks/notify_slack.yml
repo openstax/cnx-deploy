@@ -1,0 +1,13 @@
+---
+# Notify a slack channel with a message
+
+- name: notify slack
+  when: "slack_token is defined"
+  local_action:
+    module: slack
+    token: "{{ slack_token }}"
+    msg: "{{ msg }}"
+    channel: "{{ channel }}"
+    username: "Ansible on {{ inventory_hostname }}"
+    link_names: 0
+    parse: 'none'
