@@ -1,5 +1,10 @@
 ---
 # Include one task.
+# Use `--extra-vars` commandline option to assign variables.
+# To minimally run this, set the host and task variables.
+# For example, `--extra-vars="host=example.com task=exec",
+# where host is the host in the inventory
+# and the task is the name of the task file without the `.yml` extension.
 
 - hosts: "{{ host }}"
   tasks:
