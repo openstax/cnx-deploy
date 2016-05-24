@@ -1,6 +1,15 @@
 ---
 # Builds the cnx plone site.
 
+- name: "notify #cnx-stream of the deployment (start)"
+  hosts:
+    - zope-plone
+  vars:
+    msg: "Started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
+    channel: "#cnx-stream"
+  tasks:
+    - include: tasks/notify_slack.yml
+
 - name: copy deploy key
   hosts: zope-plone
   vars:
@@ -71,3 +80,12 @@
   tasks:
     - include: tasks/install_cnx_buildout.yml
     - include: tasks/create_rhaptos_site.yml
+
+- name: "notify #cnx-stream of the deployment (end)"
+  hosts:
+    - zope-plone
+  vars:
+    msg: "Deploy to {{ inventory_hostname }} was successful :heavy_check_mark:"
+    channel: "#cnx-stream"
+  tasks:
+    - include: tasks/notify_slack.yml
