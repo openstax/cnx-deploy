@@ -170,7 +170,7 @@
   become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
   become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
   pip:
-    name: "git+https://github.com/SimonSapin/cssselect2.git@c0a1e702f141675c60b5f970035a044f948f59ad#egg=cssselect2"
+    name: "git+https://github.com/Connexions/cssselect2.git#egg=cssselect2"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
     state: present
 # /FIXME cssselect2-acquisition
