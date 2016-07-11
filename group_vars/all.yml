@@ -1,4 +1,6 @@
 ---
+ansible_ssh_pipelining: true
+
 # root_prefix: ""
 
 postgres_version: 9.4
