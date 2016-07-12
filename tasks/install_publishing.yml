@@ -270,6 +270,13 @@
     mode: 0644
   register: supervisor_publishing_conf
 
+- name: configure post publication worker under supervisor
+  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  template:
+    src: etc/supervisor/conf.d/post_publication.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/post_publication.conf"
+    mode: 0644
+
 # Unforntuately supervisor's init script doesn't support reload,
 # but supervisorctl does... so maybe there is a way to reload?
 # FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
