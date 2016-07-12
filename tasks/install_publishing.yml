@@ -166,6 +166,13 @@
   apt:
     name: git
     state: present
+- name: make sure /var/www/.pip exists
+  when: ansible_os_family == "Debian"
+  become: yes
+  file:
+    path: /var/www/.pip
+    state: directory
+    owner: www-data
 - name: install cssselect2
   become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
   become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
