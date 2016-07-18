@@ -68,10 +68,10 @@
 
 - name: copy cached python packages downloads directory
   become: yes
-  become_user: www-data
   copy:
     src: src/cnx-buildout/downloads
     dest: "{{ source_dir }}/cnx-buildout"
+    owner: www-data
 
 - name: run bootstrap
   become: yes
