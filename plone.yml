@@ -75,6 +75,11 @@
   tasks:
     - include: tasks/plant_source.yml
 
+- name: install supervisor
+  hosts: zope-plone
+  tasks:
+    - include: tasks/install_supervisor.yml
+
 - name: install cnx plone site
   hosts: zope-plone
   tasks:

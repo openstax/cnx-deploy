@@ -41,5 +41,4 @@
 
 - name: start instance
   become: yes
-  become_user: www-data
-  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance start
+  shell: supervisorctl restart plone-instance

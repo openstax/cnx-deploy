@@ -120,27 +120,16 @@
 # Start server
 # +++
 
-- stat:
-    path: "{{ source_dir }}/cnx-buildout/var/instance.pid"
-  register: instance_pid
-
-- name: stop instance
+- name: configure zeoserver and instance under supervisor
   become: yes
-  become_user: www-data
-  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/instance stop
-  when: instance_pid.stat.exists
+  template:
+    src: etc/supervisor/conf.d/plone.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/plone.conf"
+    mode: 0644
 
-- stat:
-    path: "{{ source_dir }}/cnx-buildout/var/zeoserver.pid"
-  register: zeoserver_pid
-
-- name: stop zeoserver
+- name: restart supervisor
   become: yes
-  become_user: www-data
-  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver stop
-  when: zeoserver_pid.stat.exists
-
-- name: start zeoserver
-  become: yes
-  become_user: www-data
-  shell: chdir="{{ source_dir }}/cnx-buildout" ./bin/zeoserver start
+  service:
+    name: supervisor
+    state: restarted
+    sleep: 5
