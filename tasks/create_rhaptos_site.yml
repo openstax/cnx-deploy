@@ -39,6 +39,14 @@
     name: rhaptos
     state: absent
 
+- name: create zope objects from database (background job)
+  when: rhaptos_site|failed
+  become: yes
+  become_user: www-data
+  shell: ./bin/instance run scripts/build_zodb_from_postgres.py
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
 - name: start instance
   become: yes
   shell: supervisorctl restart plone-instance
