@@ -231,6 +231,8 @@
   with_items:
     - {src: "etc/cnx/publishing/app.ini",
        dest: "{{ root_prefix }}/etc/cnx/publishing/app.ini"}
+    - {src: "etc/cnx/publishing/logging.yaml",
+       dest: "{{ root_prefix }}/etc/cnx/publishing/logging.yaml"}
 
 # TODO make logging configuration files for pyramid_sawing
 
