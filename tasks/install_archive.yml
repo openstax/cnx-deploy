@@ -214,6 +214,9 @@
   register: archive_initdb_cmd
   failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
 
+- name: set up archive venv in postgres
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-archive-init_venv {{ root_prefix }}/etc/cnx/archive/app.ini"
+
 - name: initialize db-migrator
   # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
   #     the full picture of what archive is, but we'll roll with it for now.
