@@ -114,7 +114,14 @@ sub vcl_recv {
 
     # cnx rewrite archive  - specials served from nginx statically
     if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml") {
+    {% if accounts_domain %}
+
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
+    {% else %}
+
+        if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|stub-login-form|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
+    {% endif %}
+
             set req.backend_hint = rewrite_publish;
             return (pass);
         }
