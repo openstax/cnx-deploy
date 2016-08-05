@@ -180,6 +180,7 @@
     name: "git+https://github.com/Connexions/cssselect2.git#egg=cssselect2"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
     state: present
+    extra_args: "--exists-action s"
 # /FIXME cssselect2-acquisition
 
 - name: install (local) publishing packages
