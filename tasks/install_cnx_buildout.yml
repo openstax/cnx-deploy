@@ -116,6 +116,17 @@
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
+- name: git submodules update
+  become: yes
+  become_user: www-data
+  shell: "for f in {{ source_dir }}/cnx-buildout/src/*; do cd $f && git submodule update --recursive || echo; done"
+
+- name: rerun buildout
+  become: yes
+  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee -a buildout_output.txt"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
 # +++
 # Start server
 # +++
