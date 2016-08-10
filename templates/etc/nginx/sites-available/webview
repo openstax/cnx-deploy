@@ -13,6 +13,13 @@ server {
     # try_files       $uri @prerender;
     try_files       $uri $uri/ /index.html;
 
+    {% if not accounts_domain %}
+
+    location /stub-login-form {
+        proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
+    }
+    {% endif %}
+
     location /login {
         proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
     }
