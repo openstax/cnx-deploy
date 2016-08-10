@@ -13,7 +13,7 @@ The currently supported operating systems (OS) are:
 
 ### OpenStax Accounts
 
-You will need an instance of [OpenStax Accounts](https://github.com/openstax/accounts) either installed locally or out in the interwebs. If you are connecting to one in the interweb, you will need to contact n sys admin (or devops) person to register for an api key/secret pair.
+You will need an instance of [OpenStax Accounts](https://github.com/openstax/accounts) either installed locally or out in the interwebs. If you are connecting to one in the interweb, you will need to contact a sys admin (or devops) person to register for an api key/secret pair.
 
 If you need help setting up Accounts locally, see the info labeled Installing OpenStax Accounts in the Appendix section of this document.
 
@@ -34,6 +34,12 @@ It goes without saying that you should use a [virtualenv](https://virtualenv.rea
 ```sh
 pip install -r requirements.txt
 ```
+
+After this, read the ``README.md`` document inside the environments directory you are working with. For example, if you are setting up the site within a VM, look at the ``environments/vm/README.md`` file.
+
+It is recommended that you be able to run this setup and deploy on your local system using a VM or the host system itself (see the supported architectures above) before trying to deploy to a shared environment (and/or production environment). After this, you and everyone else around you will feel more comfortable giving you keys to deploy to a shared environment, like development and QA.
+
+If you need assistance setting up a local VM for this project, see the Creating a VM section below.
 
 ## Troubleshooting
 
