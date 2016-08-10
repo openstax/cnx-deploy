@@ -10,7 +10,10 @@
     - name: "db_user"
       prompt: "What database user should we use?"
       default: postgres
+    - name: "db_password"
+      prompt: "What password should we use for the database user?"
   tasks:
+    - include: tasks/create_db_user.yml
     - name: create directory for database dump
       file:
         path: /tmp/cnxarchive_dump

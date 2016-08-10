@@ -12,7 +12,7 @@
     name: psycopg2
     state: present
 
-- name: create the archive db user
+- name: create the db user
   postgresql_user:
     db: postgres
     login_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'postgres' }}"
