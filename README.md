@@ -93,6 +93,15 @@ Run the custom play!
 ansible-playbook -i environments/local-accounts-vm/inventory provision_accounts.yml
 ```
 
+#### Running accounts commands
+
+To run one of the accounts rake commands use:
+
+```sh
+RAILS_ENV=production RBENV_ROOT=/home/ostaccounts/.rbenv/ rbenv exec bundle exec rake```
+
+Make sure to run this command as 'ostaccounts'.
+
 ### Install Zope/Plone
 
 Create a VM or server that is passwordless (via an ssh key) and has passwordless sudo.
