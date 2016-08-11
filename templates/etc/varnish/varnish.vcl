@@ -324,7 +324,7 @@ sub vcl_hit {
             # FIXME https://www.varnish-cache.org/docs/4.0/whats-new/upgrading.html#backend-restarts-are-now-retry
             # return (restart);
 
-            return(restart);
+            return(pass);
         } 
     }
 }
