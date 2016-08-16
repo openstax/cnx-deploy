@@ -27,6 +27,12 @@
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
+- name: set up localFS PDF folder
+  when: rhaptos_site|failed
+  shell: "./bin/instance run scripts/set_up_localfs_for_pdfs.py"
+  args:
+    chdir: "{{ source_dir }}/cnx-buildout"
+
 - name: update database connection string in rhaptos site
   when: rhaptos_site|failed
   shell: echo 'import transaction; app.plone.rhaptosDA.connection_string = "postgres://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"; transaction.commit()' | ./bin/instance debug
