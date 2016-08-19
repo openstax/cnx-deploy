@@ -37,6 +37,32 @@
     - libxslt1-dev
     # required by mr.developer
     - git
+    # pdf generation dependencies
+    - python-imaging
+    - gif2png
+    - cjk-latex
+    - texlive-latex-extra
+    - xsltproc
+    - xvfb
+    - xfonts-base
+    - libreoffice
+    - imagemagick
+    - tralics
+    - unzip
+    - libxml2-utils
+    - texlive-latex3
+    - libedit-dev
+    - zip
+    - libreoffice-script-provider-python
+    - ruby
+    - inkscape
+    - docbook-xsl-ns
+    - openjdk-6-jre
+    - texlive-fonts-recommended
+    - memcached
+    - librsvg2-bin
+    - otf-stix
+    - openjdk-7-jdk
 
 # +++
 # Install virtualenv
