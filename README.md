@@ -4,9 +4,7 @@ The Darwin deployments are experimental at best.
 
 The currently supported operating systems (OS) are:
 
-- Debian 8.2 (Jessie) -- (recommended)
-- Ubuntu 15.10 (Wily)
-- OS X 10.11 (El Capitan)
+- Ubuntu 16.04 LTS (Xenial)
 - Ubuntu 14.04 (Trusty) -- (backwards compatible shims; tobe removed)
 
 ## Prerequisites
@@ -18,14 +16,6 @@ You will need an instance of [OpenStax Accounts](https://github.com/openstax/acc
 If you need help setting up Accounts locally, see the info labeled Installing OpenStax Accounts in the Appendix section of this document.
 
 If you are running Accounts locally, you can setup the key/secret pair yourself.
-
-### Darwin (aka OS X)
-
-You will need to install [XCode](https://developer.apple.com/xcode/) and the XCode tools. After you've installed XCode, the XCode tools can be installed via the commandline using: ``xcode-select --install``
-
-You will need to install [Homebrew](http://brew.sh/), which is a package manager for OS X.
-
-The Darwin install will always be a **Use At Your Own Risk** scenario. It is available, but it will likely dip into periods of disrepair.
 
 ## Installation
 
