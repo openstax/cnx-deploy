@@ -1,46 +1,35 @@
 ---
 # Configures SSL sites for archive and webview nginx sites.
 
-- name: ensure the ssl directories exists
-  when: ansible_os_family == "Darwin"
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ root_prefix }}/etc/ssl/certs"
-    - "{{ root_prefix }}/etc/ssl/private"
-
 - name: check if certificate is expiring in the next 24 hours
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   shell: "openssl x509 -checkend $((24 * 60 * 60)) -noout -in {{ root_prefix }}/etc/ssl/certs/cnx.pem"
   ignore_errors: yes
   register: certificate_expired
 
 - name: install certificate pem
   when: "{{ certificate_expired.rc != 0 }}"
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   copy:
     src: "{{ cert_crt_filepath }}"
     dest: "{{ root_prefix }}/etc/ssl/certs/cnx.pem"
 
 - name: install certificate key
   when: "{{ certificate_expired.rc != 0 }}"
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   copy:
     src: "{{ cert_key_filepath }}"
     dest: "{{ root_prefix }}/etc/ssl/private/cnx.key"
 
 - name: install nginx site
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: "etc/nginx/sites-available/ssl"
     dest: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
 
-- name: configure ssl (on Debian)
-  # FIXME This should also work for Darwin, but it's not configured to do so.
+- name: configure ssl
   # BBB (3-Feb-2016) ubuntu 14.04
-  ##when: ansible_os_family == "Debian"
-  when: ansible_os_family == "Debian" and ansible_distribution_release != "trusty"
+  when: ansible_distribution_release != "trusty"
   become: yes
   lineinfile:
     dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
@@ -59,8 +48,7 @@
 
 # BBB (3-Feb-2016) ubuntu 14.04
 - name: configure ssl (on Ubuntu 14.04)
-  # FIXME This should also work for Darwin, but it's not configured to do so.
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty"
   become: yes
   lineinfile:
     dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
@@ -78,23 +66,13 @@
       line: "\tssl_session_cache shared:SSL:10m;"
 
 - name: enable the nginx site
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   file:
     src: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
     dest: "{{ root_prefix }}/etc/nginx/sites-enabled/ssl"
     state: link
 
-# FIXME Doing some/all of this as a role would allow for better restarting of the service.
-- name: restart nginx (on Darwin)
-  when: ansible_os_family == "Darwin"
-  become: yes
-  launchd:
-    domain: "system"
-    label: "homebrew.mxcl.nginx"
-    state: restarted
-
-- name: reload nginx (on Debian)
-  when: ansible_os_family == "Debian"
+- name: reload nginx
   become: yes
   service:
     name: nginx

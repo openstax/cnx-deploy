@@ -5,12 +5,9 @@
 # Prerequisites
 # +++
 
-# FIXME (On Darwin) Missing prerequisites for libxml2 and libxslt.
-
 # TODO Kill this dependency by prebuilding or using packaged versions
 #      of the application/library.
 - name: install build utilities
-  when: ansible_os_family == "Debian"
   become: yes
   apt:
     name: "{{ item }}"
@@ -22,25 +19,20 @@
     - python-dev
 
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add apt-key for pgdg repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+- name: add apt-key for pgdg repository
   become: yes
   apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     state: present
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add pgdg repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+- name: add pgdg repository
   become: yes
   apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
     state: present
     update_cache: yes
 
-- name: install postgres client (on Debian)
-  when: ansible_os_family == "Debian"
+- name: install postgres client
   become: yes
   apt:
     name: "{{ item }}"
@@ -51,29 +43,7 @@
     # - "postgresql-{{ postgres_version }}"
     - "postgresql-client-{{ postgres_version }}"
 
-- name: install postgres tap (on Darwin)
-  when: ansible_os_family == "Darwin"
-  command: brew tap petere/postgresql
-
-- name: install postgres (on Darwin)
-  when: ansible_os_family == "Darwin"
-  homebrew:
-    name: "postgresql-{{ postgres_version }}"
-    state: present
-
-
-- name: install virtualenv (on Debian)
-  # BBB (1-Feb-2016) ubuntu 14.04
-  ##when: ansible_os_family == "Debian"
-  when: ansible_os_family == "Debian" and ansible_distribution_release != "trusty"
-  become: yes
-  apt:
-    name: virtualenv
-    state: present
-
-# BBB (1-Feb-2016) unbuntu 14.04
-- name: install virtualenv (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+- name: install virtualenv
   become: yes
   apt:
     name: python-virtualenv
@@ -88,16 +58,15 @@
   register: venvs_dir
 
 - name: ensure the venvs directory exists
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   when: not venvs_dir.stat.exists
   file:
     path: "{{ root_prefix }}/var/cnx/venvs"
     state: directory
     mode: 0755
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
-- name: set the owner of venvs directory (on Debian)
-  when: ansible_os_family == 'Debian'
+- name: set the owner of venvs directory
   become: yes
   file:
     path: "{{ root_prefix }}/var/cnx/venvs"
@@ -106,8 +75,8 @@
     owner: www-data
 
 - name: create the archive virtualenv
-  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
-  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  become: yes
+  become_user: www-data
   pip:
     name: pip
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -130,8 +99,8 @@
 # as soon as possible. And this FIXME block ends with the closing /FIXME
 
 - name: install archive packages
-  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
-  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  become: yes
+  become_user: www-data
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -142,8 +111,8 @@
 
 # XXX
 - name: uninstall (local) archive packages
-  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
-  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  become: yes
+  become_user: www-data
   pip:
     name: "{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -156,8 +125,8 @@
 # /XXX
 
 - name: install (local) archive packages
-  become: "{{ ansible_os_family == 'Darwin' and 'no' or 'yes' }}"
-  become_user: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+  become: yes
+  become_user: www-data
   pip:
     name: "{{ source_dir }}/{{ item }}"
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
@@ -176,7 +145,7 @@
 # +++
 
 - name: ensure the etc directories exists
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   file:
     path: "{{ root_prefix }}/etc/{{ item }}"
     state: directory
@@ -186,13 +155,13 @@
     - cnx/archive
 
 - name: render configuration
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0744
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'root' }}"
-    group: "{{ ansible_os_family == 'Darwin' and 'staff' or 'root' }}"
+    owner: root
+    group: root
   with_items:
     - {src: "etc/cnx/archive/app.ini",
        dest: "{{ root_prefix }}/etc/cnx/archive/app.ini"}
@@ -231,7 +200,7 @@
 # +++
 
 - name: configure archive under supervisor
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: etc/supervisor/conf.d/archive.conf
     dest: "{{ root_prefix }}/etc/supervisor/conf.d/archive.conf"
@@ -243,7 +212,6 @@
 # FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
 # managed processes
 - name: restart supervisor
-  when: ansible_os_family == "Debian"
   become: yes
   service:
     name: supervisor

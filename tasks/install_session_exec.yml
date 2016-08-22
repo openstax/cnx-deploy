@@ -6,7 +6,6 @@
 # +++
 
 - name: install build utilities
-  when: ansible_os_family == "Debian"
   become: yes
   apt:
     name: "{{ item }}"
@@ -19,7 +18,7 @@
 # +++
 
 - name: install session_exec
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
-  shell: "make USE_PGXS=1 PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} && make USE_PGXS=1 PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} install"
+  become: yes
+  shell: "make USE_PGXS=1 && make USE_PGXS=1 install"
   args:
     chdir: "{{ source_dir }}/session_exec"

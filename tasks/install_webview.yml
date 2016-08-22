@@ -6,37 +6,37 @@
 # +++
 
 - name: copy dist build to source
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   copy:
     src: "{{ local_source_dir }}/webview/dist"
     dest: "{{ source_dir }}/webview"
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
 # +++
 # Configure
 # +++
 
 - name: configure webview settings.js
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: var/www/cnx/scripts/settings.js
     dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
 - name: configure the webview nginx site
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: etc/nginx/sites-available/webview
     dest: "{{ root_prefix }}/etc/nginx/sites-available/webview"
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
 - name: enable the webview nginx site
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   file:
     src: "{{ root_prefix }}/etc/nginx/sites-available/webview"
     dest: "{{ root_prefix }}/etc/nginx/sites-enabled/webview"
     state: link
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
 # +++
 # Deploy
@@ -46,28 +46,19 @@
 #      make the config changes,
 #      then use a symlink to designate the active build.
 - name: link dist to var/www
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   file:
     src: "{{ source_dir }}/webview/dist"
     # FIXME This is copying to .../www/cnx/dist, which isn't correct
     dest: "{{ root_prefix }}/var/www/webview"
     state: link
-    owner: "{{ ansible_os_family == 'Darwin' and ansible_user_id or 'www-data' }}"
+    owner: www-data
 
 # +++
 # Init service
 # +++
 
-- name: restart nginx (on Darwin)
-  when: ansible_os_family == "Darwin"
-  become: yes
-  launchd:
-    domain: "system"
-    label: "homebrew.mxcl.nginx"
-    state: restarted
-
-- name: reload nginx (on Debian)
-  when: ansible_os_family == "Debian"
+- name: reload nginx
   become: yes
   service:
     name: nginx

@@ -4,43 +4,36 @@
 # Install
 # +++
 
-# BBB (1-Feb-2016 ubuntu 14.04, only needed for the BBB tasks that follow.
-- name: install apt-transport-https (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
-  become: yes
-  apt:
-    name: "apt-transport-https"
-    state: present
-    force: yes
+# # BBB (1-Feb-2016 ubuntu 14.04, only needed for the BBB tasks that follow.
+# - name: install apt-transport-https (on Ubuntu 14.04)
+#   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+#   become: yes
+#   apt:
+#     name: "apt-transport-https"
+#     state: present
+#     force: yes
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add apt-key for varnish repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
-  become: yes
-  apt_key:
-    url: https://repo.varnish-cache.org/GPG-key.txt
-    state: present
+# # BBB (1-Feb-2016) ubuntu 14.04
+# - name: add apt-key for varnish repository (on Ubuntu 14.04)
+#   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+#   become: yes
+#   apt_key:
+#     url: https://repo.varnish-cache.org/GPG-key.txt
+#     state: present
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add varnish repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
-  become: yes
-  apt_repository:
-    repo: "deb https://repo.varnish-cache.org/ubuntu/ trusty varnish-4.0"
-    state: present
-    update_cache: yes
+# # BBB (1-Feb-2016) ubuntu 14.04
+# - name: add varnish repository (on Ubuntu 14.04)
+#   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+#   become: yes
+#   apt_repository:
+#     repo: "deb https://repo.varnish-cache.org/ubuntu/ trusty varnish-4.0"
+#     state: present
+#     update_cache: yes
 
-- name: install varnish (on Debian)
-  when: ansible_os_family == "Debian"
+- name: install varnish
   become: yes
   apt:
     name: varnish
-    state: present
-
-- name: install varnish (on Darwin)
-  when: ansible_os_family == "Darwin"
-  homebrew:
-    name: "varnish"
     state: present
 
 # +++
@@ -48,7 +41,7 @@
 # +++
 
 - name: configure varnish logic
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   template:
     src: etc/varnish/varnish.vcl
     dest: "{{ root_prefix }}/etc/varnish/varnish.vcl"
@@ -57,7 +50,6 @@
 # BBB (21-Dec-2015) Ubuntu 15.10 still uses /etc/default/varnish,
 #     while Debian 8.2 has moved to using the systemd service configuration.
 - name: configure varnish runtime (init config)
-  when: ansible_os_family == "Debian"
   become: yes
   template:
     src: etc/default/varnish
@@ -85,19 +77,17 @@
 #       /etc/systemd/system/multi-user.target.wants/varnish.service
 #       These files actually live at /lib/systemd/system/*.service
 - name: configure varnish runtime (systemd config)
-  when: ansible_os_family == "Debian"
   become: yes
   lineinfile:
     dest: /etc/systemd/system/multi-user.target.wants/varnish.service
-    regexp: "ExecStart=/usr/sbin/varnishd -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,256m( -p vcc_allow_inline_c=on)?"
-    line: "ExecStart=/usr/sbin/varnishd -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,256m -p vcc_allow_inline_c=on"
-    insertafter: "^ExecStartPre.*"
+    regexp: "ExecStart=/usr/sbin/varnishd( -j unix,user=vcache -F)? -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,256m( -p vcc_allow_inline_c=on)?"
+    line: "ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,256m -p vcc_allow_inline_c=on"
+    insertafter: "^LimitMEMLOCK.*"
   register: service_config
 
 - name: reload daemon tools
   # BBB (1-Feb-2016) ubuntu 14.04
-  ##when: ansible_os_family == "Debian" and service_config.changed
-  when: (ansible_os_family == "Debian" and ansible_distribution_release != "trusty") and service_config.changed
+  when: ansible_distribution_release != "trusty" and service_config.changed
   become: yes
   # This makes our service file changes available for use.
   shell: systemctl daemon-reload
@@ -105,40 +95,8 @@
 # +++
 # Init service
 # +++
-# (On Darwin) We use a custom plist file here so that we won't have
-# varish start on system startup.
 
-- name: copy plist to launchd directory (on Darwin)
-  when: ansible_os_family == "Darwin"
-  template:
-    src: "osx/Users/_/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
-    dest: "~/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
-    mode: 0600
-
-# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
-# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
-- name: load the varnish launchd config (on Darwin)
-  when: ansible_os_family == "Darwin"
-  launchd:
-    domain: "gui/{{ ansible_user_uid }}"
-    path: "~/Library/LaunchAgents/homebrew.mxcl.varnish.plist"
-    state: loaded
-# If you ever need to remove this use: ``sudo launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.varnish.plist``
-
-# FIXME Doing some/all of this as a role would allow for better restarting of the service.
-# Note, launchd doesn't keep track of varnishd (probably because of some
-# strange way it starts up). But running varnishd again won't hurt anything
-# because it finds itself and moves on. If you want to stop the process,
-# you'll need to manually kill it (i.e. ``sudo pkill varnishd``)
-- name: restart varnish (on Darwin)
-  when: ansible_os_family == "Darwin"
-  launchd:
-    domain: "gui/{{ ansible_user_uid }}"
-    label: "homebrew.mxcl.varnish"
-    state: restarted
-
-- name: restart varnish (on Debian)
-  when: ansible_os_family == "Debian"
+- name: restart varnish
   become: yes
   service:
     name: varnish

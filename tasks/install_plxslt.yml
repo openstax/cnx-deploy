@@ -6,7 +6,6 @@
 # +++
 
 - name: install build utilities
-  when: ansible_os_family == "Debian"
   become: yes
   apt:
     name: "{{ item }}"
@@ -23,7 +22,7 @@
 # +++
 
 - name: install plxslt
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
-  shell: "make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} && make PG_CONFIG={{ ansible_os_family == 'Darwin' and '/usr/local/opt/postgresql-{}/bin/pg_config'.format(postgres_version) or 'pg_config' }} install"
+  become: yes
+  shell: "make && make install"
   args:
     chdir: "{{ source_dir }}/plxslt"

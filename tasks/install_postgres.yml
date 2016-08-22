@@ -1,32 +1,24 @@
 ---
 # Installs and configures Postgres.
 
-# Note, the darwin install was made slightly easier by following...
-#   http://www.sorescode.com/2013/05/17/installing-postgresql-93-beta-using-homebrew.html
-
 # +++
 # Install
 # +++
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add apt-key for pgdg repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+- name: add apt-key for pgdg repository
   become: yes
   apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     state: present
 
-# BBB (1-Feb-2016) ubuntu 14.04
-- name: add pgdg repository (on Ubuntu 14.04)
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+- name: add pgdg repository
   become: yes
   apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
     state: present
     update_cache: yes
 
-- name: install postgres (on Debian)
-  when: ansible_os_family == "Debian"
+- name: install postgres
   become: yes
   apt:
     name: "{{ item }}"
@@ -41,28 +33,6 @@
     # We'll assume plpython is required...
     - "postgresql-plpython-{{ postgres_version }}"
 
-- name: install postgres tap (on Darwin)
-  when: ansible_os_family == "Darwin"
-  command: brew tap petere/postgresql
-
-- name: install postgres (on Darwin)
-  when: ansible_os_family == "Darwin"
-  homebrew:
-    name: "postgresql-{{ postgres_version }}"
-    state: present
-
-# +++
-# Initialize
-# +++
-
-- name: does the database directory exist? (on Darwin)
-  stat: path="{{ root_prefix }}/var/postgres-{{ postgres_version }}/"
-  register: postgres_db_dir
-
-- name: initialize postgres db (on Darwin)
-  when: ansible_os_family == "Darwin" and not postgres_db_dir.stat.exists
-  shell: "{{ root_prefix }}/opt/postgresql-{{ postgres_version }}/bin/initdb /usr/local/var/postgres-{{ postgres_version }} -E utf8"
-
 # +++
 # Configure
 # +++
@@ -72,41 +42,36 @@
     zope_host_ip: "{{ lookup('dig', zope_host) }}"
 
 # For DNS lookup in /etc/hosts
-- name: look up zope_host IP address using getent (on Debian)
-  when: zope_host_ip == "NXDOMAIN" and ansible_os_family == "Debian"
+- name: look up zope_host IP address using getent
+  when: zope_host_ip == "NXDOMAIN"
   shell: "getent hosts {{ zope_host }} | cut -d' ' -f1"
-  register: debian_zope_host_lookup
-
-- name: look up zope_host IP address using dscacheutil (on Darwin)
-  when: zope_host_ip == "NXDOMAIN" and ansible_os_family == "Darwin"
-  shell: "dscacheutil -q host -a name {{ zope_host }} | grep ip_address | cut -d' ' -f2"
-  register: darwin_zope_host_lookup
+  register: zope_host_lookup
 
 - name: set zope_host IP address
   when: zope_host_ip == "NXDOMAIN"
   set_fact:
-    zope_host_ip: "{{ debian_zope_host_lookup.changed and debian_zope_host_lookup.stdout or darwin_zope_host_lookup.stdout }}"
+    zope_host_ip: "{{ zope_host_lookup.stdout }}"
 
 - name: configure postgres role connection trust
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^local\\s+all\\s+postgres\\s+(peer|trust)$"
     line: "local   all             postgres                                trust"
 - name: configure local connection trust
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^local\\s+all\\s+(all)?\\s+(peer|trust)$"
     line: "local   all             all                                     trust"
 - name: configure local host connection trust ipv4
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
     line: "host    all             all             127.0.0.1/32            trust"
 - name: configure local host connection trust ipv4
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^host\\s+all\\s+all\\s+{{ item }}/32\\s+(md5|trust)$"
@@ -115,14 +80,14 @@
   with_items:
     - "{{ zope_host_ip }}"
 - name: configure local host connection trust ipv6
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     regexp: "^host\\s+all\\s+all\\s+::1/128\\s+(md5|trust)$"
     line: "host    all             all             ::1/128                 trust"
 
 - name: allow remote connections to the database
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
     regexp: "^#?listen_addresses = '(localhost|\\*)'\\s.*$"
@@ -132,51 +97,8 @@
 # Init service
 # +++
 
-- name: restart postgres (on Debian)
-  when: ansible_os_family == "Debian"
+- name: restart postgres
   become: yes
   service:
     name: postgresql
-    state: restarted
-
-# Note for Darwin,
-# this homebrew tap doesn't have launchd configs installed with it.
-# Keep an eye on https://github.com/petere/homebrew-postgresql/issues/6 for updates.
-# I believe this is purposeful, since the install only includes the app,
-# not a premade instance.
-
-- name: does the postgres launchd plist file exist? (on Darwin)
-  stat: path="/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
-  register: plist_file
-
-- name: install postgres launchd config (on Darwin)
-  when: ansible_os_family == "Darwin" and not plist_file.stat.exists
-  template:
-    src: "osx/usr/local/var/postgres-_._/homebrew.mxcl.postgresql.plist"
-    dest: "/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
-    mode: 0600
-
-- name: link plist to launchd directory (on Darwin)
-  when: ansible_os_family == "Darwin"
-  file:
-    src: "/usr/local/var/postgres-{{ postgres_version }}/homebrew.mxcl.postgresql.plist"
-    dest: "~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
-    state: link
-
-# Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
-# If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
-- name: load the postgres launchd config (on Darwin)
-  when: ansible_os_family == "Darwin"
-  launchd:
-    domain: "gui/{{ ansible_user_uid }}"
-    path: "~/Library/LaunchAgents/homebrew.mxcl.postgresql-{{ postgres_version }}.plist"
-    state: loaded
-# If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/homebrew.mxcl.postgresl-<postgres_version>.plist``
-
-# FIXME Doing some/all of this as a role would allow for better restarting of the service.
-- name: restart the postgres (on Darwin)
-  when: ansible_os_family == "Darwin"
-  launchd:
-    domain: "gui/{{ ansible_user_uid }}"
-    label: "homebrew.mxcl.postgresql-{{ postgres_version }}"
     state: restarted

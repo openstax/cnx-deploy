@@ -4,12 +4,7 @@
 # Install
 # +++
 
-- name: install supervisor (on Darwin)
-  when: ansible_os_family == "Darwin"
-  pip: name=supervisor
-
-- name: install supervisor (on Debian)
-  when: ansible_os_family == "Debian"
+- name: install supervisor
   become: yes
   apt:
     name: supervisor
@@ -36,7 +31,7 @@
 # +++
 
 - name: configure supervisor include section
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "{{ root_prefix }}/etc/supervisor/supervisord.conf"
     regexp: "^\\[include\\]$"
@@ -46,7 +41,7 @@
 
 
 - name: configure supervisor include files path
-  become: "{{ ansible_os_family != 'Darwin' and 'yes' or 'no' }}"
+  become: yes
   lineinfile:
     dest: "{{ root_prefix }}/etc/supervisor/supervisord.conf"
     regexp: "^files = [\\w/]+etc/supervisor/conf.d/\\*(.conf)?$"
@@ -58,40 +53,7 @@
 # Init service
 # +++
 
-# FIXME This would be nice to have, but I can't make it work. Every time supervisor
-#       is started under launchd it immediately receives a SIGKILL out of nowhere.
-
-# - name: does the supervisor launchd plist file exist? (on Darwin)
-#   stat: path="~/Library/LaunchAgents/org.cnx.supervisor.plist"
-#   register: plist_file
-
-# - name: install supervisor launchd config (on Darwin)
-#   when: ansible_os_family == "Darwin" and not plist_file.stat.exists
-#   copy:
-#     src: "osx/Users/_/Library/LaunchAgents/org.cnx.supervisor.plist"
-#     dest: "~/Library/LaunchAgents/org.cnx.supervisor.plist"
-#     mode: 0600
-
-# # Note, this will not work within 'tmux' or 'screen'. launchctl results in ``Operation not permitted``
-# # If you run into this issue, see https://apple.stackexchange.com/questions/41412/using-tmux-and-pbpaste-pbcopy-and-launchctl
-# - name: load the supervisor launchd config (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   launchd:
-#     domain: "gui/{{ ansible_user_uid }}"
-#     path: "~/Library/LaunchAgents/org.cnx.supervisor.plist"
-#     state: loaded
-# # If you ever need to remove this use: ``launchctl bootout gui/$UID ~/Library/LaunchAgents/org.cnx.supervisor.plist``
-
-# # FIXME Doing some/all of this as a role would allow for better restarting of the service.
-# - name: restart supervisor (on Darwin)
-#   when: ansible_os_family == "Darwin"
-#   launchd:
-#     domain: "gui/{{ ansible_user_uid }}"
-#     label: "org.cnx.supervisor"
-#     state: started
-
-- name: start supervisor (on Debian)
-  when: ansible_os_family == "Debian"
+- name: start supervisor
   become: yes
   service:
     name: supervisor
