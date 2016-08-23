@@ -19,7 +19,7 @@
         path: /tmp/cnxarchive_dump
         state: directory
     - unarchive:
-        src: "cnxarchive_dump.tar.gz"
+        src: "cnxarchive_dump.tar"
         dest: "/tmp/cnxarchive_dump"
     - name: drop database
       become: yes
@@ -31,13 +31,13 @@
       become_user: postgres
       shell: "createdb -O {{ db_user }} {{ db_name }}"
     - name: load database without files
-      shell: "psql -U {{ db_user }} {{ db_name }} < /tmp/cnxarchive_dump/cnxarchive_dump_without_files.sql"
+      shell: "zcat /tmp/cnxarchive_dump/cnxarchive_dump_without_files.sql.gz | psql -U {{ db_user }} {{ db_name }} -f -"
 
     - name: load files table
-      shell: psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE files DISABLE TRIGGER ALL; COPY files FROM '/tmp/cnxarchive_dump/cnxarchive_index_files.txt'; COPY files (fileid, md5, sha1, file, media_type) FROM '/tmp/cnxarchive_dump/cnxarchive_other_files.txt'; ALTER TABLE files ENABLE TRIGGER ALL;"
+      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_files.txt.gz' '/tmp/cnxarchive_dump/cnxarchive_other_files.txt.gz' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE files DISABLE TRIGGER ALL; COPY files (fileid, md5, sha1, file, media_type) FROM STDIN; ALTER TABLE files ENABLE TRIGGER ALL;"
 
     - name: load module files table
-      shell: psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER ALL; COPY module_files FROM '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt'; ALTER TABLE module_files ENABLE TRIGGER ALL;"
+      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER ALL; COPY module_files (module_ident, fileid, filename) FROM STDIN; ALTER TABLE module_files ENABLE TRIGGER ALL;"
     - name: remove dump files
       file:
         path: /tmp/cnxarchive_dump
