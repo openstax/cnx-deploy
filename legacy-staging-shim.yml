@@ -55,20 +55,14 @@
   tasks:
     - include: tasks/install_plxslt.yml
     - include: tasks/install_session_exec.yml
-  roles:
-    - multimac.launchd
 
 - name: install supervisor
   hosts:
     - archive
   tasks:
     - include: tasks/install_supervisor.yml
-  roles:
-    - multimac.launchd
       
 - name: install archive
   hosts: archive
   tasks:
     - include: tasks/install_archive.yml
-  roles:
-    - multimac.launchd

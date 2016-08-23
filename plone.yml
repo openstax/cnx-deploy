@@ -51,8 +51,6 @@
   hosts: zope-plone
   tasks:
     - include: tasks/install_postgres.yml
-  roles:
-    - multimac.launchd
 
 - name: checkout cnx-buildout
   hosts: local

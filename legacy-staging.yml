@@ -91,8 +91,6 @@
       vars:
         db_owner: "{{ archive_db_user }}"
         db_name: "{{ archive_db_name }}"
-  roles:
-    - multimac.launchd
 
 # +++
 # Applications
@@ -111,8 +109,6 @@
     - archive
   tasks:
     - include: tasks/install_supervisor.yml
-  roles:
-    - multimac.launchd
       
 - name: install archive
   hosts: archive
@@ -120,8 +116,6 @@
     standalone_archive_install: yes
   tasks:
     - include: tasks/install_archive.yml
-  roles:
-    - multimac.launchd
 
 - name: install cnx plone site
   hosts: zope-plone
