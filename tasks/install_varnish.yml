@@ -100,4 +100,4 @@
   become: yes
   service:
     name: varnish
-    state: "{{ (varnish_config.changed or service_config.changed) and 'reloaded' or 'started' }}"
+    state: "{{ (varnish_config.changed or service_config.changed) and 'restarted' or 'started' }}"
