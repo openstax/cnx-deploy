@@ -1,0 +1,31 @@
+---
+# Configure /etc/hosts file for development.
+
+- name: "configure /etc/hosts file"
+  hosts:
+    - archive
+    - publishing
+    - authoring
+    - frontend
+    - worker
+    - database
+    - zope-plone
+  tasks:
+    - name: get dns from local /etc/hosts
+      local_action: "command grep {{ item }} /etc/hosts"
+      with_items: "{{ groups.all }}"
+      register: etc_hosts
+    - name: remove old entries from target /etc/hosts
+      become: yes
+      lineinfile:
+        dest: "/etc/hosts"
+        regexp: "{{ item.item }}"
+        state: absent
+      with_items: "{{ etc_hosts.results }}"
+    - name: add new entries to target /etc/hosts
+      become: yes
+      lineinfile:
+        dest: "/etc/hosts"
+        line: "{{ item.stdout }}"
+        insertbefore: BOF
+      with_items: "{{ etc_hosts.results }}"
