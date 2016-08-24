@@ -37,54 +37,15 @@
 # Configure
 # +++
 
-- name: look up zope_host IP address using dig
-  set_fact:
-    zope_host_ip: "{{ lookup('dig', zope_host) }}"
-
-# For DNS lookup in /etc/hosts
-- name: look up zope_host IP address using getent
-  when: zope_host_ip == "NXDOMAIN"
-  shell: "getent hosts {{ zope_host }} | cut -d' ' -f1"
-  register: zope_host_lookup
-
-- name: set zope_host IP address
-  when: zope_host_ip == "NXDOMAIN"
-  set_fact:
-    zope_host_ip: "{{ zope_host_lookup.stdout }}"
-
 - name: configure postgres role connection trust
   become: yes
-  lineinfile:
+  become_user: postgres
+  template:
+    src: etc/postgresql/_/main/pg_hba.conf
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    regexp: "^local\\s+all\\s+postgres\\s+(peer|trust)$"
-    line: "local   all             postgres                                trust"
-- name: configure local connection trust
-  become: yes
-  lineinfile:
-    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    regexp: "^local\\s+all\\s+(all)?\\s+(peer|trust)$"
-    line: "local   all             all                                     trust"
-- name: configure local host connection trust ipv4
-  become: yes
-  lineinfile:
-    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    regexp: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
-    line: "host    all             all             127.0.0.1/32            trust"
-- name: configure local host connection trust ipv4
-  become: yes
-  lineinfile:
-    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    regexp: "^host\\s+all\\s+all\\s+{{ item }}/32\\s+(md5|trust)$"
-    insertafter: "^host\\s+all\\s+all\\s+127.0.0.1/32\\s+(md5|trust)$"
-    line: "host    all             all             {{ item }}/32            trust"
-  with_items:
-    - "{{ zope_host_ip }}"
-- name: configure local host connection trust ipv6
-  become: yes
-  lineinfile:
-    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-    regexp: "^host\\s+all\\s+all\\s+::1/128\\s+(md5|trust)$"
-    line: "host    all             all             ::1/128                 trust"
+    owner: postgres
+    group: postgres
+    mode: 0640
 
 - name: allow remote connections to the database
   become: yes
