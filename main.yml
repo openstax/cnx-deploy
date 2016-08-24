@@ -13,6 +13,7 @@
     - frontend
     - worker
     - database
+    - zope-plone
   become: yes
   # This is the critical line, otherwise Ansible will try
   # to run python to gather facts.
@@ -29,11 +30,36 @@
     - frontend
     - worker
     - database
+    - zope-plone
   vars:
     msg: "Started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
     channel: "#cnx-stream"
   tasks:
     - include: tasks/notify_slack.yml
+
+- name: copy deploy key
+  hosts: zope-plone
+  vars:
+    user: "www-data"
+    user_home: "/var/www"
+  tasks:
+    - name: create www-data home
+      become: yes
+      file:
+        path: "{{ user_home }}"
+        state: directory
+        owner: www-data
+        group: www-data
+    - include: tasks/copy_deploy_key.yml
+
+- name: test git over ssh using the www-data user
+  hosts: zope-plone
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell: "ssh -T git@github.com"
+      register: git_test
+      failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
 
 # +++
 # Source gathering
@@ -41,6 +67,17 @@
 
 - name: package up source for shipment
   hosts: local
+  tasks:
+    - include: tasks/checkout.yml
+    - include: tasks/archive_source.yml
+
+- name: checkout cnx-buildout
+  hosts: local
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:Rhaptos/cnx-buildout.git
+        default_version: HEAD
   tasks:
     - include: tasks/checkout.yml
     - include: tasks/archive_source.yml
@@ -56,10 +93,34 @@
   tasks:
     - include: tasks/plant_source.yml
 
+- name: send cnx-buildout source to hosts
+  hosts:
+    - zope-plone
+  vars:
+    source:
+      - name: cnx-buildout
+        repo: git@github.com:Rhaptos/cnx-buildout.git
+        default_version: HEAD
+  tasks:
+    - include: tasks/plant_source.yml
+
 - name: build webview
   hosts: local
   tasks:
     - include: tasks/build_webview.yml
+
+# +++
+# Install unpackaged dependencies
+# +++
+
+- name: build python 2.4
+  hosts:
+    - zope-plone
+  tasks:
+    - stat: path=/usr/local/bin/python2.4
+      register: python24_binary
+    - include: tasks/install_python24.yml
+      when: not python24_binary.stat.exists
 
 # +++
 # Persistence services
@@ -70,10 +131,22 @@
 - name: install postgres database
   hosts:
     - database
+    # Only needed on this host for provisioning
+    - zope-plone
   tasks:
     - include: tasks/install_postgres.yml
+
+- name: install postgres extensions
+  hosts:
+    - database
+  tasks:
     - include: tasks/install_plxslt.yml
     - include: tasks/install_session_exec.yml
+
+- name: create postgres database and users
+  hosts:
+    - database
+  tasks:
     - include: tasks/create_db_user.yml
       vars:
         db_user: "{{ archive_db_user }}"
@@ -90,6 +163,12 @@
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
+
+- name: install cnxml dtd pkgs
+  hosts:
+    - database
+    - zope-plone
+  tasks:
     - include: tasks/install_cnxml_dtd.yml
 
 - name: install memcached
@@ -111,6 +190,7 @@
     - archive
     - publishing
     - authoring
+    - zope-plone
   tasks:
     - include: tasks/install_supervisor.yml
 
@@ -146,8 +226,16 @@
     - include: tasks/create_self_signed_cert.yml
       when: not crt_file.stat.exists
 
+- name: install cnx plone site
+  hosts:
+    - zope-plone
+  tasks:
+    - include: tasks/install_cnx_buildout.yml
+    - include: tasks/create_rhaptos_site.yml
+
 - name: install frontend
-  hosts: frontend
+  hosts:
+    - frontend
   vars:
     cert_password: "password"
     cert_domain: "*.{{ frontend_domain }}"
@@ -169,6 +257,7 @@
     - frontend
     - worker
     - database
+    - zope-plone
   vars:
     msg: "Deploy to {{ inventory_hostname }} was successful :heavy_check_mark:"
     channel: "#cnx-stream"
