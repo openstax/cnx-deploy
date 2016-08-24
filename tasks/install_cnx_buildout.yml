@@ -11,7 +11,7 @@
     state: present
   become: yes
   with_items:
-    - openjdk-7-jre-headless
+    - openjdk-8-jre-headless
     - libjpeg-dev
     - libpng-dev
     - build-essential
