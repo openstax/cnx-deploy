@@ -1,11 +1,6 @@
 ---
 # Installs cnx zope instance with all the dependencies.
 
-# Note, this task list does not work on Darwin.
-- name: pre-check system requirements
-  fail: msg="CNX's Zope instance can only be deployed to Linux systems"
-  when: ansible_system != 'Linux'
-
 # +++
 # Prerequisites
 # +++
