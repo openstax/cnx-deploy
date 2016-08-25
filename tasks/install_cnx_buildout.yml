@@ -138,6 +138,31 @@
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
+- name: install python-memcached and hashlib
+  become: yes
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+    executable: pip-2.4
+  with_items:
+    - name: python-memcached
+      version: 1.48
+    - name: hashlib
+      version: 20081119
+
+- name: ensure /var/www/files directory exists
+  become: yes
+  file:
+    path: "/var/www/files"
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: install princexml
+  apt:
+    deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu14.04_amd64.deb"
+  become: yes
+
 - name: assign permissions group
   become: yes
   file:
