@@ -105,6 +105,7 @@
     virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
     state: latest
   with_items:
+    - cnx-db
     - db-migrator
     - pyramid_sawing
 
