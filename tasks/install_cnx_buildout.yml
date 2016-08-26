@@ -6,6 +6,23 @@
 # +++
 
 - name: install dependencies
+  when: ansible_distribution_release == 'trusty'
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - openjdk-7-jre-headless
+    - libjpeg-dev
+    - libpng-dev
+    - build-essential
+    # lxml dependencies
+    - libxml2-dev
+    - libxslt1-dev
+    # required by mr.developer
+    - git
+- name: install dependencies
+  when: ansible_distribution_release != 'trusty'
   apt:
     name: "{{ item }}"
     state: present
