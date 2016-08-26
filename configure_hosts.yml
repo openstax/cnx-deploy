@@ -30,20 +30,19 @@
     - zope-plone
   tasks:
     - name: get dns from local /etc/hosts
-      local_action: "command grep {{ item }} /etc/hosts"
-      with_items: "{{ groups.all }}"
+      local_action: "command grep -E '^${% for group in groups.all %}|{{ '\\<%s\\>'|format(group) }}{% endfor %}' /etc/hosts"
       register: etc_hosts
     - name: remove old entries from target /etc/hosts
       become: yes
       lineinfile:
         dest: "/etc/hosts"
-        regexp: "{{ item.item }}"
+        regexp: "{{ item }}"
         state: absent
-      with_items: "{{ etc_hosts.results }}"
+      with_items: "{{ groups.all }}"
     - name: add new entries to target /etc/hosts
       become: yes
       lineinfile:
         dest: "/etc/hosts"
-        line: "{{ item.stdout }}"
+        line: "{{ item }}"
         insertbefore: BOF
-      with_items: "{{ etc_hosts.results }}"
+      with_items: "{{ etc_hosts.stdout_lines }}"
