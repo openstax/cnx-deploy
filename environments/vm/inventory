@@ -29,3 +29,11 @@ local.cnx.org
 
 [zope-plone:children]
 zope.local.cnx.org
+
+# Groups of groups
+
+[db_connected:children]
+archive
+publishing
+authoring
+zope-plone

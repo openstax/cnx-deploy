@@ -29,3 +29,11 @@ cte-cnx-dev
 
 [zope-plone:children]
 cte-legacy-dev
+
+# Groups of groups
+
+[db_connected:children]
+archive
+publishing
+authoring
+zope-plone
