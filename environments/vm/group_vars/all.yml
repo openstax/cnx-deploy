@@ -42,3 +42,5 @@ accounts_disable_verify_ssl: yes
 postgres_trusted_connections:
   - name: local
     addr: localhost
+  - name: zope
+    addr: zope.local.cnx.org
