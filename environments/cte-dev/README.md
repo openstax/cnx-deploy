@@ -22,11 +22,3 @@ ansible-playbook -i environments/cte-dev/inventory main.yml --ask-become-pass --
 ```
 
 This will run the ``main.yml`` playbook on the systems.
-
-For provisioning the zope application onto a VM:
-
-```sh
-ansible-playbook -i environments/cte-dev/inventory plone.yml
-```
-
-The difference here is the use of the ``plone.yml`` playbook. (In the future, this playbook may merge into ``main.yml``.

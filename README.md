@@ -94,18 +94,11 @@ ansible-playbook -i environments/local-accounts-vm/inventory provision_accounts.
 To run one of the accounts rake commands use:
 
 ```sh
-RAILS_ENV=production RBENV_ROOT=/home/ostaccounts/.rbenv/ rbenv exec bundle exec rake```
+RAILS_ENV=production RBENV_ROOT=/home/ostaccounts/.rbenv/ rbenv exec bundle exec rake
+```
 
 Make sure to run this command as 'ostaccounts'.
 
-### Install Zope/Plone
-
-Create a VM or server that is passwordless (via an ssh key) and has passwordless sudo.
-
-```sh
-ansible-playbook -i environments/vm/inventory plone.yml
-```
-
-The ``plone.yml`` file is the playbook which installs the zope/plone instance.
+#### Running the main playbook
 
 You may need to run the playbood several times if you find that it is taking a very long time on the "run buildout" task. It should take awhile, but not several hours. Best thing to do would be to shell in and ``tail -f /var/lib/cnx/cnx-buildout/buildout_output.txt``.
