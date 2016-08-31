@@ -37,6 +37,8 @@
     - libxslt1-dev
     # required by mr.developer
     - git
+    # psycopg2
+    - libpq-dev
     # pdf generation dependencies
     - python-imaging
     - gif2png

@@ -10,6 +10,8 @@
 - name: create the db user
   postgresql_user:
     db: postgres
+    login_host: "{{ db_host|default('localhost') }}"
+    port: "{{ db_port|default(5432) }}"
     login_user: postgres
     name: "{{ db_user }}"
     password: "{{ db_password }}"

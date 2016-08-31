@@ -7,23 +7,18 @@
     chdir: "{{ source_dir }}/cnx-buildout"
   ignore_errors: True
 
-- name: create rhaptos database user
-  when: rhaptos_site|failed
-  vars:
-    db_user: rhaptos
-    db_password: "{{ archive_db_password }}"
-  include: tasks/create_db_user.yml
-
 - name: create empty temporary rhaptos database
   when: rhaptos_site|failed
   vars:
     db_name: rhaptos
-    db_owner: rhaptos
+    db_owner: "{{ archive_db_user }}"
+    db_host: "{{ archive_db_host }}"
+    db_port: "{{ archive_db_port }}"
   include: tasks/create_db.yml
 
 - name: create rhaptos site
   when: rhaptos_site|failed
-  shell: "./bin/instance run scripts/create_rhaptos_site.py plone Portal postgres {{ archive_db_user }} rhaptos localhost 5432"
+  shell: "./bin/instance run scripts/create_rhaptos_site.py plone Portal postgres {{ archive_db_user }} rhaptos {{ archive_db_host }} {{ archive_db_port }}"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
@@ -43,6 +38,8 @@
   when: rhaptos_site|failed
   postgresql_db:
     name: rhaptos
+    login_host: "{{ archive_db_host }}"
+    port: "{{ archive_db_port }}"
     state: absent
 
 - name: start instance
