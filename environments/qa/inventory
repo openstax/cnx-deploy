@@ -24,5 +24,19 @@ qa.cnx.org
 [worker:children]
 qa.cnx.org
 
-[zope-plone:children]
+[zeo:children]
 qa.cnx.org
+
+[zclient:children]
+qa.cnx.org
+
+[pdf_gen:children]
+qa.cnx.org
+
+# Groups of groups
+
+[db_connected:children]
+archive
+publishing
+authoring
+zclient

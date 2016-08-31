@@ -14,7 +14,9 @@
     - frontend
     - worker
     - database
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     msg: "{{ ansible_user_id }} started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
     channel: "#cnx-stream"
@@ -22,7 +24,10 @@
     - include: tasks/notify_slack.yml
 
 - name: copy deploy key
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     user: "www-data"
     user_home: "/var/www"
@@ -37,7 +42,10 @@
     - include: tasks/copy_deploy_key.yml
 
 - name: test git over ssh using the www-data user
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   become: yes
   become_user: www-data
   tasks:
@@ -79,7 +87,9 @@
 
 - name: send cnx-buildout source to hosts
   hosts:
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     source:
       - name: cnx-buildout
@@ -99,7 +109,9 @@
 
 - name: build python 2.4
   hosts:
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - stat: path=/usr/local/bin/python2.4
       register: python24_binary
@@ -116,8 +128,10 @@
 - name: install postgres database
   hosts:
     - database
-    # Only needed on this host for provisioning
-    - zope-plone
+    # Only needed on this host(s) for provisioning
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_postgres.yml
 
@@ -152,7 +166,9 @@
 - name: install cnxml dtd pkgs
   hosts:
     - database
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_cnxml_dtd.yml
 
@@ -175,7 +191,9 @@
     - archive
     - publishing
     - authoring
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_supervisor.yml
 
@@ -211,11 +229,18 @@
     - include: tasks/create_self_signed_cert.yml
       when: not crt_file.stat.exists
 
-- name: install cnx plone site
+- name: install zope
   hosts:
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_cnx_buildout.yml
+
+- name: create rhaptos site
+  hosts:
+    - zeo
+  tasks:
     - include: tasks/create_rhaptos_site.yml
 
 - name: install frontend
@@ -241,7 +266,9 @@
     - frontend
     - worker
     - database
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     msg: "Deploy to {{ inventory_hostname }} by {{ ansible_user_id }} was successful :heavy_check_mark:"
     channel: "#cnx-stream"

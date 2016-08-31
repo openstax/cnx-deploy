@@ -30,7 +30,13 @@ cte-cnx-dev
 [worker:children]
 cte-cnx-dev
 
-[zope-plone:children]
+[zeo:children]
+cte-legacy-dev
+
+[zclient:children]
+cte-legacy-dev
+
+[pdf_gen:children]
 cte-legacy-dev
 
 # Groups of groups
@@ -39,8 +45,10 @@ cte-legacy-dev
 archive
 publishing
 authoring
-zope-plone
+zclient
+pdf_gen
 
 [nfs_connected:children]
 frontend
-zope-plone
+zclient
+pdf_gen

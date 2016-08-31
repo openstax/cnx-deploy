@@ -18,23 +18,32 @@ legacy-staging5.cnx.org
 
 # Grouped Hosts
 
-[database:children]
+[legacy_staging:children]
 legacy-staging1
 legacy-staging2
 legacy-staging3
 legacy-staging4
 legacy-staging5
+
+[database:children]
+legacy_staging
 
 [archive:children]
-legacy-staging1
-legacy-staging2
-legacy-staging3
-legacy-staging4
-legacy-staging5
+legacy_staging
 
-[zope-plone:children]
-legacy-staging1
-legacy-staging2
-legacy-staging3
-legacy-staging4
-legacy-staging5
+[zeo:children]
+legacy_staging
+
+[zclient:children]
+legacy_staging
+
+[pdf_gen:children]
+legacy_staging
+
+# Groups of groups
+
+[db_connected:children]
+archive
+publishing
+authoring
+zclient

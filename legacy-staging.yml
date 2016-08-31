@@ -33,7 +33,10 @@
     - include: tasks/archive_source.yml
 
 - name: send source to hosts
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     source:
       - name: cnx-buildout
@@ -43,7 +46,10 @@
     - include: tasks/plant_source.yml
 
 - name: copy deploy key
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   vars:
     user: "www-data"
     user_home: "/var/www"
@@ -59,7 +65,10 @@
       when: deploy_key is defined
 
 - name: test git over ssh using the www-data user
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   become: yes
   become_user: www-data
   tasks:
@@ -68,7 +77,10 @@
       failed_when: "{% if git_test.rc != 1 and 'Hi cnx-devops! You\\'ve successfully authenticated' not in git_test.stderr %} True {% else %} False {% endif %}"
 
 - name: install cnxml dtd pkgs
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_cnxml_dtd.yml
 
@@ -97,7 +109,10 @@
 # +++
 
 - name: build python 2.4
-  hosts: zope-plone
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - stat: path=/usr/local/bin/python2.4
       register: python24_binary
@@ -117,8 +132,16 @@
   tasks:
     - include: tasks/install_archive.yml
 
-- name: install cnx plone site
-  hosts: zope-plone
+- name: install zope
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - include: tasks/install_cnx_buildout.yml
+
+- name: create rhaptos site
+  hosts:
+    - zeo
+  tasks:
     - include: tasks/create_rhaptos_site.yml

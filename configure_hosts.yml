@@ -11,7 +11,9 @@
     - frontend
     - worker
     - database
-    - zope-plone
+    - zeo
+    - zclient
+    - pdf_gen
   tasks:
     - name: get dns from local /etc/hosts
       local_action: "command grep -E '^${% for group in groups.all %}|{{ '\\<%s\\>'|format(group) }}{% endfor %}' /etc/hosts"

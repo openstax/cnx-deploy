@@ -30,7 +30,13 @@ local.cnx.org
 [worker:children]
 local.cnx.org
 
-[zope-plone:children]
+[zeo:children]
+zope.local.cnx.org
+
+[zclient:children]
+zope.local.cnx.org
+
+[pdf_gen:children]
 zope.local.cnx.org
 
 # Groups of groups
@@ -39,8 +45,10 @@ zope.local.cnx.org
 archive
 publishing
 authoring
-zope-plone
+zclient
+pdf_gen
 
 [nfs_connected:children]
 frontend
-zope-plone
+zclient
+pdf_gen
