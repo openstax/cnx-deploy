@@ -1,0 +1,32 @@
+---
+# Playbook for managing an NFS server
+
+- include: pretask.yml
+
+- name: collect info on nfs connected hosts
+  hosts: nfs_connected
+  # NOOP only to acquire IP address information about connected hosts.
+  tasks: []
+
+- name: install nfs server
+  hosts: nfs
+  become: yes
+  tasks:
+    - include: tasks/connect_nfs.yml
+    - name: install nfs-kernel-server
+      apt:
+        name: nfs-kernel-server
+        state: present
+    - name: configure nfs server
+      template:
+        src: etc/exports
+        dest: /etc/exports
+        owner: root
+        group: root
+        mode: 0644
+      register: nfs_configuration
+    - name: restart nfs
+      when: "{{ nfs_configuration | changed }}"
+      service:
+        name: nfs-kernel-server
+        state: restarted

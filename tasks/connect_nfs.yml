@@ -1,0 +1,14 @@
+---
+# Configure NFS mounts
+
+- name: make nfs directories
+  become: yes
+  with_items:
+    - /var/www/files
+    - /var/www/files2
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: www-data
+    group: www-data
+    mode: 0755
