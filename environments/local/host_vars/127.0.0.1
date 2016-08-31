@@ -1,4 +1,0 @@
----
-local_source_dir: "{{ source_dir }}"
-# Varnish 4.0 on Darwin doesn't seem to run as root so we can't use port 80.
-varnish_port: "{{ ansible_os_family == 'Darwin' and 6081 or 80 }}"
