@@ -1,0 +1,14 @@
+---
+# Configure buildout for use with ansible
+
+# Create an include buildout file that we can modify to include other ansible
+# generated buildout configuration.
+
+- name: configure buildout for ansible
+  become: yes
+  become_user: www-data
+  copy:
+    src: var/lib/cnx/cnx-buildout/ansible.cfg
+    dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible.cfg"
+    owner: www-data
+    group: www-data

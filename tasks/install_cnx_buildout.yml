@@ -37,35 +37,6 @@
     - libxslt1-dev
     # required by mr.developer
     - git
-    # psycopg2
-    - libpq-dev
-    # pdf generation dependencies
-    - python-imaging
-    - gif2png
-    - cjk-latex
-    - texlive-latex-extra
-    - xsltproc
-    - xvfb
-    - xfonts-base
-    - libreoffice
-    - imagemagick
-    - tralics
-    - unzip
-    - libxml2-utils
-    - texlive-latex3
-    - libedit-dev
-    - zip
-    - libreoffice-script-provider-python
-    - ruby
-    - inkscape
-    - docbook-xsl-ns
-      #- openjdk-6-jre
-    - texlive-fonts-recommended
-    - memcached
-    - librsvg2-bin
-    - otf-stix
-      #- openjdk-7-jdk
-    - openjdk-8-jdk
 
 # +++
 # Install virtualenv
@@ -131,7 +102,7 @@
 
 - name: run buildout
   become: yes
-  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee buildout_output.txt"
+  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout -c ansible.cfg 2>&1 | tee buildout_output.txt"
   args:
     chdir: "{{ source_dir }}/cnx-buildout"
 
@@ -161,36 +132,6 @@
     owner: www-data
     group: www-data
 
-- name: install princexml (trusty)
-  when: ansible_distribution_release == "trusty"
-  apt:
-    deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu14.04_amd64.deb"
-  become: yes
-
-- name: install princexml
-  when: ansible_distribution_release != "trusty"
-  apt:
-    deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu16.04_amd64.deb"
-  become: yes
-
-- name: create directory for urw fonts
-  become: yes
-  file:
-    path: "/usr/share/fonts/urw"
-    state: directory
-    mode: 0755
-
-- name: download urw fonts
-  become: yes
-  get_url:
-    url: "http://svn.ghostscript.com/ghostscript/trunk/ghostpdl/urwfonts/{{ item }}"
-    dest: "/usr/share/fonts/urw"
-  with_items:
-    - URWPalladioL-Bold.ttf
-    - URWPalladioL-BoldItal.ttf
-    - URWPalladioL-Ital.ttf
-    - URWPalladioL-Roma.ttf
-
 - name: assign permissions group
   become: yes
   file:
@@ -200,34 +141,9 @@
     owner: www-data
     group: www-data
 
-- name: update source code
-  become: yes
-  become_user: www-data
-  shell: "bin/develop up -f"
-  args:
-    chdir: "{{ source_dir }}/cnx-buildout"
-
-- name: git submodules update
-  become: yes
-  become_user: www-data
-  shell: "for f in {{ source_dir }}/cnx-buildout/src/*; do cd $f && git submodule update --recursive || echo; done"
-
-- name: rerun buildout
-  become: yes
-  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout 2>&1 | tee -a buildout_output.txt"
-  args:
-    chdir: "{{ source_dir }}/cnx-buildout"
-
 # +++
 # Start server
 # +++
-
-- name: configure zeoserver and instance under supervisor
-  become: yes
-  template:
-    src: etc/supervisor/conf.d/plone.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/plone.conf"
-    mode: 0644
 
 - name: restart supervisor
   become: yes

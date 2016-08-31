@@ -1,0 +1,18 @@
+---
+# Configure Zope client instances
+
+# The buildout already contains a section to create an instance.
+# Here want to configure and create several instance configurations.
+
+# TODO Allow for the configuration of the buildout to create more than one instance.
+# TODO Adjust the supervisor template below to include each instance in supervisor.
+
+- name: configure zclient in supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/zclient.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zclient.conf"
+    mode: 0644
+
+# TODO ...
+# - notify: reload supervisord

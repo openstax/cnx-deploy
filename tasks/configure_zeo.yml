@@ -1,0 +1,13 @@
+---
+# Configure ZEO
+
+# The buildout already contains a section to create the zeo process.
+# In this task we only need to provide a way for the system to invoke
+# and watch the process.
+
+- name: configure zeo in supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/zeo.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zeo.conf"
+    mode: 0644

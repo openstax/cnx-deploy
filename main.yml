@@ -229,6 +229,40 @@
     - include: tasks/create_self_signed_cert.yml
       when: not crt_file.stat.exists
 
+- name: configure buildout
+  hosts:
+    - zeo
+    - zclient
+    - pdf_gen
+  tasks:
+    - include: tasks/configure_buildout.yml
+  tags:
+    - zope
+
+- name: configure zoe
+  hosts:
+    - zeo
+  tasks:
+    - include: tasks/configure_zeo.yml
+  tags:
+    - zope
+
+- name: configure zope client(s)
+  hosts:
+    - zclient
+  tasks:
+    - include: tasks/configure_zclient.yml
+  tags:
+    - zope
+
+- name: configure pdf generation
+  hosts:
+    - pdf_gen
+  tasks:
+    - include: tasks/configure_pdf_gen.yml
+  tags:
+    - zope
+
 - name: install zope
   hosts:
     - zeo
@@ -236,12 +270,16 @@
     - pdf_gen
   tasks:
     - include: tasks/install_cnx_buildout.yml
+  tags:
+    - zope
 
 - name: create rhaptos site
   hosts:
     - zeo
   tasks:
     - include: tasks/create_rhaptos_site.yml
+  tags:
+    - zope
 
 - name: install frontend
   hosts:
