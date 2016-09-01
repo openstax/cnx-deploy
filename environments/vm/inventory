@@ -9,6 +9,9 @@ zope.local.cnx.org
 
 # Grouped Hosts
 
+[nfs:children]
+local.cnx.org
+
 [database:children]
 local.cnx.org
 
@@ -36,4 +39,8 @@ zope.local.cnx.org
 archive
 publishing
 authoring
+zope-plone
+
+[nfs_connected:children]
+frontend
 zope-plone
