@@ -1,6 +1,12 @@
 ---
 # Configure NFS mounts
 
+- name: install nfs-common
+  become: yes
+  apt:
+    name: nfs-common
+    state: present
+
 - name: make nfs directories
   become: yes
   with_items:
@@ -12,3 +18,27 @@
     owner: www-data
     group: www-data
     mode: 0755
+
+- name: configure nfs mount for files
+  become: yes
+  when: "{{ inventory_hostname not in groups.nfs }}"
+  mount:
+    src: "{{ nfs_server_for_files1 }}:/var/www/files"
+    name: /var/www/files
+    fstype: nfs
+    opts: rw
+    dump: 0
+    passno: 2
+    state: mounted
+
+- name: configure nfs mount for files2
+  become: yes
+  when: "{{ inventory_hostname not in groups.nfs }}"
+  mount:
+    src: "{{ nfs_server_for_files2 }}:/var/www/files2"
+    name: /var/www/files2
+    fstype: nfs
+    opts: rw
+    dump: 0
+    passno: 2
+    state: mounted

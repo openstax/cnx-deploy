@@ -38,3 +38,6 @@ accounts_domain: accounts.local.openstax.org
 accounts_consumer_token: 
 accounts_consumer_secret: 
 accounts_disable_verify_ssl: yes
+
+nfs_server_for_files1: local.cnx.org
+nfs_server_for_files2: local.cnx.org
