@@ -110,7 +110,8 @@
 # Persistence services
 # +++
 
-# TODO NFS mount
+- include: nfs.yml
+- include: nfs_connected.yml
 
 - name: install postgres database
   hosts:
@@ -227,7 +228,6 @@
     cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
     cert_key_filepath: "{{ cert_dir }}/cnx.key"
   tasks:
-    - include: tasks/ensure_shared_fs.yml
     - include: tasks/install_nginx.yml
     - include: tasks/install_varnish.yml
     - include: tasks/install_webview.yml
