@@ -4,14 +4,22 @@
 # The buildout already contains a section to create an instance.
 # Here want to configure and create several instance configurations.
 
-# TODO Allow for the configuration of the buildout to create more than one instance.
-# TODO Adjust the supervisor template below to include each instance in supervisor.
+# This gets included in the buildout via the configure_buildout.yml task.
+- name: configure frontend(s)
+  become: yes
+  become_user: www-data
+  template:
+    src: var/lib/cnx/cnx-buildout/ansible-zclients.cfg
+    dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible-zclients.cfg"
+    owner: www-data
+    group: www-data
+    mode: 0644
 
 - name: configure zclient in supervisor
   become: yes
   template:
-    src: etc/supervisor/conf.d/zclient.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zclient.conf"
+    src: etc/supervisor/conf.d/zclients.conf
+    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zclients.conf"
     mode: 0644
 
 # TODO ...
