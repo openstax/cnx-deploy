@@ -1,7 +1,7 @@
 ---
 # This forcibly wipes and loads data from files/cnxarchive_dump.tar.gz.
 
-- name: forcibly push data
+- name: get database details
   hosts: database
   vars_prompt:
     - name: "db_name"
@@ -13,7 +13,14 @@
     - name: "db_password"
       prompt: "What password should we use for the database user?"
   tasks:
-    - include: tasks/create_db_user.yml
+    - set_fact:
+        db_name: "{{ db_name }}"
+        db_user: "{{ db_user }}"
+        db_password: "{{ db_password }}"
+
+- name: transfer database dump
+  hosts: database
+  tasks:
     - name: create directory for database dump
       file:
         path: /tmp/cnxarchive_dump
@@ -21,6 +28,11 @@
     - unarchive:
         src: "cnxarchive_dump.tar"
         dest: "/tmp/cnxarchive_dump"
+
+- name: forcibly push data
+  hosts: database
+  tasks:
+    - include: tasks/create_db_user.yml
     - name: drop database
       become: yes
       become_user: postgres
