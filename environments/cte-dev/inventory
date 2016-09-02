@@ -24,6 +24,9 @@ cte-cnx-dev
 [authoring:children]
 cte-cnx-dev
 
+[haproxy:children]
+cte-cnx-dev
+
 [frontend:children]
 cte-cnx-dev
 

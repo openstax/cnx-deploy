@@ -24,8 +24,8 @@ acl block {
 
 # haproxy load balancing for zope
 backend backend_0 {
-.host = "{{ zope_host }}";
-.port = "{{ zope_port }}";
+.host = "{{ hostvars[groups.haproxy[0]].ansible_default_ipv4.address }}";
+.port = "{{ haproxy_port|default('8888') }}";
 .connect_timeout = 0.4s;
 .first_byte_timeout = 1200s;
 .between_bytes_timeout = 600s;

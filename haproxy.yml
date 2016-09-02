@@ -1,0 +1,17 @@
+---
+# Playbook for installing the haproxy service tier
+
+- include: pretask.yml
+
+- name: collect info on zclients hosts
+  hosts:
+    - zclient
+  # NOOP only to acquire IP address information about hosts.
+  tasks: []
+
+- name: haproxy
+  hosts:
+    - haproxy
+  tasks:
+    - include: tasks/install_haproxy.yml
+    - include: tasks/configure_haproxy.yml

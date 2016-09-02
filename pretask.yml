@@ -12,6 +12,7 @@
     - zeo
     - zclient
     - pdf_gen
+    - haproxy
   become: yes
   # This is the critical line, otherwise Ansible will try
   # to run python to gather facts.

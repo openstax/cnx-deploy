@@ -1,0 +1,19 @@
+---
+# Configure HAProxy
+
+- name: configure haproxy
+  become: yes
+  template:
+    src: etc/haproxy/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+  register: configure_haproxy_task
+
+- name: reload haproxy
+  become: yes
+  when: "{{ configure_haproxy_task|changed }}"
+  service:
+    name: haproxy
+    state: reloaded

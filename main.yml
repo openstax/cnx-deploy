@@ -281,6 +281,8 @@
   tags:
     - zope
 
+- include: haproxy.yml
+
 - name: install frontend
   hosts:
     - frontend
