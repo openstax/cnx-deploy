@@ -1,0 +1,49 @@
+---
+root_prefix: ""
+
+archive_db_name: "{{ vault_archive_db_name }}"
+archive_db_user: "{{ vault_archive_db_user }}"
+archive_db_password: "{{ vault_archive_db_password }}"
+archive_db_host: dev00.cnx.org
+archive_db_port: 5432
+
+authoring_db_name: "{{ vault_authoring_db_name }}"
+authoring_db_user: "{{ vault_authoring_db_user }}"
+authoring_db_password: "{{ vault_authoring_db_password }}"
+authoring_db_host: dev00.cnx.org
+authoring_db_port: 5432
+
+# FIXME Not really yaml'ish to use space separated values...
+# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
+# 'hosts' is a space separated value containing hostnames or ip addresses
+# where a memcached instance is running.
+memcached_hosts: localhost
+
+varnish_port: 80
+
+archive_host: dev00.cnx.org
+archive_port: 6789
+publishing_host: dev00.cnx.org
+publishing_port: 6543
+authoring_host: dev00.cnx.org
+authoring_port: 6420
+
+zope_domain: legacy-dev00.cnx.org
+arclishing_domain: archive-dev00.cnx.org
+frontend_domain: dev00.cnx.org
+accounts_domain: accounts-qa1.openstax.org
+
+accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
+accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
+accounts_disable_verify_ssl: no
+
+source_versions:
+  webview: HEAD
+
+postgres_trusted_connections: "{{ vault_postgres_trusted_connections }}"
+
+deploy_key: "{{ vault_deploy_key }}"
+slack_token: "{{ vault_slack_token }}"
+
+nfs_server_for_files1: dev00.cnx.org
+nfs_server_for_files2: dev00.cnx.org
