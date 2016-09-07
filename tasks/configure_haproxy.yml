@@ -3,6 +3,7 @@
 
 - name: configure haproxy
   become: yes
+  when: ansible_distribution_release != "trusty"
   template:
     src: etc/haproxy/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
@@ -10,6 +11,25 @@
     group: root
     mode: 0644
   register: configure_haproxy_task
+
+- name: configure haproxy (trusty)
+  become: yes
+  when: ansible_distribution_release == "trusty"
+  template:
+    src: etc/haproxy/haproxy-trusty.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+  register: configure_haproxy_task
+
+- name: enable haproxy (trusty)
+  become: yes
+  when: ansible_distribution_release == "trusty"
+  lineinfile:
+    dest: /etc/default/haproxy
+    regexp: 'ENABLED'
+    line: 'ENABLED=1'
 
 - name: reload haproxy
   become: yes
