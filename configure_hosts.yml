@@ -16,7 +16,7 @@
     - pdf_gen
   tasks:
     - name: get dns from local /etc/hosts
-      local_action: "command grep -E '^${% for group in groups.all %}|{{ '\\<%s\\>'|format(group) }}{% endfor %}' /etc/hosts"
+      local_action: "command grep -E '\\<{{ accounts_domain }}\\>{% for group in groups.all %}|{{ '\\<%s\\>'|format(group) }}{% endfor %}' /etc/hosts"
       register: etc_hosts
     - name: remove old entries from target /etc/hosts
       become: yes
