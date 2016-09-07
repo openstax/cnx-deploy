@@ -39,7 +39,6 @@
 
 - name: configure postgres role connection trust
   become: yes
-  become_user: postgres
   template:
     src: etc/postgresql/_/main/pg_hba.conf
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
