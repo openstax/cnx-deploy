@@ -11,11 +11,11 @@
 - name: copy deploy key
   when: deploy_key is defined
   become: yes
-  become_user: "{{ user }}"
   copy:
     content: "{{ deploy_key }}"
     dest: "{{ user_home }}/.ssh/cnx-devops_rsa"
     mode: 0600
+    owner: "{{ user }}"
 
 - name: make sure ~/.ssh/config exists
   when: deploy_key is defined
