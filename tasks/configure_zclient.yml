@@ -7,7 +7,6 @@
 # This gets included in the buildout via the configure_buildout.yml task.
 - name: configure frontend(s)
   become: yes
-  become_user: www-data
   template:
     src: var/lib/cnx/cnx-buildout/ansible-zclients.cfg
     dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible-zclients.cfg"
