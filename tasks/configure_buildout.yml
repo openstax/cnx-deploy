@@ -6,7 +6,6 @@
 
 - name: configure buildout for ansible
   become: yes
-  become_user: www-data
   template:
     src: var/lib/cnx/cnx-buildout/ansible.cfg
     dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible.cfg"
