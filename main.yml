@@ -239,7 +239,7 @@
   tags:
     - zope
 
-- name: configure zoe
+- name: configure zeo
   hosts:
     - zeo
   tasks:
