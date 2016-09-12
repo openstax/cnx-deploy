@@ -65,6 +65,13 @@
     - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
       line: "\tssl_session_cache shared:SSL:10m;"
 
+- name: configure nginx.conf server names hash bucket size
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "\\bserver_names_hash_bucket_size\\b"
+    line: "\tserver_names_hash_bucket_size 128;"
+
 - name: enable the nginx site
   become: yes
   file:
