@@ -45,13 +45,3 @@
 - name: start instance
   become: yes
   shell: supervisorctl restart plone-instance
-
-- name: create zope objects from database (background job)
-  when: rhaptos_site|failed
-  become: yes
-  become_user: www-data
-  # wait for plone instance to start
-  shell: "while ! nc -w 1 localhost {{ zope_port }}; do sleep 1; done; ./bin/instance run scripts/build_zodb_from_postgres.py -d http://{{ zope_domain }}"
-  args:
-    chdir: "{{ source_dir }}/cnx-buildout"
-    executable: "/bin/bash"
