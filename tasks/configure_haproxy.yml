@@ -21,7 +21,7 @@
     owner: root
     group: root
     mode: 0644
-  register: configure_haproxy_task
+  register: configure_haproxy_task_on_trusty
 
 - name: enable haproxy (trusty)
   become: yes
@@ -33,7 +33,7 @@
 
 - name: reload haproxy
   become: yes
-  when: "{{ configure_haproxy_task|changed }}"
+  when: "{{ configure_haproxy_task|changed or configure_haproxy_task_on_trusty|changed }}"
   service:
     name: haproxy
     state: reloaded
