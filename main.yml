@@ -158,6 +158,10 @@
       vars:
         db_user: "{{ authoring_db_user }}"
         db_password: "{{ authoring_db_password }}"
+    - include: tasks/create_db_user.yml
+      vars:
+        db_user: "backups"
+        role_attr_flags: ""
     - include: tasks/create_db.yml
       vars:
         db_owner: "{{ authoring_db_user }}"
