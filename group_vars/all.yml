@@ -6,9 +6,12 @@ ansible_ssh_pipelining: true
 postgres_version: 9.4
 source_dir: "{{ '~/cnx/src' | expanduser }}"
 archives_dir: "{{ '~/cnx/archives' | expanduser }}"
-# postgres_trusted_connections:
+# postgres_connections:
 #   - name: <human readable name>
 #     addr: <hostname | ip | mask>
+#     database: <default: all>
+#     user: <default: all>
+#     method: <default: trust>
 
 # archive_db_name: cnxarchive
 # archive_db_user: cnxarchive
