@@ -1,0 +1,96 @@
+---
+# This will rename a database to swap with an existing one.
+# There will be some downtime during stop services, drop, rename and start services.
+
+- name: get database details
+  hosts: database
+  vars_prompt:
+    - name: "origin_db_name"
+      prompt: "What database are we moving?"
+      private: no
+      default: repository_new
+    - name: "target_db_name"
+      prompt: "What database are we swapping out to (<name>_old)?"
+      private: no
+      default: repository
+  tasks:
+    - set_fact:
+        origin_db_name: "{{ origin_db_name }}"
+        target_db_name: "{{ target_db_name }}"
+        dest_db_name: "{{ target_db_name }}_old"
+
+- name: stop archive
+  hosts: archive
+  tasks:
+    - shell: supervisorctl stop archive
+      become: yes
+
+- name: stop publishing
+  hosts: publishing
+  tasks:
+    - shell: supervisorctl stop publishing
+      become: yes
+
+- name: stop post publication worker
+  hosts: publishing
+  tasks:
+    - shell: supervisorctl stop post_publication
+      become: yes
+
+- name: stop zclients
+  hosts:
+    - zclient
+    - pdf_gen
+  tasks:
+    - shell: "for i in {0..{{ hostvars[inventory_hostname].zclient_count|default(1) -1 }}}; do supervisorctl stop zclient_instance$i; done"
+      become: yes
+      args:
+        executable: /bin/bash
+
+# Varnish is still running and the frontend should be serving stale results.
+
+- name: rename database
+  hosts: database
+  tasks:
+    - name: rename via pgsql
+      shell: |
+        psql -v ON_ERROR_STOP=1 --username postgres <<-" EOSQL"
+        ALTER DATABASE {{ target_db_name }} RENAME TO {{ dest_db_name }};
+        ALTER DATABASE {{ origin_db_name }} RENAME TO {{ target_db_name }};
+        EOSQL
+
+- name: start archive
+  hosts: archive
+  tasks:
+    - shell: supervisorctl start archive
+      become: yes
+
+- name: start publishing
+  hosts: publishing
+  tasks:
+    - shell: supervisorctl start publishing
+      become: yes
+
+- name: start post publication worker
+  hosts: publishing
+  tasks:
+    - shell: supervisorctl start post_publication
+      become: yes
+
+- name: start zclients
+  hosts:
+    - zclient
+    - pdf_gen
+  tasks:
+    - shell: "for i in {0..{{ hostvars[inventory_hostname].zclient_count|default(1) - 1 }}}; do supervisorctl start zclient_instance$i; done"
+      become: yes
+      args:
+        executable: /bin/bash
+
+- name: restart varnish
+  hosts: frontend
+  tasks:
+    - service:
+        name: varnish
+        state: restarted
+      become: yes
