@@ -1,0 +1,88 @@
+---
+# Configures SSL sites for archive and webview nginx sites.
+
+- name: check if certificate is expiring in the next 24 hours
+  become: yes
+  shell: "openssl x509 -checkend $((24 * 60 * 60)) -noout -in {{ root_prefix }}/etc/ssl/certs/cnx.pem"
+  ignore_errors: yes
+  register: certificate_expired
+
+- name: install certificate pem
+  when: "{{ certificate_expired.rc != 0 }}"
+  become: yes
+  copy:
+    src: "{{ cert_crt_filepath }}"
+    dest: "{{ root_prefix }}/etc/ssl/certs/cnx.pem"
+
+- name: install certificate key
+  when: "{{ certificate_expired.rc != 0 }}"
+  become: yes
+  copy:
+    src: "{{ cert_key_filepath }}"
+    dest: "{{ root_prefix }}/etc/ssl/private/cnx.key"
+
+- name: install nginx site
+  become: yes
+  template:
+    src: "etc/nginx/sites-available/ssl"
+    dest: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
+
+- name: configure ssl
+  # BBB (3-Feb-2016) ubuntu 14.04
+  when: ansible_distribution_release != "trusty"
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "{{ item.regexp }}"
+    insertafter: "^[\t]+ssl_prefer_server_ciphers on;"
+    line: "{{ item.line }}"
+  with_items:
+    # - regexp: "^[\t]+ssl_prefer_server_ciphers on;"
+    #   line: "\tssl_prefer_server_ciphers on;"
+    - regexp: "^[\t]+ssl_session_timeout 5m;"
+      line: "\tssl_session_timeout 5m;"
+    - regexp: "^[\t]+ssl_ciphers AES256\\+EECDH:AES256\\+EDH;"
+      line: "\tssl_ciphers AES256+EECDH:AES256+EDH;"
+    - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
+      line: "\tssl_session_cache shared:SSL:10m;"
+  notify:
+    - reload nginx
+
+# BBB (3-Feb-2016) ubuntu 14.04
+- name: configure ssl (on Ubuntu 14.04)
+  when: ansible_distribution_release == "trusty"
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "{{ item.regexp }}"
+    insertafter: "^[\\t]+include /etc/nginx/sites-enabled/\\*;"
+    line: "{{ item.line }}"
+  with_items:
+    # - regexp: "^[\t]+ssl_prefer_server_ciphers on;"
+    #   line: "\tssl_prefer_server_ciphers on;"
+    - regexp: "^[\t]+ssl_session_timeout 5m;"
+      line: "\tssl_session_timeout 5m;"
+    - regexp: "^[\t]+ssl_ciphers AES256\\+EECDH:AES256\\+EDH;"
+      line: "\tssl_ciphers AES256+EECDH:AES256+EDH;"
+    - regexp: "^[\t]+ssl_session_cache shared:SSL:10m;"
+      line: "\tssl_session_cache shared:SSL:10m;"
+  notify:
+    - reload nginx
+
+- name: configure nginx.conf server names hash bucket size
+  become: yes
+  lineinfile:
+    dest: "{{ root_prefix }}/etc/nginx/nginx.conf"
+    regexp: "\\bserver_names_hash_bucket_size\\b"
+    line: "\tserver_names_hash_bucket_size 128;"
+  notify:
+    - reload nginx
+
+- name: enable the nginx site
+  become: yes
+  file:
+    src: "{{ root_prefix }}/etc/nginx/sites-available/ssl"
+    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/ssl"
+    state: link
+  notify:
+    - restart nginx

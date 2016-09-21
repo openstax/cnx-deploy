@@ -1,0 +1,63 @@
+---
+# Installs webview with all the dependencies.
+
+# +++
+# Install
+# +++
+
+- name: copy dist build to source
+  become: yes
+  copy:
+    src: "{{ local_source_dir }}/webview/dist"
+    dest: "{{ source_dir }}/webview"
+    owner: www-data
+  notify:
+    - restart nginx
+
+# +++
+# Configure
+# +++
+
+- name: configure webview settings.js
+  become: yes
+  template:
+    src: var/www/cnx/scripts/settings.js
+    dest: "{{ source_dir }}/webview/dist/scripts/settings.js"
+    owner: www-data
+  notify:
+    - reload nginx
+
+- name: configure the webview nginx site
+  become: yes
+  template:
+    src: etc/nginx/sites-available/webview
+    dest: "{{ root_prefix }}/etc/nginx/sites-available/webview"
+    owner: www-data
+  notify:
+    - reload nginx
+
+- name: enable the webview nginx site
+  become: yes
+  file:
+    src: "{{ root_prefix }}/etc/nginx/sites-available/webview"
+    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/webview"
+    state: link
+    owner: www-data
+  notify:
+    - restart nginx
+
+# +++
+# Deploy
+# +++
+
+# TODO We need to copy the built files to a staging location,
+#      make the config changes,
+#      then use a symlink to designate the active build.
+- name: link dist to var/www
+  become: yes
+  file:
+    src: "{{ source_dir }}/webview/dist"
+    # FIXME This is copying to .../www/cnx/dist, which isn't correct
+    dest: "{{ root_prefix }}/var/www/webview"
+    state: link
+    owner: www-data
