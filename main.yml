@@ -296,11 +296,14 @@
     cert_dir: "{{ inventory_dir }}/secrets/certs/cnx"
     cert_crt_filepath: "{{ cert_dir }}/cnx.crt"
     cert_key_filepath: "{{ cert_dir }}/cnx.key"
-  tasks:
-    - include: tasks/install_nginx.yml
-    - include: tasks/install_varnish.yml
-    - include: tasks/install_webview.yml
-    - include: tasks/configure_ssl.yml
+  roles:
+    - varnish
+    - webview
+  tags:
+    - nginx
+    - varnish
+    - webview
+    - fe
 
 - name: "notify #cnx-stream of the deployment (end)"
   hosts:
