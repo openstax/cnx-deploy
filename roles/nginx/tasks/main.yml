@@ -1,0 +1,42 @@
+---
+
+# +++
+# Install
+# +++
+
+- name: install nginx
+  become: yes
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+# +++
+# Configure
+# +++
+
+- name: disable default site
+  become: yes
+  file:
+    path: "{{ root_prefix }}/etc/nginx/sites-enabled/default"
+    state: absent
+  register: disabled_default_site
+
+# Because the default site uses port 80, we need to free it before the
+# handlers otherwise varnish won't be able to bind to port 80 on provisioning.
+- name: restart nginx
+  when: "{{ disabled_default_site|changed }}"
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+
+# BBB (1-Feb-2016) ubuntu 14.04
+- name: make var/www available (on Ubuntu 14.04)
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
+  become: yes
+  file:
+    path: "{{ root_prefix }}/var/www"
+    state: directory
+    mode: 0755
