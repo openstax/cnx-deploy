@@ -7,8 +7,7 @@ upstream prerender {
 server {
     listen          8081;
     server_name     {{ frontend_domain }};
-    # FIXME How about putting the built distribution in /var/www?
-    root            {{ source_dir | expanduser }}/webview/dist/;
+    root            /var/www/webview;
     index           index.html;
     # try_files       $uri @prerender;
     try_files       $uri $uri/ /index.html;

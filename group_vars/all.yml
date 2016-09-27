@@ -69,10 +69,6 @@ source:
   - name: cnx-publishing
     repo: git@github.com:Connexions/cnx-publishing.git
     default_version: HEAD
-  - name: webview
-    repo: git@github.com:Connexions/webview.git
-    # FIXME ¡¡ production branch !!
-    default_version: production
   - name: cnx-authoring
     repo: git@github.com:Connexions/cnx-authoring.git
     default_version: HEAD

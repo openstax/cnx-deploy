@@ -79,7 +79,6 @@
     - archive
     - publishing
     - authoring
-    - frontend
     - worker
     - database
   tasks:
@@ -97,11 +96,6 @@
         default_version: HEAD
   tasks:
     - include: tasks/plant_source.yml
-
-- name: build webview
-  hosts: local
-  tasks:
-    - include: tasks/build_webview.yml
 
 # +++
 # Install unpackaged dependencies

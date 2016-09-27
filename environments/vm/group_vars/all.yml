@@ -39,3 +39,5 @@ accounts_disable_verify_ssl: yes
 
 nfs_server_for_files1: local.cnx.org
 nfs_server_for_files2: local.cnx.org
+
+webview_version: latest
