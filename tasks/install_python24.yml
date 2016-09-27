@@ -59,7 +59,7 @@
 
 - name: download setuptools
   get_url:
-    url: https://raw.githubusercontent.com/pypa/setuptools/bootstrap-py24/ez_setup.py
+    url: https://raw.githubusercontent.com/pypa/setuptools/archive/bootstrap-py24/ez_setup.py
     dest: .
 
 - name: install setuptools
