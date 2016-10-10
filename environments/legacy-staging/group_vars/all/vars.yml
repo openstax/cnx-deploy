@@ -48,5 +48,3 @@ zope_domain: legacy.cnx.org
 arclishing_domain: archive.cnx.org
 frontend_domain: cnx.org
 accounts_domain: accounts-qa1.openstax.org
-
-deploy_key: "{{ vault_deploy_key }}"

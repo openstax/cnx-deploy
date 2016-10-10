@@ -39,7 +39,6 @@ accounts_disable_verify_ssl: no
 
 postgres_trusted_connections: "{{ vault_postgres_trusted_connections }}"
 
-deploy_key: "{{ vault_deploy_key }}"
 slack_token: "{{ vault_slack_token }}"
 
 nfs_server_for_files1: cte-cnx-dev.cnx.org
