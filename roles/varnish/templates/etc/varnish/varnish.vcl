@@ -214,7 +214,7 @@ sub vcl_recv {
             set req.backend_hint = backend_0;
         }
         // all rewrite webview
-        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
+        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
             set req.backend_hint = rewrite_webview;
 
             if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/users" || req.url ~ "@draft"){
