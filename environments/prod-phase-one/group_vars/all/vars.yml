@@ -1,0 +1,41 @@
+---
+root_prefix: ""
+
+archive_db_name: "{{ vault_archive_db_name }}"
+archive_db_user: "{{ vault_archive_db_user }}"
+archive_db_password: "{{ vault_archive_db_password }}"
+archive_db_host: prod00.cnx.org
+archive_db_port: 5432
+
+# FIXME Not really yaml'ish to use space separated values...
+# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
+# 'hosts' is a space separated value containing hostnames or ip addresses
+# where a memcached instance is running.
+memcached_hosts: localhost
+
+varnish_port: 80
+
+archive_host: tundra.cnx.rice.edu
+archive_port: 8888
+publishing_host: tundra.cnx.rice.edu
+publishing_port: 6550
+authoring_host: prod00.cnx.org
+authoring_port: 6420
+
+zope_domain: legacy-prod00.cnx.org
+arclishing_domain: archive.cnx.org
+frontend_domain: prod00.cnx.org
+accounts_domain: accounts.openstax.org
+
+accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
+accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
+accounts_disable_verify_ssl: no
+
+postgres_connections: "{{ vault_postgres_connections }}"
+
+slack_token: "{{ vault_slack_token }}"
+
+nfs_server_for_files1: prod00.cnx.org
+nfs_server_for_files2: prod00.cnx.org
+
+webview_version: v0.20.0
