@@ -39,3 +39,14 @@ nfs_server_for_files1: prod00.cnx.org
 nfs_server_for_files2: prod00.cnx.org
 
 webview_version: v0.20.0
+
+xxx_hardcoded_zclients:
+  - ip_addr: 128.42.169.13
+    host: glad
+    count: 2
+  - ip_addr: 128.42.169.17
+    host: quil
+    count: 5
+  - ip_addr: 128.42.169.18
+    host: font
+    count: 5
