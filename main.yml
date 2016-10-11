@@ -152,8 +152,6 @@
 # Applications
 # +++
 
-# TODO Prerender
-
 - name: install supervisor
   hosts:
     - archive
