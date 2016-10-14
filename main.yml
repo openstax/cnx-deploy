@@ -247,7 +247,11 @@
   tags:
     - zope
 
-- include: haproxy.yml
+- include: zclient_load_balancer.yml
+  tags:
+    - zclient
+    - haproxy
+    - fe
 
 - name: install frontend
   hosts:

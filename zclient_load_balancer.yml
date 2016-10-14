@@ -11,7 +11,8 @@
 
 - name: haproxy
   hosts:
+    - zclient_load_balancer
+  roles:
     - haproxy
   tasks:
-    - include: tasks/install_haproxy.yml
     - include: tasks/configure_haproxy.yml
