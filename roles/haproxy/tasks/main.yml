@@ -1,0 +1,44 @@
+---
+# Install HAProxy
+
+- name: install haproxy
+  become: yes
+  apt:
+    name: haproxy
+    state: present
+
+- name: configure haproxy
+  become: yes
+  when: ansible_distribution_release != "trusty"
+  template:
+    src: etc/haproxy/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - reload haproxy
+
+- name: configure haproxy (trusty)
+  become: yes
+  when: ansible_distribution_release == "trusty"
+  template:
+    src: etc/haproxy/haproxy-trusty.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - reload haproxy
+
+- name: enable haproxy (trusty)
+  become: yes
+  when: ansible_distribution_release == "trusty"
+  lineinfile:
+    dest: /etc/default/haproxy
+    regexp: 'ENABLED'
+    line: 'ENABLED=1'
+  notify:
+    - restart haproxy

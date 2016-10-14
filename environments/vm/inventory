@@ -24,7 +24,7 @@ local.cnx.org
 [authoring:children]
 local.cnx.org
 
-[haproxy:children]
+[zclient_load_balancer:children]
 local.cnx.org
 
 [frontend:children]
