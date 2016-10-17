@@ -34,13 +34,6 @@
         server {{ host }}{{ i }} {{ ip_addr }}:82{{ 80 + i }} check maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
-
-        server  glad0 128.42.169.13:8080 check maxconn 4 rise 1
-        server  glad1 128.42.169.13:8180 check maxconn 4 rise 1
-        server  glad2 128.42.169.13:8280 check maxconn 4 rise 1
-        server  quil0 128.42.169.17:8080 check maxconn 4 rise 1
-        server  quil1 128.42.169.17:8180 check maxconn 4 rise 1
-        server  quil2 128.42.169.17:8280 check maxconn 4 rise 1
     owner: root
     group: root
     mode: 0644

@@ -9,10 +9,8 @@
   # NOOP only to acquire IP address information about hosts.
   tasks: []
 
-- name: haproxy
+- name: zcluster
   hosts:
     - zclient_load_balancer
   roles:
-    - haproxy
-  tasks:
-    - include: tasks/configure_haproxy.yml
+    - zclient_load_balancer
