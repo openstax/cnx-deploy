@@ -1,0 +1,4 @@
+---
+
+# For valid size labels see: http://varnish.org/docs/4.0/users-guide/storage-backends.html#malloc
+varnish_memory_allocation: 256m

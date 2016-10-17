@@ -87,8 +87,8 @@
   become: yes
   lineinfile:
     dest: /etc/systemd/system/multi-user.target.wants/varnish.service
-    regexp: "ExecStart=/usr/sbin/varnishd( -j unix,user=vcache -F)? -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,256m( -p vcc_allow_inline_c=on)?"
-    line: "ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,256m -p vcc_allow_inline_c=on"
+    regexp: "ExecStart=/usr/sbin/varnishd( -j unix,user=vcache -F)? -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,\\d+[KkGgMmTt]{1}( -p vcc_allow_inline_c=on)?"
+    line: "ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,{{ varnish_memory_allocation }} -p vcc_allow_inline_c=on"
     insertafter: "^LimitMEMLOCK.*"
   register: service_config
   notify:
