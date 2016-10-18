@@ -11,6 +11,7 @@
 
 - name: zcluster
   hosts:
-    - zclient_load_balancer
+    - legacy_frontend
   roles:
     - zclient_load_balancer
+    - varnish

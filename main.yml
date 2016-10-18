@@ -247,10 +247,11 @@
   tags:
     - zope
 
-- include: zclient_load_balancer.yml
+- include: legacy_frontend.yml
   tags:
-    - zclient
     - haproxy
+    - varnish
+    - legacy_fe
     - fe
 
 - name: install frontend
