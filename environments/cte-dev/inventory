@@ -24,7 +24,7 @@ cte-cnx-dev
 [authoring:children]
 cte-cnx-dev
 
-[zclient_load_balancer:children]
+[legacy_frontend:children]
 cte-cnx-dev
 
 [frontend:children]
