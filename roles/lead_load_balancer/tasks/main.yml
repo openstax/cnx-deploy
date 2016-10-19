@@ -1,0 +1,51 @@
+---
+# Configure HAProxy
+
+- name: configure lead load balancer
+  become: yes
+  blockinfile:
+    dest: /etc/haproxy/haproxy.cfg
+    state: present
+    marker: "# {mark} lead block ANSIBLE MANAGED BLOCK"
+    insertafter: EOF
+    block: |
+      frontend http-proxy
+        bind *:80
+        acl is_legacy hdr(host) -i {{ zope_domain }}
+        acl is_arclishing hdr(host) -i {{ arclishing_domain }}
+        acl is_cnxorg hdr(host) -i {{ frontend_domain }}
+        use_backend legacy_nodes if is_legacy
+        use_backend nodes if is_cnxorg
+        use_backend nodes if is_arclishing
+        default_backend nodes
+
+      # Load balancing the frontend grouping
+      backend nodes
+        balance uri
+        option httpchk OPTIONS * HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
+
+        # Server options:
+        # "check" enables health checks
+        # "rise 1" means consider the frontend up after 1 successful health check
+      {% for host in groups.frontend %}
+      {% set ip_addr = hostvars[host]['ansible_' + iface].ipv4.address %}
+        server {{ host }} {{ ip_addr }}:{{ varnish_port }} check rise 1
+      {% endfor %}
+
+      # Load balancing the frontend grouping
+      backend legacy_nodes
+        balance roundrobin
+        option httpchk OPTIONS * HTTP/1.1\r\nHOST:\ {{ zope_domain }}
+
+        # Server options:
+        # "check" enables health checks
+        # "rise 1" means consider the frontend up after 1 successful health check
+      {% for host in groups.legacy_frontend %}
+      {% set ip_addr = hostvars[host]['ansible_' + iface].ipv4.address %}
+        server {{ host }} {{ ip_addr }}:{{ varnish_port }} check rise 1
+      {% endfor %}
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload haproxy
