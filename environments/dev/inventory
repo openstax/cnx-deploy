@@ -35,6 +35,9 @@ dev00
 [authoring:children]
 dev00
 
+[lead_frontend:children]
+dev00
+
 [legacy_frontend:children]
 dev00
 

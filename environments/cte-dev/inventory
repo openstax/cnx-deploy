@@ -24,6 +24,9 @@ cte-cnx-dev
 [authoring:children]
 cte-cnx-dev
 
+[lead_frontend:children]
+cte-cnx-dev
+
 [legacy_frontend:children]
 cte-cnx-dev
 

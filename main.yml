@@ -272,6 +272,12 @@
     - webview
     - fe
 
+- include: lead_frontend.yml
+  tags:
+    - haproxy
+    - lead_fe
+    - fe
+
 - name: "notify #cnx-stream of the deployment (end)"
   hosts:
     - archive

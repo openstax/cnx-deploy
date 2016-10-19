@@ -1,0 +1,17 @@
+---
+# Playbook for installing the HAProxy service for initial request consumption.
+
+- include: pretask.yml
+
+- name: collect info on connected hosts
+  hosts:
+    - frontend
+    - legacy_frontend
+  # NOOP only to acquire IP address information about hosts.
+  tasks: []
+
+- name: setup initial request frontend services
+  hosts:
+    - lead_frontend
+  roles:
+    - lead_load_balancer
