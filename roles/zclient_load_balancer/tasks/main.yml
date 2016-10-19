@@ -6,7 +6,9 @@
   blockinfile:
     dest: /etc/haproxy/haproxy.cfg
     state: present
-    content: |
+    marker: "# {mark} zcluster block ANSIBLE MANAGED BLOCK"
+    insertafter: EOF
+    block: |
       frontend zcluster
         bind :8888
         default_backend zclients
