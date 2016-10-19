@@ -10,29 +10,39 @@
     # rsyslog only picks up the newly added haproxy logging config after restart.
     - restart rsyslog
 
-- name: configure haproxy
+- name: configure haproxy ping monitoring
   become: yes
-  when: ansible_distribution_release != "trusty"
-  template:
-    src: etc/haproxy/haproxy.cfg
+  blockinfile:
     dest: /etc/haproxy/haproxy.cfg
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  notify:
-    - reload haproxy
+    state: present
+    marker: "# {mark} ping monitoring block ANSIBLE MANAGED BLOCK"
+    insertafter: "^\\s+errorfile 504 /etc/haproxy/errors/504.http"
+    block: |
+      {# Comment to let yml know where the indentation starts #}
+        option httpclose
+        # Remove requests from the queue if people press stop button
+        option abortonclose
+        # Try to connect this many times on failure
+        retries 3
+        # If a client is bound to a particular backend but it goes down,
+        # send them to a different one
+        option redispatch
+        monitor-uri /haproxy-ping
 
-- name: configure haproxy (trusty)
-  become: yes
-  when: ansible_distribution_release == "trusty"
-  template:
-    src: etc/haproxy/haproxy-trusty.cfg
-    dest: /etc/haproxy/haproxy.cfg
+        timeout connect 7s
+        timeout queue   300s
+        timeout client  300s
+        timeout server  300s
+        timeout check   10s
+
+        # Enable status page at this URL, on the port HAProxy is bound to
+        stats enable
+        stats uri /haproxy-status
+        stats refresh 5s
+        stats realm Haproxy statistics
     owner: root
     group: root
     mode: 0644
-    backup: yes
   notify:
     - reload haproxy
 
