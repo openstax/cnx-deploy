@@ -6,6 +6,9 @@
   apt:
     name: haproxy
     state: present
+  notify:
+    # rsyslog only picks up the newly added haproxy logging config after restart.
+    - restart rsyslog
 
 - name: configure haproxy
   become: yes
