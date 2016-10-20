@@ -38,12 +38,5 @@
   args:
     chdir: tmp
 
-- name: move crt to final location
-  copy:
-    src: tmp/server.crt
-    dest: "{{ cert_crt_filepath }}"
-
-- name: move key to final location
-  copy:
-    src: tmp/server.key
-    dest: "{{ cert_key_filepath }}"
+- name: create the .pem file
+  shell: "cat tmp/server.crt tmp/server.key | tee {{ cert_pem_filepath }}"

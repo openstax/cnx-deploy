@@ -11,6 +11,7 @@
     block: |
       frontend http-proxy
         bind *:80
+        bind *:443 ssl crt /etc/ssl/certs/{{ frontend_domain }}.pem
         acl is_legacy hdr(host) -i {{ zope_domain }}
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}

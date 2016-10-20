@@ -1,4 +1,5 @@
 ---
 
 dependencies:
+  - ssl_cert
   - haproxy
