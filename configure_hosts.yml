@@ -5,9 +5,12 @@
 
 - name: "configure /etc/hosts file"
   hosts:
+    - nfs
     - archive
     - publishing
     - authoring
+    - lead_frontend
+    - legacy_frontend
     - frontend
     - worker
     - database
