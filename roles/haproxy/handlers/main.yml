@@ -10,9 +10,11 @@
   become: yes
   service:
     name: haproxy
-    state: restart
+    state: restarted
+  register: restart_haproxy_handler
 
 - name: reload haproxy
+  when: "{{ restart_haproxy_handler is not defined }}"
   become: yes
   service:
     name: haproxy
