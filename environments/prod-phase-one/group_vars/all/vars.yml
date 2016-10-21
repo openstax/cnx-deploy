@@ -50,3 +50,5 @@ xxx_hardcoded_zclients:
   - ip_addr: 128.42.169.18
     host: font
     count: 5
+
+blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"

@@ -17,10 +17,11 @@ import std;
 #         time_t TIM_parse(const char *p);
 # }C
 
-# TODO restore blocked IP address list, but this needs to be part of configuration.
 acl block {
+{% for ip_addr in blocked_ip_addresses|default([]) %}
+"{{ ip_addr }}";
+{% endfor %}
 }
-
 
 # haproxy load balancing for zope
 backend backend_0 {
