@@ -13,15 +13,14 @@ prod02.cnx.org
 [prod03]
 prod03.cnx.org
 
-[prod04]
-prod04.cnx.org
+[prod_files00]
+prod-files00.cnx.org
 
 
 # Grouped Hosts
 
 [nfs:children]
-# placed on the same machine as the frontend
-prod04
+prod_files00
 
 [database:children]
 
