@@ -38,7 +38,7 @@ slack_token: "{{ vault_slack_token }}"
 nfs_server_for_files1: prod00.cnx.org
 nfs_server_for_files2: prod00.cnx.org
 
-webview_version: v0.20.0
+webview_version: v0.21.0
 
 xxx_hardcoded_zclients:
   - ip_addr: 128.42.169.13
