@@ -35,8 +35,8 @@ postgres_connections: "{{ vault_postgres_connections }}"
 
 slack_token: "{{ vault_slack_token }}"
 
-nfs_server_for_files1: prod00.cnx.org
-nfs_server_for_files2: prod00.cnx.org
+nfs_server_for_files1: prod-files00.cnx.org
+nfs_server_for_files2: prod-files00.cnx.org
 
 webview_version: v0.21.0
 
