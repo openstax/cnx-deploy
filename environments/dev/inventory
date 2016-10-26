@@ -67,6 +67,7 @@ zclient
 pdf_gen
 
 [nfs_connected:children]
+legacy_frontend
 frontend
 zclient
 pdf_gen
