@@ -3,16 +3,18 @@
 
 - name: "install python-minimal (2.7) for ansible"
   hosts:
+    - nfs
+    - database
     - archive
     - publishing
     - authoring
+    - lead_frontend
+    - legacy_frontend
     - frontend
     - worker
-    - database
     - zeo
     - zclient
     - pdf_gen
-    - haproxy
   become: yes
   # This is the critical line, otherwise Ansible will try
   # to run python to gather facts.

@@ -8,12 +8,15 @@
 
 - name: "notify #cnx-stream of the deployment (start)"
   hosts:
+    - nfs
+    - database
     - archive
     - publishing
     - authoring
+    - lead_frontend
+    - legacy_frontend
     - frontend
     - worker
-    - database
     - zeo
     - zclient
     - pdf_gen
@@ -257,12 +260,15 @@
 
 - name: "notify #cnx-stream of the deployment (end)"
   hosts:
+    - nfs
+    - database
     - archive
     - publishing
     - authoring
+    - lead_frontend
+    - legacy_frontend
     - frontend
     - worker
-    - database
     - zeo
     - zclient
     - pdf_gen
