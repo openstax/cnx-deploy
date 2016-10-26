@@ -33,6 +33,8 @@ staging_files00
 
 [authoring:children]
 
+[lead_frontend:children]
+staging00
 
 [legacy_frontend:children]
 staging03
