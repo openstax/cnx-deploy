@@ -29,7 +29,7 @@
         # "check" enables health checks
         # "rise 1" means consider the frontend up after 1 successful health check
       {% for host in groups.frontend %}
-      {% set ip_addr = hostvars[host]['ansible_' + iface].ipv4.address %}
+      {% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
         server {{ host }} {{ ip_addr }}:{{ varnish_port }} check rise 1
       {% endfor %}
 
@@ -42,7 +42,7 @@
         # "check" enables health checks
         # "rise 1" means consider the frontend up after 1 successful health check
       {% for host in groups.legacy_frontend %}
-      {% set ip_addr = hostvars[host]['ansible_' + iface].ipv4.address %}
+      {% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
         server {{ host }} {{ ip_addr }}:{{ varnish_port }} check rise 1
       {% endfor %}
     owner: root
