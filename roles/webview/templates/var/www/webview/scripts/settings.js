@@ -58,11 +58,8 @@
       },
 
       conceptCoach: {
-        uuids: {
-          'f10533ca-f803-490d-b935-88899941197f': ['exercise'],
-          '8QUzyvgD': ['exercise'] // only long-codes are currently supported
-        },
-        url: 'https://tutor-qa.openstax.org'
+        uuids: {{ concept_couch_webview_settings|default({})|to_json }},
+        url: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}'
       }
 
     };
