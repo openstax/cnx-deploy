@@ -41,7 +41,7 @@
       },
 
       accountProfile: 'https://{{ accounts_domain }}/profile',
-
+      cnxSupport: 'http://openstax.force.com/support?l=en_US&c=Products%3ACNX',
       terpUrl: function (itemCode) {
         return 'https://openstaxtutor.org/terp/' + itemCode + '/quiz_start';
       },
