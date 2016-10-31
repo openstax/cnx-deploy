@@ -27,6 +27,7 @@ arclishing_domain: archive.cnx.org
 frontend_domain: staging00.cnx.org
 accounts_domain: accounts.openstax.org
 tutor_domain: tutor.openstax.org
+exercises_domain: exercises.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
