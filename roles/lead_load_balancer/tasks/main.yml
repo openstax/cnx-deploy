@@ -23,7 +23,7 @@
       # Load balancing the frontend grouping
       backend nodes
         balance uri
-        option httpchk OPTIONS * HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
+        option httpchk GET /ping HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
 
         # Server options:
         # "check" enables health checks

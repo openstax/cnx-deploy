@@ -107,6 +107,11 @@ sub vcl_recv {
         return (synth(403, "Access denied"));
     }
 
+    if (req.url ~ "^/ping") {
+        set req.backend_hint = rewrite_webview;
+        return (pass);
+    }
+
     # cnx rewrite archive
     if (req.url ~ "^/a/") {
             set req.backend_hint = rewrite_publish;
