@@ -5,6 +5,12 @@ server {
     index           index.html;
     try_files       $uri $uri/ /index.html;
 
+    location /ping {
+        add_header Content-Length 0;
+        add_header Content-Type text/plain;
+        return 200;
+    }
+
     location /login {
         proxy_pass http://{{ authoring_host }}:{{ authoring_port }};
     }
