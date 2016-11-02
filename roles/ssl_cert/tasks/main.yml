@@ -9,3 +9,4 @@
     owner: "{{ cert_owner|default('root') }}"
     group: "{{ cert_group|default('root') }}"
     mode: 0600
+  notify: "{{ on_ssl_install }}"
