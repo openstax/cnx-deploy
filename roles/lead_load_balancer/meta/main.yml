@@ -1,5 +1,7 @@
 ---
 
 dependencies:
-  - ssl_cert
+  - role: ssl_cert
+    on_ssl_install:
+      - reload haproxy
   - haproxy

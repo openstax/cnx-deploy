@@ -1,0 +1,5 @@
+---
+
+# This is a default NOOP handler for the `on_ssl_install` notifier
+on_ssl_install:
+  - ssl cert NOOP

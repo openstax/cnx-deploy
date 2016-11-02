@@ -1,0 +1,7 @@
+---
+
+- name: ssl cert NOOP
+  # 'false' means we never actually run this task. It is just a place holder.
+  when: false
+  # This is a default NOOP handler for the `on_ssl_install` notifier
+  shell: echo "NOOP"
