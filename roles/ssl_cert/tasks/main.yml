@@ -1,14 +1,7 @@
 ---
 # Configures SSL sites for cnx sites.
 
-- name: check if certificate is expiring in the next 24 hours
-  become: yes
-  shell: "openssl x509 -checkend $((24 * 60 * 60)) -noout -in {{ root_prefix }}/etc/ssl/certs/{{ frontend_domain }}.pem"
-  ignore_errors: yes
-  register: certificate_expired
-
 - name: install certificate pem
-  when: "{{ certificate_expired.rc != 0 }}"
   become: yes
   copy:
     src: "{{ cert_pem_filepath }}"
