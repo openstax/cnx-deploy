@@ -151,14 +151,6 @@
     - legacy_be
     - be
 
-- name: configure zeo
-  hosts:
-    - zeo
-  tasks:
-    - include: tasks/configure_zeo.yml
-  tags:
-    - zope
-
 - name: configure zope client(s)
   hosts:
     - zclient

@@ -2,3 +2,5 @@
 
 dependencies:
   - zope_common
+  - role: zeo
+    when: "{{ ansible_hostname in groups.zeo }}"

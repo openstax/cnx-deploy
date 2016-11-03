@@ -9,5 +9,7 @@
   become: yes
   template:
     src: etc/supervisor/conf.d/zeo.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zeo.conf"
+    dest: "/etc/supervisor/conf.d/zeo.conf"
     mode: 0644
+  notify:
+    - restart supervisord
