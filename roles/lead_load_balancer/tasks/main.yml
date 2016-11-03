@@ -22,6 +22,7 @@
 
       # Load balancing the frontend grouping
       backend nodes
+        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
         balance uri
         option httpchk GET /ping HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
 
@@ -35,6 +36,7 @@
 
       # Load balancing the frontend grouping
       backend legacy_nodes
+        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
         balance roundrobin
         option httpchk OPTIONS * HTTP/1.1\r\nHOST:\ {{ zope_domain }}
 
