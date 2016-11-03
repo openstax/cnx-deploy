@@ -71,3 +71,8 @@ legacy_frontend
 frontend
 zclient
 pdf_gen
+
+[zope:children]
+zeo
+zclient
+pdf_gen
