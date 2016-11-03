@@ -36,17 +36,6 @@
     - include: tasks/checkout.yml
     - include: tasks/archive_source.yml
 
-- name: checkout cnx-buildout
-  hosts: local
-  vars:
-    source:
-      - name: cnx-buildout
-        repo: git@github.com:Rhaptos/cnx-buildout.git
-        default_version: HEAD
-  tasks:
-    - include: tasks/checkout.yml
-    - include: tasks/archive_source.yml
-
 - name: send source to hosts
   hosts:
     - archive
@@ -56,34 +45,6 @@
     - database
   tasks:
     - include: tasks/plant_source.yml
-
-- name: send cnx-buildout source to hosts
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  vars:
-    source:
-      - name: cnx-buildout
-        repo: git@github.com:Rhaptos/cnx-buildout.git
-        default_version: HEAD
-  tasks:
-    - include: tasks/plant_source.yml
-
-# +++
-# Install unpackaged dependencies
-# +++
-
-- name: build python 2.4
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - stat: path=/usr/local/bin/python2.4
-      register: python24_binary
-    - include: tasks/install_python24.yml
-      when: not python24_binary.stat.exists
 
 # +++
 # Persistence services
@@ -181,15 +142,14 @@
   tasks:
     - include: tasks/install_authoring.yml
 
-- name: configure buildout
-  hosts:
+- include: zope.yml
+  tags:
+    - zope
     - zeo
     - zclient
     - pdf_gen
-  tasks:
-    - include: tasks/configure_buildout.yml
-  tags:
-    - zope
+    - legacy_be
+    - be
 
 - name: configure zeo
   hosts:

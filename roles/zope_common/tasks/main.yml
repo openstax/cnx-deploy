@@ -1,0 +1,28 @@
+---
+
+- name: make source directory
+  become: yes
+  file:
+    path: "/var/lib/cnx"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+
+- name: install git
+  become: yes
+  apt:
+    name: git
+
+- name: clone source
+  become: yes
+  become_user: www-data
+  git:
+    repo: "https://github.com/Rhaptos/cnx-buildout.git"
+    dest: "/var/lib/cnx/cnx-buildout"
+    version: "HEAD"
+  register: git_result
+  until: git_result|success
+  retries: 5
+  delay: 30
+
+- include: configure_buildout.yml
