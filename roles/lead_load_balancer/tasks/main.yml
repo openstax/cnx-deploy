@@ -12,9 +12,14 @@
       frontend http-proxy
         bind *:80
         bind *:443 ssl crt /etc/ssl/certs/{{ frontend_domain }}.pem
+
+        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
+        http-request set-header X-Secure true if { ssl_fc }
+
         acl is_legacy hdr(host) -i {{ zope_domain }}
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
+
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
         use_backend nodes if is_arclishing
@@ -22,9 +27,9 @@
 
       # Load balancing the frontend grouping
       backend nodes
-        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
         balance uri
         option httpchk GET /ping HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
+        option forwardfor
 
         # Server options:
         # "check" enables health checks
@@ -36,9 +41,9 @@
 
       # Load balancing the frontend grouping
       backend legacy_nodes
-        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
         balance roundrobin
         option httpchk OPTIONS * HTTP/1.1\r\nHOST:\ {{ zope_domain }}
+        option forwardfor
 
         # Server options:
         # "check" enables health checks
