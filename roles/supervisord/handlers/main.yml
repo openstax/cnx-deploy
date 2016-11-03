@@ -1,0 +1,7 @@
+---
+
+- name: restart supervisord
+  become: yes
+  service:
+    name: supervisor
+    state: restarted
