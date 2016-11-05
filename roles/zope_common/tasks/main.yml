@@ -26,3 +26,5 @@
   delay: 30
 
 - include: configure_buildout.yml
+- include: configure_zclient.yml
+  when: "{{ inventory_hostname in groups.zclient }}"
