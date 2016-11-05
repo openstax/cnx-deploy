@@ -9,17 +9,7 @@
   become: yes
   template:
     src: var/lib/cnx/cnx-buildout/ansible-zclients.cfg
-    dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible-zclients.cfg"
+    dest: "/var/lib/cnx/cnx-buildout/ansible-zclients.cfg"
     owner: www-data
     group: www-data
     mode: 0644
-
-- name: configure zclient in supervisor
-  become: yes
-  template:
-    src: etc/supervisor/conf.d/zclients.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/zclients.conf"
-    mode: 0644
-
-# TODO ...
-# - notify: reload supervisord

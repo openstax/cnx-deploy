@@ -4,3 +4,5 @@ dependencies:
   - zope_common
   - role: zeo
     when: "{{ ansible_hostname in groups.zeo }}"
+  - role: zclient
+    when: "{{ ansible_hostname in groups.zclient }}"
