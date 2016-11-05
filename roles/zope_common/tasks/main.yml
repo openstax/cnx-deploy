@@ -28,4 +28,6 @@
 - include: configure_buildout.yml
 - include: configure_zclient.yml
   when: "{{ inventory_hostname in groups.zclient }}"
+- include: configure_pdf_gen.yml
+  when: "{{ inventory_hostname in groups.pdf_gen }}"
 - include: install_cnx_buildout.yml
