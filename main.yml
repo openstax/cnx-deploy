@@ -151,16 +151,6 @@
     - legacy_be
     - be
 
-- name: install zope
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - include: tasks/install_cnx_buildout.yml
-  tags:
-    - zope
-
 - name: create rhaptos site
   hosts:
     - zeo
