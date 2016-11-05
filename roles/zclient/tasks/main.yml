@@ -1,0 +1,10 @@
+---
+
+- name: configure zclient in supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/zclients.conf
+    dest: "/etc/supervisor/conf.d/zclients.conf"
+    mode: 0644
+  notify:
+    - restart supervisord

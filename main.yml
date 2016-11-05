@@ -36,17 +36,6 @@
     - include: tasks/checkout.yml
     - include: tasks/archive_source.yml
 
-- name: checkout cnx-buildout
-  hosts: local
-  vars:
-    source:
-      - name: cnx-buildout
-        repo: git@github.com:Rhaptos/cnx-buildout.git
-        default_version: HEAD
-  tasks:
-    - include: tasks/checkout.yml
-    - include: tasks/archive_source.yml
-
 - name: send source to hosts
   hosts:
     - archive
@@ -56,34 +45,6 @@
     - database
   tasks:
     - include: tasks/plant_source.yml
-
-- name: send cnx-buildout source to hosts
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  vars:
-    source:
-      - name: cnx-buildout
-        repo: git@github.com:Rhaptos/cnx-buildout.git
-        default_version: HEAD
-  tasks:
-    - include: tasks/plant_source.yml
-
-# +++
-# Install unpackaged dependencies
-# +++
-
-- name: build python 2.4
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - stat: path=/usr/local/bin/python2.4
-      register: python24_binary
-    - include: tasks/install_python24.yml
-      when: not python24_binary.stat.exists
 
 # +++
 # Persistence services
@@ -122,6 +83,7 @@
         db_owner: "{{ archive_db_user }}"
         db_name: "{{ archive_db_name }}"
     - include: tasks/create_db_user.yml
+      when: "{{ authoring_db_user is defined }}"
       vars:
         db_user: "{{ authoring_db_user }}"
         db_password: "{{ authoring_db_password }}"
@@ -130,6 +92,7 @@
         db_user: "backups"
         role_attr_flags: ""
     - include: tasks/create_db.yml
+      when: "{{ authoring_db_user is defined }}"
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
@@ -181,57 +144,14 @@
   tasks:
     - include: tasks/install_authoring.yml
 
-- name: configure buildout
-  hosts:
+- include: zope.yml
+  tags:
+    - zope
     - zeo
     - zclient
     - pdf_gen
-  tasks:
-    - include: tasks/configure_buildout.yml
-  tags:
-    - zope
-
-- name: configure zeo
-  hosts:
-    - zeo
-  tasks:
-    - include: tasks/configure_zeo.yml
-  tags:
-    - zope
-
-- name: configure zope client(s)
-  hosts:
-    - zclient
-  tasks:
-    - include: tasks/configure_zclient.yml
-  tags:
-    - zope
-
-- name: configure pdf generation
-  hosts:
-    - pdf_gen
-  tasks:
-    - include: tasks/configure_pdf_gen.yml
-  tags:
-    - zope
-
-- name: install zope
-  hosts:
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - include: tasks/install_cnx_buildout.yml
-  tags:
-    - zope
-
-- name: create rhaptos site
-  hosts:
-    - zeo
-  tasks:
-    - include: tasks/create_rhaptos_site.yml
-  tags:
-    - zope
+    - legacy_be
+    - be
 
 - include: legacy_frontend.yml
   tags:

@@ -8,6 +8,6 @@
   become: yes
   template:
     src: var/lib/cnx/cnx-buildout/ansible.cfg
-    dest: "{{ root_prefix }}/var/lib/cnx/cnx-buildout/ansible.cfg"
+    dest: "/var/lib/cnx/cnx-buildout/ansible.cfg"
     owner: www-data
     group: www-data

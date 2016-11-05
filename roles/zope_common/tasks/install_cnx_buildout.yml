@@ -6,22 +6,6 @@
 # +++
 
 - name: install dependencies
-  when: ansible_distribution_release == 'trusty'
-  apt:
-    name: "{{ item }}"
-    state: present
-  become: yes
-  with_items:
-    - openjdk-7-jre-headless
-    - libjpeg-dev
-    - libpng-dev
-    - build-essential
-    # lxml dependencies
-    - libxml2-dev
-    - libxslt1-dev
-
-- name: install dependencies
-  when: ansible_distribution_release != 'trusty'
   apt:
     name: "{{ item }}"
     state: present
@@ -40,14 +24,14 @@
 # +++
 
 - stat:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
   register: venvs_dir
 
 - name: ensure the venvs directory exists
   become: yes
   when: not venvs_dir.stat.exists
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: www-data
@@ -64,7 +48,7 @@
 
 - name: create the cnx-buildout virtualenv
   become: yes
-  shell: "{{ python24_path.stdout }} virtualenv-1.7.2/virtualenv.py {{ root_prefix }}/var/cnx/venvs/cnx-buildout"
+  shell: "{{ python24_path.stdout }} virtualenv-1.7.2/virtualenv.py /var/cnx/venvs/cnx-buildout"
 
 - name: delete virtualenv 1.7.2 source code
   file:
@@ -79,35 +63,35 @@
   become: yes
   copy:
     src: src/cnx-buildout/downloads
-    dest: "{{ source_dir }}/cnx-buildout"
+    dest: "/var/lib/cnx/cnx-buildout"
     owner: www-data
 
 - name: run bootstrap
   become: yes
   become_user: www-data
-  shell: "{{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
+  shell: "/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
   args:
-    chdir: "{{ source_dir }}/cnx-buildout"
+    chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: install simplejson 1.9.2
   become: yes
   pip:
     name: simplejson
     version: 1.9.2
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/cnx-buildout"
+    virtualenv: "/var/cnx/venvs/cnx-buildout"
     virtualenv_python: python2
 
 - name: run buildout
   become: yes
-  shell: ". {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout -c ansible.cfg 2>&1 | tee buildout_output.txt"
+  shell: ". /var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout -c ansible.cfg 2>&1 | tee buildout_output.txt"
   args:
-    chdir: "{{ source_dir }}/cnx-buildout"
+    chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: install lxml 3.2.1
   become: yes
-  shell: ". bin/libs.sh && {{ root_prefix }}/var/cnx/venvs/cnx-buildout/bin/pip install lxml==3.2.1"
+  shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install lxml==3.2.1"
   args:
-    chdir: "{{ source_dir }}/cnx-buildout"
+    chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: install python-memcached and hashlib
   become: yes
@@ -132,19 +116,8 @@
 - name: assign permissions group
   become: yes
   file:
-    path: "{{ root_prefix }}/var/lib/cnx/cnx-buildout"
+    path: "/var/lib/cnx/cnx-buildout"
     state: directory
     recurse: yes
     owner: www-data
     group: www-data
-
-# +++
-# Start server
-# +++
-
-- name: restart supervisor
-  become: yes
-  service:
-    name: supervisor
-    state: restarted
-    sleep: 5

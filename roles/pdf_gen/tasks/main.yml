@@ -1,10 +1,7 @@
 ---
 # Configure PDF Generation
 
-# TODO Create supervisor configuration
-
 - name: install dependencies
-  when: ansible_distribution_release != 'trusty'
   apt:
     name: "{{ item }}"
     state: present
@@ -35,14 +32,7 @@
     - otf-stix
     - openjdk-8-jdk
 
-- name: install princexml (trusty)
-  when: ansible_distribution_release == "trusty"
-  apt:
-    deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu14.04_amd64.deb"
-  become: yes
-
 - name: install princexml
-  when: ansible_distribution_release != "trusty"
   apt:
     deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu16.04_amd64.deb"
   become: yes
@@ -64,3 +54,12 @@
     - URWPalladioL-BoldItal.ttf
     - URWPalladioL-Ital.ttf
     - URWPalladioL-Roma.ttf
+
+- name: configure pdf_gen in supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/pdf_gen.conf
+    dest: "/etc/supervisor/conf.d/pdf_gen.conf"
+    mode: 0644
+  notify:
+    - restart supervisord
