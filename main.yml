@@ -83,6 +83,7 @@
         db_owner: "{{ archive_db_user }}"
         db_name: "{{ archive_db_name }}"
     - include: tasks/create_db_user.yml
+      when: "{{ authoring_db_user is defined }}"
       vars:
         db_user: "{{ authoring_db_user }}"
         db_password: "{{ authoring_db_password }}"
@@ -91,6 +92,7 @@
         db_user: "backups"
         role_attr_flags: ""
     - include: tasks/create_db.yml
+      when: "{{ authoring_db_user is defined }}"
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
