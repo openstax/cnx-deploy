@@ -6,3 +6,5 @@ dependencies:
     when: "{{ ansible_hostname in groups.zeo }}"
   - role: zclient
     when: "{{ ansible_hostname in groups.zclient }}"
+  - role: pdf_gen
+    when: "{{ ansible_hostname in groups.pdf_gen }}"
