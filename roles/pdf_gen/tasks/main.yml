@@ -55,4 +55,11 @@
     - URWPalladioL-Ital.ttf
     - URWPalladioL-Roma.ttf
 
-# TODO Create supervisor configuration
+- name: configure pdf_gen in supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/pdf_gen.conf
+    dest: "/etc/supervisor/conf.d/pdf_gen.conf"
+    mode: 0644
+  notify:
+    - restart supervisord
