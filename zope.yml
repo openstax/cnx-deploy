@@ -7,3 +7,8 @@
   hosts: zope
   roles:
     - zope
+  tasks:
+    - include: tasks/create_rhaptos_site.yml
+      run_once: yes
+  tags:
+    - zope

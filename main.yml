@@ -153,14 +153,6 @@
     - legacy_be
     - be
 
-- name: create rhaptos site
-  hosts:
-    - zeo
-  tasks:
-    - include: tasks/create_rhaptos_site.yml
-  tags:
-    - zope
-
 - include: legacy_frontend.yml
   tags:
     - haproxy
