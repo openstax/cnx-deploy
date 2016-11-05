@@ -151,14 +151,6 @@
     - legacy_be
     - be
 
-- name: configure pdf generation
-  hosts:
-    - pdf_gen
-  tasks:
-    - include: tasks/configure_pdf_gen.yml
-  tags:
-    - zope
-
 - name: install zope
   hosts:
     - zeo
