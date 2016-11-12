@@ -11,5 +11,13 @@
     src: etc/supervisor/conf.d/zeo.conf
     dest: "/etc/supervisor/conf.d/zeo.conf"
     mode: 0644
+  register: supervisor_conf_for_zeo
   notify:
-    - restart supervisord
+    - reload supervisord
+
+- name: restart zeo
+  when: "{{ not supervisor_conf_for_zeo|changed }}"
+  become: yes
+  supervisorctl:
+    name: zeo
+    state: restarted
