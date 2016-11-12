@@ -41,7 +41,3 @@
     login_host: "{{ archive_db_host }}"
     port: "{{ archive_db_port }}"
     state: absent
-
-- name: start instance
-  become: yes
-  shell: supervisorctl restart plone-instance
