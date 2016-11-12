@@ -5,3 +5,11 @@
   service:
     name: supervisor
     state: restarted
+  register: restart_supervisor_handler
+
+- name: reload supervisord
+  when: "{{ restart_supervisor_handler is not defined }}"
+  become: yes
+  service:
+    name: supervisor
+    state: reloaded
