@@ -185,7 +185,12 @@
   failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
 
 - name: initialize venv in db
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-db venv -h {{ archive_db_host }} -p {{ archive_db_port }} -d {{ archive_db_name }} -U {{ archive_db_user }}"
+  # FIXME (15-Nov-2016) The venv logic only works with localhost at this time.
+  #       It doesn't fail when not localhost, instead it just warns...
+  #       As a result, we are temporarily hardcoding this to localhost, which
+  #       means archive will be required to be on the same host as postgres.
+  #       https://github.com/Connexions/cnx-deploy/issues/145
+  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-db venv -h localhost -p {{ archive_db_port }} -d {{ archive_db_name }} -U {{ archive_db_user }}"
 
 - name: initialize db-migrator
   # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
