@@ -23,7 +23,7 @@ authoring_host: staging00.cnx.org
 authoring_port: 6420
 
 zope_domain: legacy-staging00.cnx.org
-arclishing_domain: archive.cnx.org
+arclishing_domain: archive-staging00.cnx.org
 frontend_domain: staging00.cnx.org
 accounts_domain: accounts.openstax.org
 tutor_domain: tutor.openstax.org
