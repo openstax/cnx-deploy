@@ -23,7 +23,7 @@ authoring_host: prod00.cnx.org
 authoring_port: 6420
 
 zope_domain: legacy-prod00.cnx.org
-arclishing_domain: archive.cnx.org
+arclishing_domain: archive-prod00.cnx.org
 frontend_domain: prod00.cnx.org
 accounts_domain: accounts.openstax.org
 tutor_domain: tutor.openstax.org
