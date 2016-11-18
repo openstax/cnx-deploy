@@ -19,12 +19,12 @@ archive_host: tundra.cnx.rice.edu
 archive_port: 8888
 publishing_host: tundra.cnx.rice.edu
 publishing_port: 6550
-authoring_host: prod00.cnx.org
+authoring_host: cnx.org
 authoring_port: 6420
 
-zope_domain: legacy-prod00.cnx.org
-arclishing_domain: archive-prod00.cnx.org
-frontend_domain: prod00.cnx.org
+zope_domain: legacy.cnx.org
+arclishing_domain: archive.cnx.org
+frontend_domain: cnx.org
 accounts_domain: accounts.openstax.org
 tutor_domain: tutor.openstax.org
 exercises_domain: exercises.openstax.org
