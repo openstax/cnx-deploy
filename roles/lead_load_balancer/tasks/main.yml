@@ -15,6 +15,7 @@
 
         http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
         http-request set-header X-Secure true if { ssl_fc }
+        http-request set-header X-Forwarded-Proto https if { ssl_fc }
 
         acl is_legacy hdr(host) -i {{ zope_domain }}
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
