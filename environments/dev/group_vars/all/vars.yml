@@ -32,10 +32,14 @@ zope_domain: legacy-dev00.cnx.org
 arclishing_domain: archive-dev00.cnx.org
 frontend_domain: dev00.cnx.org
 accounts_domain: accounts-qa1.openstax.org
+tutor_domain: openstaxtutor.org
+exercises_domain: exercises.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
 accounts_disable_verify_ssl: no
+
+exercises_token: "{{ vault_exercises_token }}"
 
 postgres_connections: "{{ vault_postgres_connections }}"
 

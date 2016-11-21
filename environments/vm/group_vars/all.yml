@@ -32,10 +32,14 @@ zope_domain: legacy.local.cnx.org
 arclishing_domain: archive.local.cnx.org
 frontend_domain: local.cnx.org
 accounts_domain: accounts.local.openstax.org
+tutor_domain: openstaxtutor.org
+exercises_domain: exercises.openstax.org
 
 accounts_consumer_token: 
 accounts_consumer_secret: 
 accounts_disable_verify_ssl: yes
+
+exercises_token: "somekindoftoken"
 
 nfs_server_for_files1: local.cnx.org
 nfs_server_for_files2: local.cnx.org
