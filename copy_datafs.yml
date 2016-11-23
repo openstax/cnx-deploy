@@ -1,0 +1,25 @@
+---
+# This pull the Data.fs from a production server
+
+- name: copy datafs
+  hosts: zeo
+  vars_prompt:
+    - name: "source_host"
+      prompt: "Where is the Data.fs hosted?"
+      private: no
+      default: "backend1.cnx.org"
+    - name: "source_location"
+      prompt: "What directory is the Data.fs located in on the host machine?"
+      private: no
+      default: "/opt/instances/cnx/var"
+  vars:
+    source_filename: "Data.fs"
+    source_host: "{{ source_host }}"
+    source_location: "{{ source_location }}"
+    destination_filename: "{{ source_filename }}.new"
+  tasks:
+    - name: copy datafs over
+      synchronize:
+        mode: pull
+        src: "rsync://{{ source_host }}{{ source_location}}/{{ source_filename }}"
+        dest: "/var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
