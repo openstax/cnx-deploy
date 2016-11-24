@@ -42,7 +42,7 @@ backend legacy_frontend {
 #}
 
 # static files
-backend backend_2 {
+backend static_files {
 .host = "127.0.0.1";
 .port = "8080";
 .connect_timeout = 0.4s;
@@ -126,7 +126,7 @@ sub vcl_recv {
         }
 
         elsif (req.url ~ "^/specials") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             return (hash);
         }
         else {
@@ -162,7 +162,7 @@ sub vcl_recv {
 
         /* doing the static file dance */
         if (req.url ~ "^/pdfs") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/pdfs", "/files");
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
@@ -178,7 +178,7 @@ sub vcl_recv {
             return(hash);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
         }
         elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
@@ -190,15 +190,15 @@ sub vcl_recv {
             return(hash);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/.*(pdf|epub)", "/files/\1-\3.\4");
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)$") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)", "/files/\1-\3.\4.zip");
         }
         elsif (req.url ~ "^/content/(col[0-9]+)/([0-9.]+)/source$") {
-            set req.backend_hint = backend_2;
+            set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/(([0-9.]+)|latest)/?") {
