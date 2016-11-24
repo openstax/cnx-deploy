@@ -24,7 +24,7 @@ acl block {
 }
 
 # haproxy load balancing for zope
-backend backend_0 {
+backend legacy_frontend {
 .host = "{{ hostvars[groups.legacy_frontend[0]].ansible_default_ipv4.address }}";
 .port = "{{ haproxy_port|default('8888') }}";
 .connect_timeout = 0.4s;
@@ -166,15 +166,15 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^/pdfs", "/files");
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             return(hash);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/col.*/?\?format=rdf") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             return(hash);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/.*/module_export_template") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             return(hash);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
@@ -182,11 +182,11 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
         }
         elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             return(hash);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
@@ -210,14 +210,14 @@ sub vcl_recv {
         // special cases for legacy
         elsif (req.url ~ "^/images/(advice\.png|example\.png|missing\.eps\.metadata|thick-left-arrow\.png|annot\.png|explanation\.png|question\.png|change\.png|magnify-glass-cnx\.png|rhaptos_powered\.png|comment\.png|missing\.eps|seealso\.png)"
                || req.url ~ "^/scripts/(fileSizeUnits|getUser|selectAllNoneInverse)") {
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
         }
         elseif ( req.url ~ "^/aboutus/" ) {
             /*  avoid multiple rewrites on restart */
             if (req.url !~ "VirtualHostBase" ) {
                 set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
             }
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
         }
         // all rewrite webview
         elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
@@ -230,7 +230,7 @@ sub vcl_recv {
         // everything else (including 404)
         else {
             set req.http.X-My-Header = "Fallthrough";
-            set req.backend_hint = backend_0;
+            set req.backend_hint = legacy_frontend;
             /*  avoid multiple rewrites on restart */
             if (req.url !~ "VirtualHostBase" ) {
                 if  ( req.http.X-Secure ) {
@@ -243,7 +243,7 @@ sub vcl_recv {
         }
     }
     elsif (req.http.host ~ "^passthru") {
-        set req.backend_hint = backend_0;
+        set req.backend_hint = legacy_frontend;
     }
     elsif (req.http.host ~ "^siyavula.cnx.org") {
         set req.url = "/VirtualHostBase/http/siyavula.cnx.org:80/plone/VirtualHostRoot" + req.url;
@@ -258,7 +258,7 @@ sub vcl_recv {
                 set req.url = "/VirtualHostBase/http/{{ zope_domain }}:80/plone/VirtualHostRoot" + req.url;
             }
         }
-        set req.backend_hint = backend_0;
+        set req.backend_hint = legacy_frontend;
     }
     else {
         return (synth(750, "Moved Permanently"));
