@@ -1,0 +1,10 @@
+---
+
+- name: create zeopack cronjob
+  become: yes
+  become_user: "www-data"
+  cron:
+    name: zeopack
+    state: present
+    special_time: weekly
+    job: "/var/lib/cnx/cnx-buildout/bin/zeopack"
