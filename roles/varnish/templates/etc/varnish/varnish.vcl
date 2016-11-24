@@ -233,12 +233,6 @@ sub vcl_recv {
             }
         }
     }
-    elsif (req.http.host ~ "^passthru") {
-        set req.backend_hint = legacy_frontend;
-    }
-    elsif (req.http.host ~ "^siyavula.cnx.org") {
-        set req.url = "/VirtualHostBase/http/siyavula.cnx.org:80/plone/VirtualHostRoot" + req.url;
-    }
     elsif (req.http.host ~ "^{{ zope_domain }}") {
         /*  avoid multiple rewrites on restart */
         if (req.url !~ "VirtualHostBase" ) {
