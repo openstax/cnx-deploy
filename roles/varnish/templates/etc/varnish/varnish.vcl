@@ -32,15 +32,6 @@ backend legacy_frontend {
 .between_bytes_timeout = 600s;
 }
 
-## mobile
-#backend backend_1 {
-#.host = "128.42.169.31";
-#.port = "5000";
-#.connect_timeout = 0.4s;
-#.first_byte_timeout = 600s;
-#.between_bytes_timeout = 60s;
-#}
-
 # static files
 backend static_files {
 .host = "127.0.0.1";
