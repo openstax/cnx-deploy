@@ -41,7 +41,7 @@ backend static_files {
 .between_bytes_timeout = 10s;
 }
 
-backend rewrite_webview {
+backend webview {
 .host = "127.0.0.1";
 .port = "8081";
 .connect_timeout = 0.4s;
@@ -49,7 +49,7 @@ backend rewrite_webview {
 .between_bytes_timeout = 60s;
 }
 
-backend rewrite_resources {
+backend resources {
 .host = "{{ archive_host }}";
 .port = "{{ archive_port }}";
 .connect_timeout = 0.4s;
@@ -57,7 +57,7 @@ backend rewrite_resources {
 .between_bytes_timeout = 60s;
 }
 
-backend rewrite_archive {
+backend archive {
 .host = "{{ archive_host }}";
 .port = "{{ archive_port }}";
 .connect_timeout = 0.4s;
@@ -65,7 +65,7 @@ backend rewrite_archive {
 .between_bytes_timeout = 60s;
 }
 
-backend rewrite_publish {
+backend publishing {
 .host = "{{ publishing_host }}";
 .port = "{{ publishing_port }}";
 .first_byte_timeout = 1200s;
@@ -99,20 +99,20 @@ sub vcl_recv {
     }
 
     if (req.url ~ "^/ping") {
-        set req.backend_hint = rewrite_webview;
+        set req.backend_hint = webview;
         return (pass);
     }
 
     # cnx rewrite archive
     if (req.url ~ "^/a/") {
-            set req.backend_hint = rewrite_publish;
+            set req.backend_hint = publishing;
             return (pass);
         }
 
     # cnx rewrite archive  - specials served from nginx statically
     if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml") {
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
-            set req.backend_hint = rewrite_publish;
+            set req.backend_hint = publishing;
             return (pass);
         }
 
@@ -122,14 +122,14 @@ sub vcl_recv {
         }
         else {
 
-        set req.backend_hint = rewrite_archive;
+        set req.backend_hint = archive;
         return (hash);
         }
     }
 
     # resource images
     if (req.url ~ "^/resources/") {
-        set req.backend_hint = rewrite_resources;
+        set req.backend_hint = resources;
         return (hash);
     }
 
@@ -193,10 +193,10 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/(([0-9.]+)|latest)/?") {
-            set req.backend_hint = rewrite_archive;
+            set req.backend_hint = archive;
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/(([0-9.]+)|latest)/\?collection=col[0-9]*") {
-            set req.backend_hint = rewrite_archive;
+            set req.backend_hint = archive;
         }
         // special cases for legacy
         elsif (req.url ~ "^/images/(advice\.png|example\.png|missing\.eps\.metadata|thick-left-arrow\.png|annot\.png|explanation\.png|question\.png|change\.png|magnify-glass-cnx\.png|rhaptos_powered\.png|comment\.png|missing\.eps|seealso\.png)"
@@ -212,7 +212,7 @@ sub vcl_recv {
         }
         // all rewrite webview
         elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
-            set req.backend_hint = rewrite_webview;
+            set req.backend_hint = webview;
 
             if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/users" || req.url ~ "@draft"){
                 return (pass);
