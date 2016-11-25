@@ -11,3 +11,11 @@
     dest: "/var/lib/cnx/cnx-buildout/ansible.cfg"
     owner: www-data
     group: www-data
+
+- name: place the ansible-versions.cfg
+  become: yes
+  copy:
+    src: "{{ inventory_dir }}/files/versions.cfg"
+    dest: "/var/lib/cnx/cnx-buildout/ansible-versions.cfg"
+    owner: www-data
+    group: www-data
