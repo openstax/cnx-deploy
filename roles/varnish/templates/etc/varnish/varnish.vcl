@@ -105,12 +105,12 @@ sub vcl_recv {
 
     # cnx rewrite archive
     if (req.url ~ "^/a/") {
-            set req.backend_hint = publishing;
-            return (pass);
-        }
+        set req.backend_hint = publishing;
+        return (pass);
+    }
 
     # cnx rewrite archive  - specials served from nginx statically
-    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml") {
+    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml" || req.url ~ "^/robots.txt") {
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing;
             return (pass);
@@ -192,10 +192,7 @@ sub vcl_recv {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
         }
-        elsif (req.url ~ "^/content/((col|m)[0-9]+)/(([0-9.]+)|latest)/?") {
-            set req.backend_hint = archive;
-        }
-        elsif (req.url ~ "^/content/((col|m)[0-9]+)/(([0-9.]+)|latest)/\?collection=col[0-9]*") {
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)") {
             set req.backend_hint = archive;
         }
         // special cases for legacy
@@ -210,8 +207,8 @@ sub vcl_recv {
             }
             set req.backend_hint = legacy_frontend;
         }
-        // all rewrite webview
-        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
+        // all webview
+        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
             set req.backend_hint = webview;
 
             if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/users" || req.url ~ "@draft"){
