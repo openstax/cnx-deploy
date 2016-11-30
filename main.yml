@@ -22,7 +22,9 @@
     - pdf_gen
   vars:
     msg: "{{ ansible_user_id }} started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
-    channel: "#cnx-stream"
+    channels:
+      - "#cnx-stream"
+      - "#deployments"
   tasks:
     - include: tasks/notify_slack.yml
 
@@ -194,6 +196,8 @@
     - pdf_gen
   vars:
     msg: "Deploy to {{ inventory_hostname }} by {{ ansible_user_id }} was successful :heavy_check_mark:"
-    channel: "#cnx-stream"
+    channels:
+      - "#cnx-stream"
+      - "#deployments"
   tasks:
     - include: tasks/notify_slack.yml
