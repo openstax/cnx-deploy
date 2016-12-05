@@ -1,0 +1,18 @@
+---
+# Playbook for managing the database.
+
+- include: pretask.yml
+
+- name: collect info on database connected hosts
+  hosts: db_connected
+  # NOOP only to acquire IP address information about connected hosts.
+  tasks: []
+
+- name: install postgres database
+  hosts:
+    - database
+    # FIXME The zclient group's rhaptos site creation requires a local database.
+    #       This is only required during provisioning. =/
+    - zclient
+  roles:
+    - postgres

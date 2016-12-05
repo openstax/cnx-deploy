@@ -1,0 +1,15 @@
+---
+
+- name: restart postgresql
+  become: yes
+  service:
+    name: postgresql
+    state: restarted
+  register: restart_postgresql_handler
+
+- name: reload postgresql
+  when: "{{ restart_postgresql_handler is not defined }}"
+  become: yes
+  service:
+    name: postgresql
+    state: reloaded

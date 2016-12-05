@@ -59,11 +59,9 @@
   hosts:
     - database
     # Only needed on this host(s) for provisioning
-    - zeo
     - zclient
-    - pdf_gen
-  tasks:
-    - include: tasks/install_postgres.yml
+  roles:
+    - postgres
 
 - name: install postgres extensions
   hosts:
