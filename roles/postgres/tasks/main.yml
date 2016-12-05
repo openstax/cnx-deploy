@@ -1,10 +1,6 @@
 ---
 # Installs and configures Postgres.
 
-# +++
-# Install
-# +++
-
 - name: add apt-key for pgdg repository
   become: yes
   apt_key:
@@ -23,8 +19,6 @@
   apt:
     name: "{{ item }}"
     state: present
-    # BBB (1-Feb-2016) ubuntu 14.04
-    force: "{{ (ansible_distribution == 'Ubuntu' and  ansible_distribution_release == 'trusty') and 'yes' or 'no' }}"
   with_items:
     - "postgresql-{{ postgres_version }}"
     - "postgresql-server-dev-{{ postgres_version }}"
@@ -32,7 +26,9 @@
     - "postgresql-contrib-{{ postgres_version }}"
     # We'll assume plpython is required...
     - "postgresql-plpython-{{ postgres_version }}"
-
+  notify:
+    - restart postgresql
+    
 # +++
 # Configure
 # +++
@@ -45,6 +41,8 @@
     owner: postgres
     group: postgres
     mode: 0640
+  notify:
+    - reload postgresql
 
 - name: allow remote connections to the database
   become: yes
@@ -52,13 +50,5 @@
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
     regexp: "^#?listen_addresses = '(localhost|\\*)'\\s.*$"
     line: "listen_addresses = '*'"
-
-# +++
-# Init service
-# +++
-
-- name: restart postgres
-  become: yes
-  service:
-    name: postgresql
-    state: restarted
+  notify:
+    - reload postgresql
