@@ -15,6 +15,10 @@
     - zclient
   roles:
     - postgres
+  tags:
+    - database
+    - legacy_be
+    - be
 
 - name: create databases and users
   hosts:
@@ -44,3 +48,6 @@
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
+  tags:
+    - database
+    - be
