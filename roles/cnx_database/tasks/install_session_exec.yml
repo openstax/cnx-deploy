@@ -1,0 +1,45 @@
+---
+# Installs the postgresql session_exec extension.
+
+- name: install build utilities
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    # unzip is needed for the source acquisition step
+    - unzip
+
+- name: create temp unpack location
+  become: yes
+  command: "mktemp -d /tmp/ansible.XXXXXXXX"
+  register: temp_location
+
+- name: download and unpack session_exec
+  become: yes
+  unarchive:
+    src: "https://github.com/okbob/session_exec/archive/dde5cb7661d659fcc4fc3133f9a1e463e82c088c.zip"
+    dest: "{{ temp_location.stdout }}"
+    copy: no
+
+# This is done so that the next step has a definitive location to run in.
+- name: rename the expanded directory name
+  become: yes
+  command: "find {{ temp_location.stdout }} -mindepth 1 -maxdepth 1 \\( -type d -name session_exec\\* \\) -exec mv {} session_exec \\;"
+  args:
+    chdir: "{{ temp_location.stdout }}"
+
+- name: install session_exec
+  become: yes
+  shell: "make USE_PGXS=1 && make USE_PGXS=1 install"
+  args:
+    chdir: "{{ temp_location.stdout }}/session_exec"
+  notify:
+    - restart postgresql
+
+- name: remove temp directory
+  become: yes
+  file:
+    path: "{{ temp_location.stdout }}"
+    state: absent

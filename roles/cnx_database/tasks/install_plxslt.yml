@@ -1,0 +1,49 @@
+---
+# Installs the postgresql plxslt extension.
+
+- name: install build utilities
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - libxml2-dev
+    - libxslt-dev
+    # pkg-config is required for plxslt builds
+    - pkg-config
+    # unzip is needed for the source acquisition step
+    - unzip
+
+- name: create temp unpack location
+  become: yes
+  command: "mktemp -d /tmp/ansible.XXXXXXXX"
+  register: temp_location
+
+- name: download and unpack plxslt
+  become: yes
+  unarchive:
+    src: "https://github.com/petere/plxslt/archive/7e12a80bedf1f846243deaee473f28e0793f6211.zip"
+    dest: "{{ temp_location.stdout }}"
+    copy: no
+
+# This is done so that the next step has a definitive location to run in.
+- name: rename the expanded directory name
+  become: yes
+  command: "find {{ temp_location.stdout }} -mindepth 1 -maxdepth 1 \\( -type d -name plxslt\\* \\) -exec mv {} plxslt \\;"
+  args:
+    chdir: "{{ temp_location.stdout }}"
+
+- name: install plxslt
+  become: yes
+  shell: "make && make install"
+  args:
+    chdir: "{{ temp_location.stdout }}/plxslt"
+  notify:
+    - restart postgresql
+
+- name: remove temp directory
+  become: yes
+  file:
+    path: "{{ temp_location.stdout }}"
+    state: absent
