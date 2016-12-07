@@ -55,47 +55,7 @@
 - include: nfs.yml
 - include: nfs_connected.yml
 
-- name: install postgres database
-  hosts:
-    - database
-    # Only needed on this host(s) for provisioning
-    - zclient
-  roles:
-    - postgres
-
-- name: install postgres extensions
-  hosts:
-    - database
-  tasks:
-    - include: tasks/install_plxslt.yml
-    - include: tasks/install_session_exec.yml
-
-- name: create postgres database and users
-  hosts:
-    - database
-  tasks:
-    - include: tasks/create_db_user.yml
-      vars:
-        db_user: "{{ archive_db_user }}"
-        db_password: "{{ archive_db_password }}"
-    - include: tasks/create_db.yml
-      vars:
-        db_owner: "{{ archive_db_user }}"
-        db_name: "{{ archive_db_name }}"
-    - include: tasks/create_db_user.yml
-      when: "{{ authoring_db_user is defined }}"
-      vars:
-        db_user: "{{ authoring_db_user }}"
-        db_password: "{{ authoring_db_password }}"
-    - include: tasks/create_db_user.yml
-      vars:
-        db_user: "backups"
-        role_attr_flags: ""
-    - include: tasks/create_db.yml
-      when: "{{ authoring_db_user is defined }}"
-      vars:
-        db_owner: "{{ authoring_db_user }}"
-        db_name: "{{ authoring_db_name }}"
+- include: database.yml
 
 - name: install cnxml dtd pkgs
   hosts:
