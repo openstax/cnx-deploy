@@ -16,37 +16,11 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
-    - python-dev
-
-
-- name: add apt-key for pgdg repository
-  become: yes
-  apt_key:
-    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-    state: present
-
-- name: add pgdg repository
-  become: yes
-  apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
-    state: present
-    update_cache: yes
 
 - name: install postgres client
   become: yes
   apt:
-    name: "{{ item }}"
-    state: present
-    # BBB (1-Feb-2016) ubuntu 14.04
-    force: "{{ (ansible_distribution == 'Ubuntu' and  ansible_distribution_release == 'trusty') and 'yes' or 'no' }}"
-  with_items:
-    # - "postgresql-{{ postgres_version }}"
-    - "postgresql-client-{{ postgres_version }}"
-
-- name: install virtualenv
-  become: yes
-  apt:
-    name: python-virtualenv
+    name: "postgresql-client-{{ postgres_version }}"
     state: present
 
 # +++
@@ -54,14 +28,14 @@
 # +++
 
 - stat:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
   register: venvs_dir
 
 - name: ensure the venvs directory exists
   become: yes
   when: not venvs_dir.stat.exists
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: www-data
@@ -69,7 +43,7 @@
 - name: set the owner of venvs directory
   become: yes
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     recurse: yes
     owner: www-data
@@ -79,7 +53,7 @@
   become_user: www-data
   pip:
     name: pip
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    virtualenv: "/var/cnx/venvs/archive"
     virtualenv_python: python2
 
 # +++
@@ -103,7 +77,7 @@
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    virtualenv: "/var/cnx/venvs/archive"
     state: latest
   with_items:
     - cnx-db
@@ -116,7 +90,7 @@
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    virtualenv: "/var/cnx/venvs/archive"
     state: absent
   with_items:
     - cnx-query-grammar
@@ -130,7 +104,7 @@
   become_user: www-data
   pip:
     name: "{{ source_dir }}/{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/archive"
+    virtualenv: "/var/cnx/venvs/archive"
     ##state: forcereinstall
     state: present
   with_items:
@@ -148,7 +122,7 @@
 - name: ensure the etc directories exists
   become: yes
   file:
-    path: "{{ root_prefix }}/etc/{{ item }}"
+    path: "/etc/{{ item }}"
     state: directory
     mode: 0755
   with_items:
@@ -165,7 +139,9 @@
     group: root
   with_items:
     - {src: "etc/cnx/archive/app.ini",
-       dest: "{{ root_prefix }}/etc/cnx/archive/app.ini"}
+       dest: "/etc/cnx/archive/app.ini"}
+  notify:
+    - restart archive
 
 # TODO make logging configuration files for pyramid_sawing
 
@@ -180,7 +156,7 @@
 #       they gracefully bailed out with a meaningful message.
 
 - name: initialize archive db
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-archive-initdb {{ root_prefix }}/etc/cnx/archive/app.ini"
+  command: "/var/cnx/venvs/archive/bin/cnx-archive-initdb /etc/cnx/archive/app.ini"
   register: archive_initdb_cmd
   failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
 
@@ -190,19 +166,19 @@
   #       As a result, we are temporarily hardcoding this to localhost, which
   #       means archive will be required to be on the same host as postgres.
   #       https://github.com/Connexions/cnx-deploy/issues/145
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/cnx-db venv -h localhost -p {{ archive_db_port }} -d {{ archive_db_name }} -U {{ archive_db_user }}"
+  command: "/var/cnx/venvs/archive/bin/cnx-db venv -h localhost -p {{ archive_db_port }} -d {{ archive_db_name }} -U {{ archive_db_user }}"
 
 - name: initialize db-migrator
   # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
   #     the full picture of what archive is, but we'll roll with it for now.
   when: "(standalone_archive_install is defined and standalone_archive_install) and 'Database is already initialized' not in archive_initdb_cmd.stderr"
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive init"
+  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive init"
 
 - name: migrate database
   # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
   #     the full picture of what archive is, but we'll roll with it for now.
   when: "standalone_archive_install is defined and standalone_archive_install"
-  command: "{{ root_prefix }}/var/cnx/venvs/archive/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/archive/app.ini --context cnx-archive migrate"
+  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive migrate"
 
 # +++
 # Init service
@@ -212,17 +188,7 @@
   become: yes
   template:
     src: etc/supervisor/conf.d/archive.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/archive.conf"
+    dest: "/etc/supervisor/conf.d/archive.conf"
     mode: 0644
-  register: supervisor_archive_conf
-
-# Unforntuately supervisor's init script doesn't support reload,
-# but supervisorctl does... so maybe there is a way to reload?
-# FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
-# managed processes
-- name: restart supervisor
-  become: yes
-  service:
-    name: supervisor
-    state: restarted
-    sleep: 5
+  notify:
+    - reload supervisord

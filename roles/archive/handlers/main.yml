@@ -1,0 +1,7 @@
+---
+
+- name: restart archive
+  become: yes
+  supervisorctl:
+    name: archive
+    state: restarted
