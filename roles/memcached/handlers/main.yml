@@ -1,0 +1,13 @@
+---
+
+- name: start memcached
+  become: yes
+  service:
+    name: memcached
+    state: started
+
+- name: restart memcached
+  become: yes
+  service:
+    name: memcached
+    state: restarted
