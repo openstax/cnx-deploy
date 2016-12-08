@@ -1,8 +1,6 @@
 ---
 # Playbook for managing an NFS server
 
-- include: pretask.yml
-
 - name: collect info on nfs connected hosts
   hosts: nfs_connected
   # NOOP only to acquire IP address information about connected hosts.

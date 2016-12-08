@@ -1,8 +1,6 @@
 ---
 # Playbook for managing Zope based services
 
-- include: pretask.yml
-
 - name: install zope based services
   hosts: zope
   roles:

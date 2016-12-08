@@ -1,8 +1,6 @@
 ---
 # Playbook for managing the database.
 
-- include: pretask.yml
-
 - name: collect info on database connected hosts
   hosts: db_connected
   # NOOP only to acquire IP address information about connected hosts.

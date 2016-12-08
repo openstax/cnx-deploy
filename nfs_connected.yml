@@ -1,8 +1,6 @@
 ---
 # Playbook for managing NFS connections
 
-- include: pretask.yml
-
 - name: connect to nfs
   hosts: nfs_connected
   tasks:

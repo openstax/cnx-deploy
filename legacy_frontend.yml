@@ -1,8 +1,6 @@
 ---
 # Playbook for installing the haproxy service tier
 
-- include: pretask.yml
-
 - name: collect info on zclients hosts
   hosts:
     - zclient
