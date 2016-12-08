@@ -1,8 +1,6 @@
 ---
 # Playbook for installing the HAProxy service for initial request consumption.
 
-- include: pretask.yml
-
 - name: collect info on connected hosts
   hosts:
     - frontend
