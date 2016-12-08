@@ -10,13 +10,5 @@
   apt:
     name: memcached
     state: present
-
-# +++
-# Init service
-# +++
-
-- name: start memcached
-  become: yes
-  service:
-    name: memcached
-    state: started
+  notify:
+    - start memcached

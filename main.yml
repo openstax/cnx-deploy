@@ -71,8 +71,11 @@
     - archive
     - publishing
     - authoring
-  tasks:
-    - include: tasks/install_memcached.yml
+  roles:
+    - memcached
+  tags:
+    - memcached
+    - be
 
 # +++
 # Applications
