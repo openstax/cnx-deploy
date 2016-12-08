@@ -1,0 +1,14 @@
+---
+# Install frontend components
+
+- name: install frontend
+  hosts:
+    - frontend
+  roles:
+    - varnish
+    - webview
+  tags:
+    - nginx
+    - varnish
+    - webview
+    - fe
