@@ -1,0 +1,11 @@
+---
+# Install Python 2.x and useful tools
+
+- name: install python 2.x and tools
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-dev
+    - python-virtualenv
