@@ -16,36 +16,11 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
-    - python-dev
-
-- name: add apt-key for pgdg repository
-  become: yes
-  apt_key:
-    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-    state: present
-
-- name: add pgdg repository
-  become: yes
-  apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
-    state: present
-    update_cache: yes
 
 - name: install postgres client
   become: yes
   apt:
-    name: "{{ item }}"
-    state: present
-    # BBB (1-Feb-2016) ubuntu 14.04
-    force: "{{ (ansible_distribution == 'Ubuntu' and  ansible_distribution_release == 'trusty') and 'yes' or 'no' }}"
-  with_items:
-    # - "postgresql-{{ postgres_version }}"
-    - "postgresql-client-{{ postgres_version }}"
-
-- name: install virtualenv
-  become: yes
-  apt:
-    name: python-virtualenv
+    name: "postgresql-client-{{ postgres_version }}"
     state: present
 
 # +++
@@ -53,14 +28,14 @@
 # +++
 
 - stat:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
   register: venvs_dir
 
 - name: ensure the venvs directory exists
   become: yes
   when: not venvs_dir.stat.exists
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: www-data
@@ -68,7 +43,7 @@
 - name: set the owner of venvs directory
   become: yes
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     recurse: yes
     owner: www-data
@@ -78,7 +53,7 @@
   become_user: www-data
   pip:
     name: pip
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    virtualenv: "/var/cnx/venvs/publishing"
     virtualenv_python: python2
 
 # +++
@@ -102,7 +77,7 @@
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    virtualenv: "/var/cnx/venvs/publishing"
     state: latest
   with_items:
     - cnx-db
@@ -115,7 +90,7 @@
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    virtualenv: "/var/cnx/venvs/publishing"
     state: absent
   with_items:
     - cnx-query-grammar
@@ -146,7 +121,7 @@
   become_user: www-data
   pip:
     name: "git+https://github.com/Connexions/cssselect2.git#egg=cssselect2"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    virtualenv: "/var/cnx/venvs/publishing"
     state: present
     extra_args: "--exists-action s"
 # /FIXME cssselect2-acquisition
@@ -157,7 +132,7 @@
   pip:
     name: ".{{ 'extras' in item and '[{}]'.format(','.join(item.extras)) or '' }}"
     chdir: "{{ source_dir }}/{{ item.name }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/publishing"
+    virtualenv: "/var/cnx/venvs/publishing"
     ##state: forcereinstall
     state: present
   with_items:
@@ -182,7 +157,7 @@
 - name: ensure the etc directories exists
   become: yes
   file:
-    path: "{{ root_prefix }}/etc/{{ item }}"
+    path: "/etc/{{ item }}"
     state: directory
     mode: 0755
   with_items:
@@ -199,9 +174,9 @@
     group: root
   with_items:
     - {src: "etc/cnx/publishing/app.ini",
-       dest: "{{ root_prefix }}/etc/cnx/publishing/app.ini"}
+       dest: "/etc/cnx/publishing/app.ini"}
     - {src: "etc/cnx/publishing/logging.yaml",
-       dest: "{{ root_prefix }}/etc/cnx/publishing/logging.yaml"}
+       dest: "/etc/cnx/publishing/logging.yaml"}
 
 # TODO make logging configuration files for pyramid_sawing
 
@@ -212,11 +187,11 @@
 # Note, the setup current **assumes** that the publishing and archive database
 # is the same database. There has been no reason to split these yet, so we won't.
 
-# FIXME These initialize tasks run to failures. Ideally, it's be nice if
+# FIXME These initialize tasks run to failures. Ideally, it'd be nice if
 #       they gracefully bailed out with a meaningful message.
 
 - name: initialize publishing db
-  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/cnx-publishing-initdb {{ root_prefix }}/etc/cnx/publishing/app.ini"
+  command: "/var/cnx/venvs/publishing/bin/cnx-publishing-initdb /etc/cnx/publishing/app.ini"
   register: publishing_initdb_cmd
   # FIXME (30-Mar-2016) We need to fail with a more reliable message, rather than
   #       looking at the traceback line.
@@ -224,10 +199,10 @@
 
 - name: initialize db-migrator
   when: "'already exists' not in publishing_initdb_cmd.stderr"
-  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
 
 - name: migrate database
-  command: "{{ root_prefix }}/var/cnx/venvs/publishing/bin/dbmigrator --config {{ root_prefix }}/etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing migrate"
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing migrate"
 
 # +++
 # Init service
@@ -237,24 +212,16 @@
   become: yes
   template:
     src: etc/supervisor/conf.d/publishing.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/publishing.conf"
+    dest: "/etc/supervisor/conf.d/publishing.conf"
     mode: 0644
-  register: supervisor_publishing_conf
+  notify:
+    - reload supervisord
 
 - name: configure post publication worker under supervisor
   become: yes
   template:
     src: etc/supervisor/conf.d/post_publication.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/post_publication.conf"
+    dest: "/etc/supervisor/conf.d/post_publication.conf"
     mode: 0644
-
-# Unforntuately supervisor's init script doesn't support reload,
-# but supervisorctl does... so maybe there is a way to reload?
-# FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
-# managed processes
-- name: restart supervisor
-  become: yes
-  service:
-    name: supervisor
-    state: restarted
-    sleep: 5
+  notify:
+    - reload supervisord
