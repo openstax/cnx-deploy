@@ -2,19 +2,7 @@
 # Ansible requires python2, while Ubuntu >=15 strictly uses Python3.
 
 - name: "install python-minimal (2.7) for ansible"
-  hosts:
-    - nfs
-    - database
-    - archive
-    - publishing
-    - authoring
-    - lead_frontend
-    - legacy_frontend
-    - frontend
-    - worker
-    - zeo
-    - zclient
-    - pdf_gen
+  hosts: all
   become: yes
   # This is the critical line, otherwise Ansible will try
   # to run python to gather facts.

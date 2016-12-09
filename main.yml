@@ -7,19 +7,7 @@
 - include: pretask.yml
 
 - name: "notify #cnx-stream of the deployment (start)"
-  hosts:
-    - nfs
-    - database
-    - archive
-    - publishing
-    - authoring
-    - lead_frontend
-    - legacy_frontend
-    - frontend
-    - worker
-    - zeo
-    - zclient
-    - pdf_gen
+  hosts: all
   vars:
     msg: "{{ ansible_user_id }} started deploy to {{ inventory_hostname }} :hourglass_flowing_sand:"
     channels:
@@ -84,19 +72,7 @@
     - fe
 
 - name: "notify #cnx-stream of the deployment (end)"
-  hosts:
-    - nfs
-    - database
-    - archive
-    - publishing
-    - authoring
-    - lead_frontend
-    - legacy_frontend
-    - frontend
-    - worker
-    - zeo
-    - zclient
-    - pdf_gen
+  hosts: all
   vars:
     msg: "Deploy to {{ inventory_hostname }} by {{ ansible_user_id }} was successful :heavy_check_mark:"
     channels:
