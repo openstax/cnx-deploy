@@ -1,0 +1,7 @@
+---
+
+- name: restart authoring
+  become: yes
+  supervisorctl:
+    name: authoring
+    state: restarted
