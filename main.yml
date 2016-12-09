@@ -29,26 +29,6 @@
     - include: tasks/notify_slack.yml
 
 # +++
-# Source gathering
-# +++
-
-- name: package up source for shipment
-  hosts: local
-  tasks:
-    - include: tasks/checkout.yml
-    - include: tasks/archive_source.yml
-
-- name: send source to hosts
-  hosts:
-    - archive
-    - publishing
-    - authoring
-    - worker
-    - database
-  tasks:
-    - include: tasks/plant_source.yml
-
-# +++
 # Persistence services
 # +++
 
@@ -66,46 +46,13 @@
   tasks:
     - include: tasks/install_cnxml_dtd.yml
 
-- name: install memcached
-  hosts:
-    - archive
-    - publishing
-    - authoring
-  roles:
-    - memcached
-  tags:
-    - memcached
-    - be
-
 # +++
 # Applications
 # +++
 
-- name: install supervisor
-  hosts:
-    - archive
-    - publishing
-    - authoring
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - include: tasks/install_supervisor.yml
-
-- name: install archive
-  hosts: archive
-  tasks:
-    - include: tasks/install_archive.yml
-
-- name: install publishing
-  hosts: publishing
-  tasks:
-    - include: tasks/install_publishing.yml
-
-- name: install authoring
-  hosts: authoring
-  tasks:
-    - include: tasks/install_authoring.yml
+- include: archive.yml
+- include: publishing.yml
+- include: authoring.yml
 
 - include: zope.yml
   tags:
