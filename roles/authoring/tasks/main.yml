@@ -17,12 +17,11 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
-    - python-dev
 
-- name: install virtualenv
+- name: install postgres client
   become: yes
   apt:
-    name: python-virtualenv
+    name: "postgresql-client-{{ postgres_version }}"
     state: present
 
 # +++
@@ -30,14 +29,14 @@
 # +++
 
 - stat:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
   register: venvs_dir
 
 - name: ensure the venvs directory exists
   become: yes
   when: not venvs_dir.stat.exists
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: www-data
@@ -45,7 +44,7 @@
 - name: set the owner of venvs directory
   become: yes
   file:
-    path: "{{ root_prefix }}/var/cnx/venvs"
+    path: "/var/cnx/venvs"
     state: directory
     recurse: yes
     owner: www-data
@@ -55,25 +54,19 @@
   become_user: www-data
   pip:
     name: pip
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    virtualenv: "/var/cnx/venvs/authoring"
     virtualenv_python: python2
 
 # +++
 # Install
 # +++
 
-- name: install session_exec
-  become: yes
-  shell: "make USE_PGXS=1 && make USE_PGXS=1 install"
-  args:
-    chdir: "{{ source_dir }}/session_exec"
-
 - name: install authoring packages
   become: yes
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    virtualenv: "/var/cnx/venvs/authoring"
     state: latest
   with_items:
     - pyramid_sawing
@@ -96,7 +89,7 @@
   become_user: www-data
   pip:
     name: "{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    virtualenv: "/var/cnx/venvs/authoring"
     state: absent
   with_items:
     - cnx-query-grammar
@@ -110,7 +103,7 @@
   become_user: www-data
   pip:
     name: "{{ source_dir }}/{{ item }}"
-    virtualenv: "{{ root_prefix }}/var/cnx/venvs/authoring"
+    virtualenv: "/var/cnx/venvs/authoring"
     ##state: forcereinstall
     state: present
   with_items:
@@ -128,7 +121,7 @@
 - name: ensure the etc directories exists
   become: yes
   file:
-    path: "{{ root_prefix }}/etc/{{ item }}"
+    path: "/etc/{{ item }}"
     state: directory
     mode: 0755
   with_items:
@@ -145,7 +138,7 @@
     group: root
   with_items:
     - {src: "etc/cnx/authoring/app.ini",
-       dest: "{{ root_prefix }}/etc/cnx/authoring/app.ini"}
+       dest: "/etc/cnx/authoring/app.ini"}
 
 # TODO make logging configuration files for pyramid_sawing
 
@@ -157,7 +150,7 @@
 #       this gracefully bailed out with a meaningful message and return code.
 
 - name: initialize authoring db
-  command: "{{ root_prefix }}/var/cnx/venvs/authoring/bin/cnx-authoring-initialize_db {{ root_prefix }}/etc/cnx/authoring/app.ini"
+  command: "/var/cnx/venvs/authoring/bin/cnx-authoring-initialize_db /etc/cnx/authoring/app.ini"
   register: initdb_cmd
   failed_when: "initdb_cmd.rc > 0 and 'relation \"document\" already exists' not in initdb_cmd.stderr"
 
@@ -169,17 +162,7 @@
   become: yes
   template:
     src: etc/supervisor/conf.d/authoring.conf
-    dest: "{{ root_prefix }}/etc/supervisor/conf.d/authoring.conf"
+    dest: "/etc/supervisor/conf.d/authoring.conf"
     mode: 0644
-  register: supervisor_authoring_conf
-
-# Unforntuately supervisor's init script doesn't support reload,
-# but supervisorctl does... so maybe there is a way to reload?
-# FIXME (15-Mar-2016) We need more fine-grained restarting of supervisor
-# managed processes
-- name: restart supervisor
-  become: yes
-  service:
-    name: supervisor
-    state: restarted
-    sleep: 5
+  notify:
+    - reload supervisord
