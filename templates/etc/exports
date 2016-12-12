@@ -12,4 +12,3 @@
 /var/www/files {% for host in groups.nfs_connected %}{{ hostvars[host].ansible_default_ipv4.address }}/32(rw,nohide,insecure,no_subtree_check,no_root_squash,async) {% endfor %}
 
 /var/www/files2 {% for host in groups.nfs_connected %}{{ hostvars[host].ansible_default_ipv4.address }}/32(rw,nohide,insecure,no_subtree_check,no_root_squash,async) {% endfor %}
-/var/log/varnish 128.42.169.0/24(async,ro,no_root_squash) 168.7.5.64/27(async,ro)
