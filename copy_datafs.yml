@@ -1,7 +1,7 @@
 # This pull the Data.fs from a production server
 
 - name: copy datafs
-  hosts: zeo 
+  hosts: zeo
   vars_prompt:
     - name: "source_host"
       prompt: "Where is the Data.fs hosted?"
@@ -19,7 +19,7 @@
   tasks:
     - name: copy datafs over
       shell: "rsync -avP --temp-dir=/tmp/rsync.d --partial-dir=/tmp/rsync.d -e ssh {{ source_host }}:{{ source_location }}/{{ source_filename }} /var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
-      become: yes 
+      become: yes
       become_user: administrator
       tags: datafs-sync
     - name: ensure datafs permissions
