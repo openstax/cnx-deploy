@@ -40,6 +40,8 @@ slack_token: "{{ vault_slack_token }}"
 nfs_server_for_files1: prod-files00.cnx.org
 nfs_server_for_files2: prod-files00.cnx.org
 
+nfs_connections: "{{ vault_nfs_connections }}"
+
 webview_version: v0.21.0
 
 xxx_hardcoded_zclients:
