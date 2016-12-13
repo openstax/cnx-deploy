@@ -18,11 +18,15 @@
     - legacy_be
     - be
 
-- name: create databases and users
+- name: install postgres database
   hosts:
     - database
   roles:
     - cnx_database
+
+- name: create databases and users
+  hosts:
+    - database
   tasks:
     - include: tasks/create_db_user.yml
       vars:
