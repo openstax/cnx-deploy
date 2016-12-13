@@ -27,4 +27,4 @@
       when: "{{ nfs_configuration | changed }}"
       service:
         name: nfs-kernel-server
-        state: restarted
+        state: reloaded
