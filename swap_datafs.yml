@@ -11,7 +11,7 @@
       supervisorctl:
         name: "{{ item }}"
         state: stopped
-        with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
+      with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
 
 - name: stop pdf_gen applications
   hosts: pdf_gen
@@ -35,10 +35,14 @@
         name: zeo
         state: stopped
     - name: move Data.fs to Data.fs.old
+      become: yes
+      become_user: www-data
       command: "mv Data.fs Data.fs.old"
       args:
         chdir: "/var/lib/cnx/cnx-buildout/var/filestorage"
     - name: move Data.fs.new to Data.fs
+      become: yes
+      become_user: www-data
       command: "mv Data.fs.new Data.fs"
       args:
         chdir: "/var/lib/cnx/cnx-buildout/var/filestorage"
@@ -58,7 +62,7 @@
       supervisorctl:
         name: "{{ item }}"
         state: started
-        with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
+      with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
 
 - name: start pdf_gen applications
   hosts: pdf_gen
