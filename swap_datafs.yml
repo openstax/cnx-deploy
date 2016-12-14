@@ -1,0 +1,72 @@
+---
+# This puts the Data.fs.new file in place
+
+- name: stop zclient applications
+  hosts: zclient
+  roles:
+    - supervisorctl
+  tasks:
+    - name: stop zclients
+      become: yes
+      supervisorctl:
+        name: "{{ item }}"
+        state: stopped
+        with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
+
+- name: stop pdf_gen applications
+  hosts: pdf_gen
+  roles:
+    - supervisorctl
+  tasks:
+    - name: stop pdf_gen
+      become: yes
+      supervisorctl:
+        name: pdf_gen
+        state: stopped
+
+- name: swap datafs
+  hosts: zeo
+  roles:
+    - supervisorctl
+  tasks:
+    - name: stop zeo
+      become: yes
+      supervisorctl:
+        name: zeo
+        state: stopped
+    - name: move Data.fs to Data.fs.old
+      command: "mv Data.fs Data.fs.old"
+      args:
+        chdir: "/var/lib/cnx/cnx-buildout/var/filestorage"
+    - name: move Data.fs.new to Data.fs
+      command: "mv Data.fs.new Data.fs"
+      args:
+        chdir: "/var/lib/cnx/cnx-buildout/var/filestorage"
+    - name: start zeo
+      become: yes
+      supervisorctl:
+        name: zeo
+        state: started
+
+- name: start zclient applications
+  hosts: zclient
+  roles:
+    - supervisorctl
+  tasks:
+    - name: start zclients
+      become: yes
+      supervisorctl:
+        name: "{{ item }}"
+        state: started
+        with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
+
+- name: start pdf_gen applications
+  hosts: pdf_gen
+  roles:
+    - supervisorctl
+  tasks:
+    - name: start pdf_gen
+      become: yes
+      supervisorctl:
+        name: pdf_gen
+        state: started
