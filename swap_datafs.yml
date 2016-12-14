@@ -26,6 +26,12 @@
 
 - name: swap datafs
   hosts: zeo
+  vars_prompt:
+    - name: "db_conn_object_path"
+      prompt: "What is the db connection object path?"
+      private: no
+      # Note: In production this is `app.devrep` everywhere else it's `app.plone.rhaptosDA`.
+      default: "app.devrep"
   roles:
     - supervisorctl
   tasks:
@@ -51,6 +57,14 @@
       supervisorctl:
         name: zeo
         state: started
+    - name: set up localFS PDF folder
+      shell: "./bin/instance run scripts/set_up_localfs_for_pdfs.py"
+      args:
+        chdir: "/var/lib/cnx/cnx-buildout"
+    - name: update database connection string in rhaptos site
+      shell: echo 'import transaction; {{ db_conn_object_path }}.connection_string = "postgres://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"; transaction.commit()' | ./bin/instance debug
+      args:
+        chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: start zclient applications
   hosts: zclient
