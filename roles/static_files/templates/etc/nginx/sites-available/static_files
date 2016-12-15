@@ -1,0 +1,25 @@
+map $http_origin $cors_header {
+    default "";
+    "~^https?://[^/]+\.?(cnx\.org)|(openstax.org)$" "$http_origin";
+}
+
+server {
+    root /var/www;
+    listen   8080; 
+    listen   [::]:8080 default ipv6only=on;  ## listen for ipv6
+    port_in_redirect off;
+
+    location /specials {
+        add_header Access-Control-Allow-Origin $cors_header;
+    }
+
+    location /files {
+        autoindex off;
+        if ($uri ~ "^/files/(.+)$") {
+            set $fname $1; 
+        }
+        add_header Content-Disposition "attachment; filename=$fname";
+        try_files  /files/$1 /files2/$1 $uri  =404;
+    }   
+
+}
