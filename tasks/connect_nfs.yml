@@ -12,6 +12,7 @@
   with_items:
     - /var/www/files
     - /var/www/files2
+    - /var/www/specials
   file:
     state: directory
     path: "{{ item }}"
@@ -37,6 +38,18 @@
   mount:
     src: "{{ nfs_server_for_files2 }}:/var/www/files2"
     name: /var/www/files2
+    fstype: nfs
+    opts: rw
+    dump: 0
+    passno: 2
+    state: mounted
+
+- name: configure nfs mount for specials
+  become: yes
+  when: "{{ inventory_hostname not in groups.nfs }}"
+  mount:
+    src: "{{ nfs_server_for_specials }}:/var/www/specials"
+    name: /var/www/files
     fstype: nfs
     opts: rw
     dump: 0

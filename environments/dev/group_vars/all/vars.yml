@@ -47,5 +47,6 @@ slack_token: "{{ vault_slack_token }}"
 
 nfs_server_for_files1: dev00.cnx.org
 nfs_server_for_files2: dev00.cnx.org
+nfs_server_for_specials: dev00.cnx.org
 
 webview_version: latest
