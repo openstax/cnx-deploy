@@ -39,6 +39,7 @@ slack_token: "{{ vault_slack_token }}"
 
 nfs_server_for_files1: staging-files00.cnx.org
 nfs_server_for_files2: staging-files00.cnx.org
+nfs_server_for_specials: staging-files00.cnx.org
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
