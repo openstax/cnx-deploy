@@ -7,8 +7,10 @@
   roles:
     - varnish
     - webview
+    - static_files
   tags:
     - nginx
     - varnish
     - webview
+    - static_files
     - fe

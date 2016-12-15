@@ -1,0 +1,26 @@
+---
+# Configure nginx to serve static files
+
+# +++
+# Configure
+# +++
+
+
+- name: configure the static_files nginx site
+  become: yes
+  template:
+    src: etc/nginx/sites-available/static_files
+    dest: "{{ root_prefix }}/etc/nginx/sites-available/static_files"
+    owner: www-data
+  notify:
+    - reload nginx
+
+- name: enable the static_files nginx site
+  become: yes
+  file:
+    src: "{{ root_prefix }}/etc/nginx/sites-available/static_files"
+    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/static_files"
+    state: link
+    owner: www-data
+  notify:
+    - restart nginx
