@@ -22,9 +22,9 @@ publishing_port: 6550
 authoring_host: staging00.cnx.org
 authoring_port: 6420
 
-zope_domain: legacy-staging00.cnx.org
-arclishing_domain: archive-staging00.cnx.org
-frontend_domain: staging00.cnx.org
+zope_domain: legacy-staging.cnx.org
+arclishing_domain: archive-staging.cnx.org
+frontend_domain: staging.cnx.org
 accounts_domain: accounts.openstax.org
 tutor_domain: tutor-staging.openstax.org
 exercises_domain: exercises.openstax.org
