@@ -26,7 +26,7 @@ zope_domain: legacy-staging00.cnx.org
 arclishing_domain: archive-staging00.cnx.org
 frontend_domain: staging00.cnx.org
 accounts_domain: accounts.openstax.org
-tutor_domain: tutor.openstax.org
+tutor_domain: tutor-staging.openstax.org
 exercises_domain: exercises.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
