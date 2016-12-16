@@ -1,13 +1,18 @@
 ---
 # Install frontend components
 
+- name: collect info on legacy_frontend host(s)
+  hosts: legacy_frontend
+  # NOOP only to acquire IP address information about connected hosts.
+  tasks: []
+
 - name: install frontend
   hosts:
     - frontend
   roles:
-    - varnish
     - webview
     - static_files
+    - varnish
   tags:
     - nginx
     - varnish
