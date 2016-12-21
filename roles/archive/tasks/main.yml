@@ -16,6 +16,7 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
+    - zlib1g-dev
 
 - name: install postgres client
   become: yes
@@ -60,60 +61,39 @@
 # Install
 # +++
 
-# FIXME (11-Feb-2016) Ansible >=2.1.0 required
-# In order to use the pip module's ``state: forcereinstall`` option,
-# we must upgrade to 2.1.0, which is not release yet.
-#
-# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
-# work because they reinstall **everything**,
-# which doesn't work because it tries to install some of our
-# unreleased packages and then fails to find them.
-#
-# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
-# as soon as possible. And this FIXME block ends with the closing /FIXME
+- name: ensure /var/www exists
+  become: yes
+  file:
+    path: "/var/www"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
 
-- name: install archive packages
+- name: ensure /var/lib/cnx exists
+  become: yes
+  file:
+    path: "/var/lib/cnx"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: copy over requirements.txt
+  become: yes
+  become_user: www-data
+  copy:
+    src: "{{ inventory_dir }}/files/archive-requirements.txt"
+    dest: "/var/lib/cnx/archive-requirements.txt"
+    owner: www-data
+    group: www-data
+
+- name: install archive
   become: yes
   become_user: www-data
   pip:
-    name: "{{ item }}"
+    requirements: "/var/lib/cnx/archive-requirements.txt"
     virtualenv: "/var/cnx/venvs/archive"
-    state: latest
-  with_items:
-    - cnx-db
-    - db-migrator
-    - pyramid_sawing
-
-# XXX
-- name: uninstall (local) archive packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ item }}"
-    virtualenv: "/var/cnx/venvs/archive"
-    state: absent
-  with_items:
-    - cnx-query-grammar
-    - rhaptos.cnxmlutils
-    - cnx-epub
-    - cnx-archive
-# /XXX
-
-- name: install (local) archive packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ source_dir }}/{{ item }}"
-    virtualenv: "/var/cnx/venvs/archive"
-    ##state: forcereinstall
-    state: present
-  with_items:
-    - cnx-query-grammar
-    - rhaptos.cnxmlutils
-    - cnx-epub
-    - cnx-archive
-
-# /FIXME
 
 # +++
 # Configure
