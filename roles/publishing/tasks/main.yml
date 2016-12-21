@@ -16,6 +16,7 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
+    - zlib1g-dev
 
 - name: install postgres client
   become: yes
@@ -60,95 +61,39 @@
 # Install
 # +++
 
-# FIXME (11-Feb-2016) Ansible >=2.1.0 required
-# In order to use the pip module's ``state: forcereinstall`` option,
-# we must upgrade to 2.1.0, which is not release yet.
-#
-# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
-# work because they reinstall **everything**,
-# which doesn't work because it tries to install some of our
-# unreleased packages and then fails to find them.
-#
-# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
-# as soon as possible. And this FIXME block ends with the closing /FIXME
-
-- name: install publishing packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ item }}"
-    virtualenv: "/var/cnx/venvs/publishing"
-    state: latest
-  with_items:
-    - cnx-db
-    - db-migrator
-    - pyramid_sawing
-
-# XXX
-- name: uninstall (local) publishing packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ item }}"
-    virtualenv: "/var/cnx/venvs/publishing"
-    state: absent
-  with_items:
-    - cnx-query-grammar
-    - rhaptos.cnxmlutils
-    - cnx-easybake
-    - cnx-epub
-    - cnx-archive
-    - openstax-accounts
-    - cnx-publishing
-# /XXX
-
-# FIXME cssselect2-acquisition (12-Apr-2016)
-# cnx-easybake requires cssselect2, which is not released to PyPI.
-# To fix this we'll install it from the repo source.
-- name: install git for the following task
-  become: yes
-  apt:
-    name: git
-    state: present
-- name: make sure /var/www/.pip exists
+- name: ensure /var/www exists
   become: yes
   file:
-    path: /var/www/.pip
+    path: "/var/www"
     state: directory
+    mode: 0755
     owner: www-data
-- name: install cssselect2
+    group: www-data
+
+- name: ensure /var/lib/cnx exists
+  become: yes
+  file:
+    path: "/var/lib/cnx"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: copy over requirements.txt
+  become: yes
+  become_user: www-data
+  copy:
+    src: "{{ inventory_dir }}/files/publishing-requirements.txt"
+    dest: "/var/lib/cnx/publishing-requirements.txt"
+    owner: www-data
+    group: www-data
+
+- name: install publishing
   become: yes
   become_user: www-data
   pip:
-    name: "git+https://github.com/Connexions/cssselect2.git#egg=cssselect2"
+    requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
-    state: present
-    extra_args: "--exists-action s"
-# /FIXME cssselect2-acquisition
-
-- name: install (local) publishing packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: ".{{ 'extras' in item and '[{}]'.format(','.join(item.extras)) or '' }}"
-    chdir: "{{ source_dir }}/{{ item.name }}"
-    virtualenv: "/var/cnx/venvs/publishing"
-    ##state: forcereinstall
-    state: present
-  with_items:
-    - name: cnx-query-grammar
-    - name: rhaptos.cnxmlutils
-    - name: cnx-easybake
-    - name: cnx-epub
-      # FIXME (12-Apr-2016) The pip module can't install `.[feature]` at this time.
-      # https://github.com/ansible/ansible-modules-core/issues/3426
-      # extras:
-      #   - collation
-    - name: cnx-archive
-    - name: openstax-accounts
-    - name: cnx-publishing
-
-# /FIXME
 
 # +++
 # Configure
