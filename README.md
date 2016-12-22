@@ -1,25 +1,13 @@
 # Connexions Deployment
 
-The Darwin deployments are experimental at best.
+The currently supported operating system (OS) is: Ubuntu 16.04 LTS (Xenial)
 
-The currently supported operating systems (OS) are:
-
-- Ubuntu 16.04 LTS (Xenial)
-- Ubuntu 14.04 (Trusty) -- (backwards compatible shims; tobe removed)
-
-## Prerequisites
-
-### OpenStax Accounts
-
-You will need an instance of [OpenStax Accounts](https://github.com/openstax/accounts) either installed locally or out in the interwebs. If you are connecting to one in the interweb, you will need to contact a sys admin (or devops) person to register for an api key/secret pair.
-
-If you need help setting up Accounts locally, see the info labeled Installing OpenStax Accounts in the Appendix section of this document.
-
-If you are running Accounts locally, you can setup the key/secret pair yourself.
 
 ## Installation
 
-It goes without saying that you should use a [virtualenv](https://virtualenv.readthedocs.org/en/latest/), but it's outside the scope of this documentation to explain that. So wear a virtualenv for your own protection. Thank you.
+It goes without saying that you should use a [virtualenv](https://virtualenv.readthedocs.org/en/latest/), but it's outside the scope of this documentation to explain that. So use a virtualenv for your own protection.
+
+To install the necessary dependencies run:
 
 ```sh
 pip install -r requirements.txt
@@ -27,9 +15,20 @@ pip install -r requirements.txt
 
 After this, read the ``README.md`` document inside the environments directory you are working with. For example, if you are setting up the site within a VM, look at the ``environments/vm/README.md`` file.
 
-It is recommended that you be able to run this setup and deploy on your local system using a VM or the host system itself (see the supported architectures above) before trying to deploy to a shared environment (and/or production environment). After this, you and everyone else around you will feel more comfortable giving you keys to deploy to a shared environment, like development and QA.
+It is recommended that you be able to run this setup and deploy on your local system using a VM or the host system itself (see the supported architectures above) before trying to deploy to a shared environment (and/or production environment). After this, you and everyone else around you will feel more comfortable giving you keys to deploy to a shared environment.
 
 If you need assistance setting up a local VM for this project, see the Creating a VM section below.
+
+## General usage
+
+The generalized usage looks something like this:
+
+```sh
+export ENV=vm
+ansible-playbook -i environments/$ENV/inventory main.yml
+```
+
+Please see the environment's README for specific details.
 
 ## Troubleshooting
 
@@ -56,20 +55,18 @@ To view the available environments, run ``ls environments/``. Within the environ
 
 **A**: Connexions is a distinctly separate entity that is availble for use outside the OpenStax ecosystem, therefore it should be independently buildable. And It's hard to see the forest through the trees, meaning, there is a lot of stuff going on in tutor-deployment.
 
-## Appendix
-
-### Discovering info about your system
 
 
-To inspect you local environment run:
 
-```sh
-ansible local -i environments/local/inventory -m setup
-```
 
-### Creating a VM
 
-This can be tricky for some... If you have questions, just ask. This VM will need to be passwordless (via an ssh key) and sudo should not ask for a password. 
+## Setting up OpenStax Accounts
+
+You will need an instance of [OpenStax Accounts](https://github.com/openstax/accounts) either installed locally or out in the interwebs. If you are connecting to one in the interweb, you will need to contact a sys admin (or devops) person to register for an api key/secret pair.
+
+Continue reading if you need help setting up Accounts locally.
+
+If you are running Accounts locally, you can setup the key/secret pair yourself.
 
 ### Installing OpenStax Accounts
 
@@ -98,7 +95,3 @@ RAILS_ENV=production RBENV_ROOT=/home/ostaccounts/.rbenv/ rbenv exec bundle exec
 ```
 
 Make sure to run this command as 'ostaccounts'.
-
-#### Running the main playbook
-
-You may need to run the playbood several times if you find that it is taking a very long time on the "run buildout" task. It should take awhile, but not several hours. Best thing to do would be to shell in and ``tail -f /var/lib/cnx/cnx-buildout/buildout_output.txt``.
