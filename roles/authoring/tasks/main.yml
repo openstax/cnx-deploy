@@ -17,6 +17,7 @@
     - build-essential
     - libxml2-dev
     - libxslt-dev
+    - zlib1g-dev
 
 - name: install postgres client
   become: yes
@@ -61,58 +62,39 @@
 # Install
 # +++
 
-- name: install authoring packages
+- name: ensure /var/www exists
+  become: yes
+  file:
+    path: "/var/www"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: ensure /var/lib/cnx exists
+  become: yes
+  file:
+    path: "/var/lib/cnx"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: copy over requirements.txt
+  become: yes
+  become_user: www-data
+  copy:
+    src: "{{ inventory_dir }}/files/authoring-requirements.txt"
+    dest: "/var/lib/cnx/authoring-requirements.txt"
+    owner: www-data
+    group: www-data
+
+- name: install authoring
   become: yes
   become_user: www-data
   pip:
-    name: "{{ item }}"
+    requirements: "/var/lib/cnx/authoring-requirements.txt"
     virtualenv: "/var/cnx/venvs/authoring"
-    state: latest
-  with_items:
-    - pyramid_sawing
-
-# FIXME (11-Feb-2016) Ansible >=2.1.0 required
-# In order to use the pip module's ``state: forcereinstall`` option,
-# we must upgrade to 2.1.0, which is not release yet.
-#
-# Using pip's ``--force-reinstall`` & ``--ignore-installed`` options do not
-# work because they reinstall **everything**,
-# which doesn't work because it tries to install some of our
-# unreleased packages and then fails to find them.
-#
-# The blocks surrounded by ``# XXX`` & ``# /XXX`` should be removed
-# as soon as possible. And this FIXME block ends with the closing /FIXME
-
-# XXX
-- name: uninstall (local) authoring packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ item }}"
-    virtualenv: "/var/cnx/venvs/authoring"
-    state: absent
-  with_items:
-    - cnx-query-grammar
-    - cnx-epub
-    - openstax-accounts
-    - cnx-authoring
-# /XXX
-
-- name: install (local) authoring packages
-  become: yes
-  become_user: www-data
-  pip:
-    name: "{{ source_dir }}/{{ item }}"
-    virtualenv: "/var/cnx/venvs/authoring"
-    ##state: forcereinstall
-    state: present
-  with_items:
-    - cnx-query-grammar
-    - cnx-epub
-    - openstax-accounts
-    - cnx-authoring
-
-# /FIXME
 
 # +++
 # Configure
