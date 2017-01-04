@@ -1,8 +1,6 @@
 ---
 
 - name: restart daemon tools
-  # BBB (1-Feb-2016) ubuntu 14.04
-  when: ansible_distribution_release != "trusty"
   become: yes
   # This makes our service file changes available for use.
   shell: systemctl daemon-reload
