@@ -1,15 +1,21 @@
 ---
 
+- name: restart daemon tools
+  become: yes
+  # This makes our service file changes available for use.
+  shell: systemctl daemon-reload
+
+- name: start varnishlog
+  become: yes
+  service:
+    name: varnishlog
+    state: started
+
 - name: start varnishncsa
   become: yes
   service:
     name: varnishncsa
     state: started
-
-- name: restart daemon tools
-  become: yes
-  # This makes our service file changes available for use.
-  shell: systemctl daemon-reload
 
 - name: restart varnish
   become: yes

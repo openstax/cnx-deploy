@@ -38,6 +38,7 @@
     update_cache: yes
     cache_valid_time: 3600
   notify:
+    - start varnishlog
     - start varnishncsa
 
 # +++
@@ -75,7 +76,28 @@
     regexp: "ExecStart=/usr/sbin/varnishd( -j unix,user=vcache -F)? -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,\\d+[KkGgMmTt]{1}( -p vcc_allow_inline_c=on)?"
     line: "ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,{{ varnish_memory_allocation }} -p vcc_allow_inline_c=on"
     insertafter: "^LimitMEMLOCK.*"
-  register: service_config
   notify:
     - restart daemon tools
     - restart varnish
+
+- name: configure varnishlog runtime (systemd config)
+  become: yes
+  lineinfile:
+    dest: /etc/systemd/system/multi-user.target.wants/varnishlog.service
+    regexp: "^Restart=always"
+    line: "Restart=always"
+    insertafter: "^ProtectSystem=.*"
+  notify:
+    - restart daemon tools
+    - start varnishlog
+
+- name: configure varnishncsa runtime (systemd config)
+  become: yes
+  lineinfile:
+    dest: /etc/systemd/system/multi-user.target.wants/varnishncsa.service
+    regexp: "^Restart=always"
+    line: "Restart=always"
+    insertafter: "^ProtectSystem=.*"
+  notify:
+    - restart daemon tools
+    - start varnishncsa
