@@ -63,23 +63,6 @@
   notify:
     - restart varnish
 
-# BBB (22-Feb-2016) ubuntu 14.04
-- name: add varnish service symlink
-  when: ansible_distribution_release == "trusty"
-  become: yes
-  file:
-    src: "/lib/systemd/system/{{ item }}"
-    dest: "/etc/systemd/system/multi-user.target.wants/{{ item }}"
-    state: link
-    owner: root
-    group: root
-  with_items:
-    - varnishlog.service
-    - varnishncsa.service
-    - varnish.service
-  notify:
-    - restart varnish
-
 # FIXME Maybe we should make our own service file and link it to
 #       /etc/systemd/system/multi-user.target.wants/varnish.service
 #       These files actually live at /lib/systemd/system/*.service
