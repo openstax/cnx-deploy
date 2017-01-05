@@ -13,6 +13,7 @@
     - /var/www/files
     - /var/www/files2
     - /var/www/specials
+    - /var/www/varnish_logs
   file:
     state: directory
     path: "{{ item }}"
@@ -49,6 +50,18 @@
   when: "{{ inventory_hostname not in groups.nfs }}"
   mount:
     src: "{{ nfs_server_for_specials }}:/var/www/specials"
+    name: /var/www/specials
+    fstype: nfs
+    opts: rw
+    dump: 0
+    passno: 2
+    state: mounted
+
+- name: configure nfs mount for varnish_logs
+  become: yes
+  when: "{{ inventory_hostname not in groups.nfs }}"
+  mount:
+    src: "{{ nfs_server_for_varnish_logs }}:/var/www/varnish_logs"
     name: /var/www/specials
     fstype: nfs
     opts: rw

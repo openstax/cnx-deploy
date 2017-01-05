@@ -14,3 +14,5 @@
 /var/www/files2 {% for host in groups.nfs_connected %}{{ hostvars[host].ansible_default_ipv4.address }}/32(rw,nohide,insecure,no_subtree_check,no_root_squash,async) {% endfor %}{% for entry in nfs_connections|default([]) %}{{ entry.addr }}{{ entry.details|default('(rw,nohide,insecure,no_subtree_check,no_root_squash,async)') }} {% endfor %}
 
 /var/www/specials {% for host in groups.nfs_connected %}{{ hostvars[host].ansible_default_ipv4.address }}/32(rw,nohide,insecure,no_subtree_check,no_root_squash,async) {% endfor %}{% for entry in nfs_connections|default([]) %}{{ entry.addr }}{{ entry.details|default('(rw,nohide,insecure,no_subtree_check,no_root_squash,async)') }} {% endfor %}
+
+/var/www/varnish_logs {% for host in groups.nfs_connected %}{{ hostvars[host].ansible_default_ipv4.address }}/32(rw,nohide,insecure,no_subtree_check,no_root_squash,async) {% endfor %}{% for entry in nfs_connections|default([]) %}{{ entry.addr }}{{ entry.details|default('(rw,nohide,insecure,no_subtree_check,no_root_squash,async)') }} {% endfor %}
