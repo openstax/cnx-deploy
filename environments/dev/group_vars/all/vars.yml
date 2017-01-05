@@ -19,7 +19,7 @@ authoring_db_port: 5432
 # where a memcached instance is running.
 memcached_hosts: localhost
 
-varnish_port: 8080
+varnish_port: 8990
 
 archive_host: dev00.cnx.org
 archive_port: 6789
