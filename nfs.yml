@@ -1,5 +1,8 @@
 ---
 # Playbook for managing an NFS server
+#
+# Note: Changes to the NFS server do not automatically cause the service
+# to restart or reload.
 
 - name: collect info on nfs connected hosts
   hosts: nfs_connected
