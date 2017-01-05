@@ -26,7 +26,7 @@
         group: root
         mode: 0644
       register: nfs_configuration
-    - name: restart nfs
+    - name: reload nfs
       when: "{{ nfs_configuration | changed }}"
       service:
         name: nfs-kernel-server
