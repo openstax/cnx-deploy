@@ -137,3 +137,14 @@
     mode: 0644
   notify:
     - reload supervisord
+
+# +++
+# Cron Configuration
+# +++
+
+- name: configure cron job for hits counting
+  become: yes
+  template:
+    src: "etc/cron.weekly/count_archive_hits"
+    dest: "/etc/cron.weekly/count_archive_hits"
+    mode: 0755

@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+INSTANCE_LOGS_ROOT=/var/www/varnish_logs
+
+
+for d in ${INSTANCE_LOGS_ROOT}/*-logs; do
+    log_dir=${d}
+    log_file=${log_dir}/large_varnish.log
+
+    # zcat the log.#.gz files into one big log file
+    ##eval zcat -f  ${log_dir}/varnishncsa.log.{{${str::${#str}-1}}.gz,1} > $log_file
+    /var/cnx/venvs/archive/bin/cnx-archive-hits_counter --hostname={{ arclishing_domain }} --format=plain /etc/cnx/archive/app.ini ${log_file}
+
+    # Make a timestamp so we know what was last consumed
+    #  ... or maybe there is a better way to accomplishing this
+    ##touch ${LOG_DIR}/varnish_import_stamp
+
+    rm ${log_file}
+done
