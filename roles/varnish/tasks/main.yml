@@ -75,3 +75,14 @@
   notify:
     - restart daemon tools
     - start varnishncsa
+
+# +++
+# Cron Configuration
+# +++
+
+- name: configure cron job to copy varnish logs
+  become: yes
+  template:
+    src: "etc/cron.daily/copy_varnish_logs"
+    dest: "/etc/cron.daily/copy_varnish_logs"
+    mode: 0755
