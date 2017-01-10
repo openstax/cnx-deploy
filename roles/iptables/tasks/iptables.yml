@@ -11,7 +11,7 @@
 - name: iptables template setup
   become: yes
   template:
-    src: templates/iptables
+    src: etc/iptables
     dest: /etc/iptables.up.rules
     mode: 0644
   tags: iptables-template
