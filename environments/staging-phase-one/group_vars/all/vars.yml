@@ -21,6 +21,7 @@ publishing_host: tundra.cnx.rice.edu
 publishing_port: 6550
 authoring_host: staging00.cnx.org
 authoring_port: 6420
+zclient_base_port: 8280
 
 zope_domain: legacy-staging.cnx.org
 arclishing_domain: archive-staging.cnx.org
