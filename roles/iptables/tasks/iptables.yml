@@ -1,0 +1,21 @@
+---
+- name: iptables variables
+  include_vars: vars/iptables.yml
+  tags: iptables-vars
+  when: open_tcp_ports is undefined
+
+- name: iptables chain setup
+  become: yes
+  script: ../scripts/iptables_setup.sh
+
+- name: iptables template setup
+  become: yes
+  template:
+    src: templates/iptables.j2
+    dest: /etc/iptables.up.rules
+    mode: 0644
+  tags: iptables-template
+
+- name: iptables restore of template
+  become: yes
+  command: iptables-restore /etc/iptables.up.rules

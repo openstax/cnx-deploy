@@ -1,0 +1,4 @@
+# -*- mode: conf -*-
+# vi: set ft=jinja syntax=jinja :
+:msg, contains, "FIREWALL" -{{ fwlog|default('/var/log/firewall.log') }}
+& ~

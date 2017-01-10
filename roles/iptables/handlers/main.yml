@@ -1,0 +1,7 @@
+---
+- name: rsyslog restart
+  become: yes
+  service:
+    name: rsyslog
+    state: restarted
+  listen: restart rsyslog

@@ -1,0 +1,12 @@
+---
+no_tracking:
+ldap_enabled: true
+# Allow these hosts to use zabbix_get
+zabbix_allowed:
+  - 128.42.169.16/32 # bastion.cnx.org
+  - 128.42.169.79/32 # bastion2.cnx.org
+  - 52.27.240.129    # monitor.openstax.org
+open_tcp_ports:
+  - 22
+  - 80
+  - 443

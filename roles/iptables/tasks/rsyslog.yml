@@ -1,0 +1,15 @@
+---
+- name: rsyslog conf template
+  template:
+    src: templates/rsyslog.conf.j2
+    dest: /tmp/rsyslog.conf
+    mode: 0644
+  tags: iptables-rsyslog-conf
+
+- name: rsyslog iptables template
+  template:
+    src: templates/40-iptables.conf.j2
+    dest: /tmp/40-iptables.conf.j2
+    mode: 0644
+  notify: restart rsyslog
+  tags: iptables-rsyslog
