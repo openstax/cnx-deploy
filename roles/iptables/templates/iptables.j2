@@ -1,17 +1,18 @@
+#jinja2: lstrip_blocks: “True”
 {#
 # -*- mode: jinja -*
 # vi: set ft=jinja syntax=jinja :
 # Something to be used for iptables-restore
 #}
 {% if no_tracking -%}
-*raw
-:PREROUTING ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-{% for ipaddr in no_tracking %}
--A PREROUTING -s {{ ipaddr }} -j NOTRACK
--A OUTPUT -d {{ ipaddr }} -j NOTRACK
-{% endfor -%}
-COMMIT
+    *raw
+    :PREROUTING ACCEPT [0:0]
+    :OUTPUT ACCEPT [0:0]
+    {% for ipaddr in no_tracking %}
+        -A PREROUTING -s {{ ipaddr }} -j NOTRACK
+        -A OUTPUT -d {{ ipaddr }} -j NOTRACK
+    {% endfor -%}
+    COMMIT
 {% endif -%}
 *filter
 :INPUT ACCEPT [0:0]
@@ -23,16 +24,16 @@ COMMIT
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
 {# end default -#}
 {% if ldap_enabled %}
--A INPUT -s 128.42.169.11/32 -p tcp -m tcp -m comment --comment "homedirs1.cnx.org" -j ACCEPT
+    -A INPUT -s 128.42.169.11/32 -p tcp -m tcp -m comment --comment "homedirs1.cnx.org" -j ACCEPT
 {% endif -%}
 {# Newer versions allow this #}
 {# -A INPUT -p tcp -m tcp -s 52.27.240.129,128.42.169.16,128.42.169.79 --dport 10050:10051 -j ACCEPT #}
 {% for ipaddr in zabbix_allowed %}
--A INPUT -s {{ ipaddr }} -p tcp -m tcp --dport 10050:10051 -m comment --comment "Zabbix allowed host" -j ACCEPT
+    -A INPUT -s {{ ipaddr }} -p tcp -m tcp --dport 10050:10051 -m comment --comment "Zabbix allowed host" -j ACCEPT
 {% endfor -%}
 -A INPUT -p tcp -m tcp -m multiport --dports {{ open_tcp_ports|join(',') }} -m comment --comment "allowed TCP ports" -j ACCEPT
 {% if open_udp_ports is defined %}
--A INPUT -p udp -m udp -m multiport --dports {{ open_udp_ports|join(',') }} -m comment --comment "allowed UDP ports" -j ACCEPT
+    -A INPUT -p udp -m udp -m multiport --dports {{ open_udp_ports|join(',') }} -m comment --comment "allowed UDP ports" -j ACCEPT
 {% endif -%}
 -A INPUT -j LOGREJECT
 -A LOGREJECT -m comment --comment "Rejection log" -j LOG --log-prefix "FIREWALL-REJECTED: "
