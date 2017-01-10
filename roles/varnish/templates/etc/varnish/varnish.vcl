@@ -325,6 +325,9 @@ sub vcl_miss {
 }
 
 sub vcl_backend_response {
+    if (bereq.url ~ "^/scripts/(?:main|settings)[.]js$") {
+        set beresp.http.Cache-Control = "max-age=3600";
+    }
     if (beresp.status >= 500) {
         set beresp.ttl = 0s;
     }
