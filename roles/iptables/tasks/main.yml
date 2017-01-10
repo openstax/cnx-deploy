@@ -1,0 +1,9 @@
+---
+- name: iptables
+  include: iptables.yml
+  tags: iptables
+
+- name: rsyslog
+  include: rsyslog.yml
+  tags: rsyslog
+
