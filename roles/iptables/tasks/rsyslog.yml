@@ -8,8 +8,8 @@
 
 - name: rsyslog iptables template
   template:
-    src: templates/40-iptables.conf
-    dest: /tmp/40-iptables.conf
+    src: etc/rsyslog.d/40-iptables.conf
+    dest: /etc/rsyslog.d/40-iptables.conf
     mode: 0644
   notify: restart rsyslog
   tags: iptables-rsyslog
