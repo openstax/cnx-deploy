@@ -1,0 +1,12 @@
+---
+- name: setup of iptables
+  hosts: all:!local
+  gather_facts: no
+  roles:
+    - role: iptables
+      tags:
+        - iptables
+        - firewall
+  tags:
+    - iptables
+    - firewall
