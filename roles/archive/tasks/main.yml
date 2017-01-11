@@ -94,6 +94,8 @@
   pip:
     requirements: "/var/lib/cnx/archive-requirements.txt"
     virtualenv: "/var/cnx/venvs/archive"
+  notify:
+    - migrate archive db
 
 # +++
 # Configure
@@ -108,6 +110,8 @@
   with_items:
     - cnx
     - cnx/archive
+  notify:
+    - initialize archive db
 
 - name: render configuration
   become: yes
@@ -124,41 +128,6 @@
     - restart archive
 
 # TODO make logging configuration files for pyramid_sawing
-
-# +++
-# Init databases
-# +++
-
-# Note, the setup current **assumes** that the publishing and archive database
-# is the same database. There has been no reason to split these yet, so we won't.
-
-# FIXME These initialize tasks run to failures. Ideally, it's be nice if
-#       they gracefully bailed out with a meaningful message.
-
-- name: initialize archive db
-  command: "/var/cnx/venvs/archive/bin/cnx-archive-initdb /etc/cnx/archive/app.ini"
-  register: archive_initdb_cmd
-  failed_when: "archive_initdb_cmd.rc > 0 and 'Database is already initialized' not in archive_initdb_cmd.stderr"
-
-- name: initialize venv in db
-  # FIXME (15-Nov-2016) The venv logic only works with localhost at this time.
-  #       It doesn't fail when not localhost, instead it just warns...
-  #       As a result, we are temporarily hardcoding this to localhost, which
-  #       means archive will be required to be on the same host as postgres.
-  #       https://github.com/Connexions/cnx-deploy/issues/145
-  command: "/var/cnx/venvs/archive/bin/cnx-db venv -h localhost -p {{ archive_db_port }} -d {{ archive_db_name }} -U {{ archive_db_user }}"
-
-- name: initialize db-migrator
-  # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
-  #     the full picture of what archive is, but we'll roll with it for now.
-  when: "(standalone_archive_install is defined and standalone_archive_install) and 'Database is already initialized' not in archive_initdb_cmd.stderr"
-  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive init"
-
-- name: migrate database
-  # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
-  #     the full picture of what archive is, but we'll roll with it for now.
-  when: "standalone_archive_install is defined and standalone_archive_install"
-  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive migrate"
 
 # +++
 # Init service

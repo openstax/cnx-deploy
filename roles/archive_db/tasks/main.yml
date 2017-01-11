@@ -1,0 +1,9 @@
+---
+# Set up script so aid in the provisioning of the archive database.
+
+- name: create script to initialize archive db
+  become: yes
+  copy:
+    src: usr/local/bin/initialize-archive-db
+    dest: /usr/local/bin/initialize-archive-db
+    mode: 0755

@@ -1,0 +1,88 @@
+#!/usr/bin/env python2
+from __future__ import print_function
+
+import sys
+import argparse
+import shlex
+from subprocess import PIPE, Popen
+
+
+# FIXME These initialize tasks run to failures. Ideally, it's be nice if
+#       they gracefully bailed out with a meaningful message.
+INIT_DB_CMD = "/var/cnx/venvs/archive/bin/cnx-archive-initdb /etc/cnx/archive/app.ini"
+
+# This message is returned by the initdb command when the database exists.
+KNOWN_OK = "Database is already initialized"
+
+
+def call(cmd):
+    """Call a commnd and return the returncode, stdout and stderr."""
+    proc = Popen(shlex.split(cmd), stderr=PIPE, stdout=PIPE)
+    out, err = proc.communicate()
+    return (proc.returncode, out, err,)
+
+
+def print_issue(step, out, err):
+        msg = "Ouch! @ {} \nSTDOUT:\n{}STDERR:\n{}".format(step, out, err)
+        print(msg, file=sys.stderr)
+
+
+def make_parser():
+    parser = argparse.ArgumentParser()
+    # database arguments
+    parser.add_argument('host')
+    parser.add_argument('port')
+    parser.add_argument('name')
+    parser.add_argument('user')
+    parser.add_argument('stand_alone_install', type=int)  # 1 or 0
+    return parser
+
+
+def main(argv=None):
+    parser = make_parser()
+    args = parser.parse_args(argv)
+
+    # Initialize DB
+    retcode, out, err = call(INIT_DB_CMD)
+    if retcode > 0 and KNOWN_OK not in err:
+        print_issue('initdb', out, err)
+        return 1
+
+    # Initialize venv in db
+    # FIXME (15-Nov-2016) The venv logic only works with localhost at this time.
+    #       It doesn't fail when not localhost, instead it just warns...
+    #       As a result, we are temporarily hardcoding this to localhost, which
+    #       means archive will be required to be on the same host as postgres.
+    #       https://github.com/Connexions/cnx-deploy/issues/145
+    cmd = "/var/cnx/venvs/archive/bin/cnx-db venv -h {0.host} -p {0.port} -d {0.name} -U {0.user}".format(args)
+    retcode, out, err = call(cmd)
+    if retcode > 0:
+        print_issue('venv', out, err)
+        return 1
+
+    if args.stand_alone_install:
+        # XXX (16-Mar-2016) standalone installs aren't ideal, because they
+        #     don't give the full picture of what archive is, but we'll
+        #     roll with it for now.
+        #     These procedures would normally run as part of the publishing
+        #     installation because it can provide the full picture.
+
+        # Initialize db-migrator
+        cmd = "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive init"
+        retcode, out, err = call(cmd)
+        if retcode > 0:
+            print_issue('dbmigrator init', out, err)
+            return 1
+
+        # Migrate database
+        cmd = "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive migrate"
+        retcode, out, err = call(cmd)
+        if retcode > 0:
+            print_issue('dbmigrator migrate', out, err)
+            return 1
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
