@@ -1,0 +1,14 @@
+---
+
+# Note, the setup current **assumes** that the publishing and archive database
+# is the same database. There has been no reason to split these yet, so we won't.
+
+- name: initialize archive db
+  command: "/usr/local/bin/initialize-archive-db {{ archive_db_host }} {{ archive_db_port }} {{ archive_db_name }} {{ archive_db_user }} {{ (standalone_archive_install is defined and standalone_archive_install) and 1 or 0 }}"
+  register: initialize_archive_db_cmd
+
+- name: migrate archive db
+  # XXX (16-Mar-2016) standalone installs aren't ideal, because they don't give
+  #     the full picture of what archive is, but we'll roll with it for now.
+  when: "(standalone_archive_install is defined and standalone_archive_install) and initialized_archive_db_cmd is not defined"
+  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-archive migrate"
