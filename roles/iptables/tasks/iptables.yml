@@ -6,7 +6,10 @@
 
 - name: iptables chain setup
   become: yes
-  script: ../scripts/iptables_setup.sh
+  copy:
+    src: etc/network/if-up.d/iptables
+    dest: /etc/network/if-up.d/iptables
+    mode: 0744
 
 - name: iptables template setup
   become: yes

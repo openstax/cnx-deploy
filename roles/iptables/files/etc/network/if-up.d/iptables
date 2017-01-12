@@ -1,0 +1,2 @@
+#!/bin/bash
+[[ -e /etc/iptables.up.rules ]] && iptables-restore /etc/iptables.up.rules
