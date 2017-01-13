@@ -1,0 +1,21 @@
+---
+# Installs a Google Site verification file.
+
+- name: stat google site verification file
+  when: "google_site_verification_filename is defined"
+  local_action:
+    module: stat
+    path: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
+  register: google_site_verification_stat
+  # Fail when the filename is defined but the file does not exist.
+  failed_when: "not google_site_verification_stat.stat.exists"
+
+- name: install google site verification file
+  when: "google_site_verification_filename is defined"
+  become: yes
+  copy:
+    src: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
+    dest: "/var/www/webview/{{ google_site_verification_filename }}"
+    owner: www-data
+    group: www-data
+    mode: 0744
