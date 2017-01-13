@@ -3,6 +3,9 @@
 
 - name: install zope based services
   hosts: zope
+  vars:
+    princexml_license_filename: "license.dat"
+    princexml_license_filepath: "{{ inventory_dir }}/secrets/princexml/{{ princexml_license_filename }}"
   roles:
     - zope
   tags:
