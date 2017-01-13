@@ -1,8 +1,4 @@
 ---
-- name: iptables variables
-  include_vars: vars/iptables.yml
-  tags: iptables-vars
-  when: open_tcp_ports is undefined
 
 - name: iptables chain setup
   become: yes
