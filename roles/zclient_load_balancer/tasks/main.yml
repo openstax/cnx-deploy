@@ -33,7 +33,7 @@
       {% for host in groups.zclient %}
       {% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
       {% for i in range(0, hostvars[host].zclient_count|default(1), 1) %}
-        server {{ host }}{{ i }} {{ ip_addr }}:82{{ 80 + i }} check maxconn 4 rise 1
+        server {{ host }}{{ i }} {{ ip_addr }}:{{ zclient_base_port + i }} check maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
 
