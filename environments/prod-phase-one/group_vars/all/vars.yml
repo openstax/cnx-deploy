@@ -45,6 +45,8 @@ nfs_connections: "{{ vault_nfs_connections }}"
 
 webview_version: v0.21.0
 
+google_site_verification_filename: "{{ vault_google_site_verification_filename }}"
+
 xxx_hardcoded_zclients:
   - ip_addr: 128.42.169.13
     host: glad
