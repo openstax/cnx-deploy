@@ -83,7 +83,7 @@
 
 - name: run buildout
   become: yes
-  shell: ". /var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout -c ansible.cfg 2>&1 | tee buildout_output.txt"
+  shell: ". /var/cnx/venvs/cnx-buildout/bin/activate && bin/buildout -c ansible.cfg -vvvv 2>&1 | tee buildout_output.txt"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
