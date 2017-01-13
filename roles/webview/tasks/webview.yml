@@ -43,6 +43,7 @@
     state: directory
     owner: www-data
     group: www-data
+    mode: 0755
 
 - name: link to /var/www/webview
   become: yes
