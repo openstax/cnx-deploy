@@ -1,0 +1,9 @@
+---
+
+- name: rsyslog conf template
+  template:
+    src: etc/rsyslog.conf
+    dest: /etc/rsyslog.conf
+    mode: 0644
+  tags:
+    - iptables-rsyslog-conf
