@@ -37,6 +37,24 @@
     deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu16.04_amd64.deb"
   become: yes
 
+- name: stat princexml license file
+  local_action:
+    module: stat
+    path: "{{ princexml_license_filepath }}"
+  register: princexml_license_stat
+  tags:
+    - install-princexml-license
+
+- name: install princexml license file
+  when: "princexml_license_stat.stat.exists"
+  become: yes
+  copy:
+    src: "{{ princexml_license_filepath }}"
+    dest: "/usr/lib/prince/license/license.dat"
+    mode: 0744
+  tags:
+    - install-princexml-license
+
 - name: create directory for urw fonts
   become: yes
   file:
