@@ -27,6 +27,7 @@ publishing_host: dev00.cnx.org
 publishing_port: 6543
 authoring_host: dev00.cnx.org
 authoring_port: 6420
+zclient_base_port: 8280
 
 zope_domain: legacy-dev00.cnx.org
 arclishing_domain: archive-dev00.cnx.org
