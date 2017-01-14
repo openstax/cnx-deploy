@@ -3,5 +3,5 @@
 - name: restart publishing
   become: yes
   supervisorctl:
-    name: publishing
+    name: "publishing:*"
     state: restarted

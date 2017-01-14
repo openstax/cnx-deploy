@@ -4,6 +4,12 @@ ansible_ssh_pipelining: true
 # root_prefix: ""
 
 postgres_version: 9.4
+
+default_archive_base_port: 6500
+default_publishing_base_port: 6600
+default_authoring_base_port: 6400
+
+
 # postgres_connections:
 #   - name: <human readable name>
 #     addr: <hostname | ip | mask>

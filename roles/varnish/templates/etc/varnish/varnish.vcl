@@ -51,7 +51,7 @@ backend webview {
 
 backend resources {
 .host = "{{ archive_host }}";
-.port = "{{ archive_port }}";
+.port = "{{ archive_base_port|default(default_archive_base_port) }}";
 .connect_timeout = 0.4s;
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
@@ -59,7 +59,7 @@ backend resources {
 
 backend archive {
 .host = "{{ archive_host }}";
-.port = "{{ archive_port }}";
+.port = "{{ archive_base_port|default(default_archive_base_port) }}";
 .connect_timeout = 0.4s;
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
@@ -67,7 +67,7 @@ backend archive {
 
 backend publishing {
 .host = "{{ publishing_host }}";
-.port = "{{ publishing_port }}";
+.port = "{{ publishing_base_port|default(default_publishing_base_port) }}";
 .first_byte_timeout = 1200s;
 .between_bytes_timeout = 600s;
 }
