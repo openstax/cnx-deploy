@@ -1,6 +1,7 @@
 vcl 4.0;
 
 import std;
+import directors;
 
 # This configuration uses inline C, so you must run the program with
 # the include C parameter: -r vcc_allow_inline_c
@@ -49,29 +50,48 @@ backend webview {
 .between_bytes_timeout = 60s;
 }
 
-backend resources {
-.host = "{{ archive_host }}";
-.port = "{{ archive_base_port|default(default_archive_base_port) }}";
+probe archive_probe {
+    .expected_response = 404;
+}
+
+{% set base_port = archive_base_port|default(default_archive_base_port) %}
+{% for host in groups.archive %}
+{% for i in range(0, hostvars[host].archive_count|default(1), 1) %}
+{% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
+{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set backend_name = '{}_archive{}'.format(name, i) %}
+backend {{ backend_name }} {
+.host = "{{ ip_addr }}";
+.port = "{{ base_port + i }}";
+.probe = archive_probe;
 .connect_timeout = 0.4s;
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
 }
 
-backend archive {
-.host = "{{ archive_host }}";
-.port = "{{ archive_base_port|default(default_archive_base_port) }}";
-.connect_timeout = 0.4s;
+{% endfor %}
+{% endfor %}
+
+probe publishing_probe {
+    .expected_response = 404;
+}
+
+{% set base_port = publishing_base_port|default(default_publishing_base_port) %}
+{% for host in groups.publishing %}
+{% for i in range(0, hostvars[host].publishing_count|default(1), 1) %}
+{% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
+{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set backend_name = '{}_publishing{}'.format(name, i) %}
+backend {{ backend_name }} {
+.host = "{{ ip_addr }}";
+.port = "{{ base_port + i }}";
+.probe = publishing_probe;
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
 }
 
-backend publishing {
-.host = "{{ publishing_host }}";
-.port = "{{ publishing_base_port|default(default_publishing_base_port) }}";
-.first_byte_timeout = 1200s;
-.between_bytes_timeout = 600s;
-}
-
+{% endfor %}
+{% endfor %}
 
 acl purge {
     "localhost";
@@ -84,6 +104,30 @@ acl nocache {
     "10.0.0.0"/8;
 }
 
+sub vcl_init {
+    # Define the archive and resource clusters
+    new archive_cluster = directors.round_robin();
+    new resource_cluster = directors.round_robin();
+{% for host in groups.archive %}
+{% for i in range(0, hostvars[host].archive_count|default(1), 1) %}
+{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set backend_name = '{}_archive{}'.format(name, i) %}
+    archive_cluster.add_backend({{ backend_name }});
+    resource_cluster.add_backend({{ backend_name }});
+{% endfor %}
+{% endfor %}
+
+    # Define the publishing cluster
+    new publishing_cluster = directors.hash();
+{% for host in groups.publishing %}
+{% for i in range(0, hostvars[host].publishing_count|default(1), 1) %}
+{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set backend_name = '{}_publishing{}'.format(name, i) %}
+    publishing_cluster.add_backend({{ backend_name }}, 1.0);
+{% endfor %}
+{% endfor %}
+
+}
 
 sub vcl_recv {
     if (req.url == "/join_form") {
@@ -105,14 +149,14 @@ sub vcl_recv {
 
     # cnx rewrite archive
     if (req.url ~ "^/a/") {
-        set req.backend_hint = publishing;
+        set req.backend_hint = publishing_cluster.backend(req.http.cookie);
         return (pass);
     }
 
     # cnx rewrite archive  - specials served from nginx statically
     if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml" || req.url ~ "^/robots.txt") {
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
-            set req.backend_hint = publishing;
+            set req.backend_hint = publishing_cluster.backend(req.http.cookie);
             return (pass);
         }
 
@@ -122,14 +166,14 @@ sub vcl_recv {
         }
         else {
 
-        set req.backend_hint = archive;
+        set req.backend_hint = archive_cluster.backend();
         return (hash);
         }
     }
 
     # resource images
     if (req.url ~ "^/resources/") {
-        set req.backend_hint = resources;
+        set req.backend_hint = resource_cluster.backend();
         return (hash);
     }
 
@@ -193,7 +237,7 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)") {
-            set req.backend_hint = archive;
+            set req.backend_hint = archive_cluster.backend();
         }
         // special cases for legacy
         elsif (req.url ~ "^/images/(advice\.png|example\.png|missing\.eps\.metadata|thick-left-arrow\.png|annot\.png|explanation\.png|question\.png|change\.png|magnify-glass-cnx\.png|rhaptos_powered\.png|comment\.png|missing\.eps|seealso\.png)"
