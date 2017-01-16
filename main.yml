@@ -1,9 +1,6 @@
 ---
 # Used to setup a deployment on localhost.
 
-# Note, 'local' (the host name in the inventory)
-#   should be assigned ``ansible_connection=local``.
-
 - include: pretask.yml
 
 - name: "notify #cnx-stream of the deployment (start)"
