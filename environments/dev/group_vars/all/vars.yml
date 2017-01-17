@@ -33,8 +33,8 @@ zope_domain: legacy-dev00.cnx.org
 arclishing_domain: archive-dev00.cnx.org
 frontend_domain: dev00.cnx.org
 accounts_domain: accounts-qa1.openstax.org
-tutor_domain: openstaxtutor.org
-exercises_domain: exercises.openstax.org
+tutor_domain: tutor-dev.openstax.org
+exercises_domain: exercises-dev.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
