@@ -4,8 +4,6 @@ ansible_ssh_pipelining: true
 # root_prefix: ""
 
 postgres_version: 9.4
-source_dir: "{{ '~/cnx/src' | expanduser }}"
-archives_dir: "{{ '~/cnx/archives' | expanduser }}"
 # postgres_connections:
 #   - name: <human readable name>
 #     addr: <hostname | ip | mask>
@@ -38,38 +36,3 @@ archives_dir: "{{ '~/cnx/archives' | expanduser }}"
 # arclishing_domain: archive.cnx.org
 # frontend_domain: cnx.org
 # accounts_domain: accounts.openstax.org
-
-source:
-  # - name:
-  #   repo:
-  #   default_version: HEAD
-  - name: cnx-query-grammar
-    repo: git@github.com:Connexions/cnx-query-grammar.git
-    default_version: HEAD
-  - name: rhaptos.cnxmlutils
-    repo: git@github.com:Connexions/rhaptos.cnxmlutils.git
-    default_version: HEAD
-  - name: cnx-epub
-    repo: git@github.com:Connexions/cnx-epub.git
-    default_version: HEAD
-  - name: plxslt
-    repo: git@github.com:petere/plxslt.git
-    default_version: HEAD
-  - name: session_exec
-    repo: git@github.com:okbob/session_exec.git
-    default_version: HEAD
-  - name: cnx-archive
-    repo: git@github.com:Connexions/cnx-archive.git
-    default_version: HEAD
-  - name: openstax-accounts
-    repo: git@github.com:Connexions/openstax-accounts.git
-    default_version: HEAD
-  - name: cnx-publishing
-    repo: git@github.com:Connexions/cnx-publishing.git
-    default_version: HEAD
-  - name: cnx-authoring
-    repo: git@github.com:Connexions/cnx-authoring.git
-    default_version: HEAD
-  - name: cnx-easybake
-    repo: git@github.com:Connexions/cnx-easybake.git
-    default_version: HEAD
