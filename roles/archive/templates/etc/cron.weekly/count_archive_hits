@@ -1,20 +1,37 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+#set -e
 
-INSTANCE_LOGS_ROOT=/var/www/varnish_logs
+log_root=/var/log/varnish
+log_user=varnishlog
+log_group=varnish
+combined_out="${log_root}/varnishncsa_combined.log"
+current_datestamp=$(date -d "$(printf '%(%m/%d/%Y)T 00:00:00')" +%s)
+timestamp_file="${log_root}/varnish_last_import"
+varnfiles_tmp=$(mktemp /tmp/varnish.XXXXXX)
 
+# Run find command to create a temp file to use for combining logs
+# into one file.
+# If you are wondering why +20c it's because an empty gz file is 20 bytes
+if [[ ! -e $timestamp_file ]] ; then
+    find ${log_root}/ -mindepth 1 \( \
+        -name varnishncsa.log.\*.gz -size +20c \
+    \) -fprintf $varnfiles_tmp '%p\0'
+else
+    read -r -d '' import_time < $timestamp_file
+    # Or use
+    # import_time=$(date -r $timestamp_file +%s)
+    find ${log_root}/ -mindepth 1 \( \
+        -name varnishncsa.log.\*.gz -size +20c -newermt "@${import_time}" \
+    \) -fprintf $varnfiles_tmp '%p\0'
+fi
 
-for d in ${INSTANCE_LOGS_ROOT}/*-logs; do
-    log_dir=${d}
-    log_file=${log_dir}/large_varnish.log
+# If the temporary file is not empty
+if [[ -s $varnfiles_tmp ]] ; then
+    xargs -0 -a $varnfiles_tmp zcat > $combined_out
+    printf $current_datestamp > $timestamp_file
+    touch -d "@${current_datestamp}" $timestamp_file
+    chown ${log_user}.${log_group} $combined_out $timestamp_file
+fi
 
-    # zcat the log.#.gz files into one big log file
-    ##eval zcat -f  ${log_dir}/varnishncsa.log.{{${str::${#str}-1}}.gz,1} > $log_file
-    /var/cnx/venvs/archive/bin/cnx-archive-hits_counter --hostname={{ arclishing_domain }} --format=plain /etc/cnx/archive/app.ini ${log_file}
-
-    # Make a timestamp so we know what was last consumed
-    #  ... or maybe there is a better way to accomplishing this
-    ##touch ${LOG_DIR}/varnish_import_stamp
-
-    rm ${log_file}
-done
+# Remove the temporary file regardless of whether it was used or not
+/bin/rm -f $varnfiles_tmp
