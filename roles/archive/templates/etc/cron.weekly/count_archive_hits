@@ -1,9 +1,9 @@
 #!/bin/bash
 #set -e
 
-log_root=/var/log/varnish
-log_user=varnishlog
-log_group=varnish
+log_root={{ varnish_logroot|default('/var/www/varnish_logs') }}
+log_user={{ varnish_user|default('varnishlog') }}
+log_group={{ varnish_group|default('varnish') }}
 combined_out="${log_root}/varnishncsa_combined.log"
 current_datestamp=$(date -d "$(printf '%(%m/%d/%Y)T 00:00:00')" +%s)
 timestamp_file="${log_root}/varnish_last_import"
@@ -28,6 +28,9 @@ fi
 # If the temporary file is not empty
 if [[ -s $varnfiles_tmp ]] ; then
     xargs -0 -a $varnfiles_tmp zcat > $combined_out
+    /var/cnx/venvs/archive/bin/cnx-archive-hits_counter \
+        --hostname={{ arclishing_domain }} --log-format=plain \
+        /etc/cnx/archive/app.ini $combined_out
     printf $current_datestamp > $timestamp_file
     touch -d "@${current_datestamp}" $timestamp_file
     chown ${log_user}.${log_group} $combined_out $timestamp_file
