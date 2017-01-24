@@ -31,6 +31,7 @@
     - librsvg2-bin
     - otf-stix
     - openjdk-8-jdk
+    - jpegoptim
 
 - name: install princexml
   apt:
