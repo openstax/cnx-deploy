@@ -8,7 +8,9 @@
     path: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
   register: google_site_verification_stat
   # Fail when the filename is defined but the file does not exist.
-  failed_when: "not google_site_verification_stat.stat.exists"
+  # failed_when: "not google_site_verification_stat.stat.exists"
+  tags:
+    - google-verification
 
 - name: install google site verification file
   when: "google_site_verification_filename is defined"
@@ -19,3 +21,6 @@
     owner: www-data
     group: www-data
     mode: 0744
+  when: google_site_verification_stat.stat.exists
+  tags:
+    - google-verification
