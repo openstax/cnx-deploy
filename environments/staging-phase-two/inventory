@@ -37,10 +37,10 @@ staging_files00
 staging07
 
 [archive:children]
-
+staging07
 
 [publishing:children]
-
+staging07
 
 [authoring:children]
 
