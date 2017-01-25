@@ -81,12 +81,12 @@
 
 - name: copy over requirements.txt
   become: yes
-  become_user: www-data
   copy:
     src: "{{ inventory_dir }}/files/publishing-requirements.txt"
     dest: "/var/lib/cnx/publishing-requirements.txt"
     owner: www-data
     group: www-data
+    mode: 0755
 
 - name: install publishing
   become: yes
