@@ -5,17 +5,24 @@
   hosts: legacy_frontend
   # NOOP only to acquire IP address information about connected hosts.
   tasks: []
+  tags:
+    - collect-info
 
 - name: install frontend
   hosts:
     - frontend
   roles:
-    - webview
-    - static_files
-    - varnish
+    - role: webview
+      tags: webview
+    - role: static_files
+      tags: static-files
+    - role: varnish
+      tags: varnish
   tags:
-    - nginx
-    - varnish
-    - webview
-    - static_files
-    - fe
+    - frontend
+#  tags:
+#    - nginx
+#    - varnish
+#    - webview
+#    - static_files
+#    - fe

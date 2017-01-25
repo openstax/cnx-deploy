@@ -13,7 +13,9 @@
     - google-verification
 
 - name: install google site verification file
-  when: "google_site_verification_filename is defined"
+  when:
+    - "google_site_verification_filename is defined"
+    - "google_site_verification_stat.stat.exists"
   become: yes
   copy:
     src: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
@@ -21,6 +23,6 @@
     owner: www-data
     group: www-data
     mode: 0744
-  when: google_site_verification_stat.stat.exists
+  #when:
   tags:
     - google-verification
