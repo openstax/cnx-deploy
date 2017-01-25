@@ -1,6 +1,3 @@
-[local]
-127.0.0.1  ansible_connection=local
-
 [legacy-staging1]
 legacy-staging1.cnx.org
 
