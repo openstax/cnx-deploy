@@ -5,20 +5,6 @@
 # frontend'ish and cnx-suite components host
 qa00.cnx.org
 
-[dev01]
-#  zeo & zclient(s) components host
-dev01.cnx.org
-
-[dev02]
-# dedicated zclients(s) host
-dev02.cnx.org
-
-[dev03]
-# pdf generation component(s) host
-dev03.cnx.org
-
-# Grouped Hosts
-
 [nfs:children]
 # placed on the same machine as the frontend
 qa00
@@ -48,14 +34,13 @@ qa00
 qa00
 
 [zeo:children]
-dev01
+qa00
 
 [zclient:children]
-dev01
-dev02
+qa00
 
 [pdf_gen:children]
-dev03
+qa00
 
 # Groups of groups
 
