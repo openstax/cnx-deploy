@@ -1,6 +1,3 @@
-[local]
-127.0.0.1  ansible_connection=local
-
 [dev00]
 # frontend'ish and cnx-suite components host
 dev00.cnx.org

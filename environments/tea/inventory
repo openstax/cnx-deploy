@@ -1,6 +1,3 @@
-[local]
-127.0.0.1  ansible_connection=local
-
 [tea00]
 # frontend'ish and cnx-suite components host
 # zeo & zclient(s) components host
