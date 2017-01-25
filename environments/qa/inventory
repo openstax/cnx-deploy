@@ -1,37 +1,61 @@
 [local]
-127.0.0.1  ansible_connection=local
+127.0.0.1 ansible_connection=local
 
-[qa]
+[qa00]
+# frontend'ish and cnx-suite components host
 qa00.cnx.org
+
+[dev01]
+#  zeo & zclient(s) components host
+dev01.cnx.org
+
+[dev02]
+# dedicated zclients(s) host
+dev02.cnx.org
+
+[dev03]
+# pdf generation component(s) host
+dev03.cnx.org
 
 # Grouped Hosts
 
+[nfs:children]
+# placed on the same machine as the frontend
+qa00
+
 [database:children]
-qa
+qa00
 
 [archive:children]
-qa
+qa00
 
 [publishing:children]
-qa
+qa00
 
 [authoring:children]
-qa
+qa00
+
+[lead_frontend:children]
+qa00
+
+[legacy_frontend:children]
+qa00
 
 [frontend:children]
-qa
+qa00
 
 [worker:children]
-qa
+qa00
 
 [zeo:children]
-qa
+dev01
 
 [zclient:children]
-qa
+dev01
+dev02
 
 [pdf_gen:children]
-qa
+dev03
 
 # Groups of groups
 
@@ -40,3 +64,15 @@ archive
 publishing
 authoring
 zclient
+pdf_gen
+
+[nfs_connected:children]
+legacy_frontend
+frontend
+zclient
+pdf_gen
+
+[zope:children]
+zeo
+zclient
+pdf_gen

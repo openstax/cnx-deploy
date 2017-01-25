@@ -12,3 +12,7 @@
     link_names: 0
     parse: 'none'
   with_items: "{{ channels }}"
+  run_once: true
+  tags:
+    - notify
+    - slack

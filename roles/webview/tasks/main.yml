@@ -2,6 +2,8 @@
 # Installs webview with all the dependencies.
 
 - include: webview.yml
+  tags:
+    - webview
 
 - include: google_site_verification.yml
   tags:
