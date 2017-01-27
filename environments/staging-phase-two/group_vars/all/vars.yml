@@ -45,7 +45,7 @@ nfs_server_for_specials: staging-files00.cnx.org
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.21.0
+webview_version: v0.21.11-dev7fefc3d
 
 xxx_hardcoded_zclients:
   - ip_addr: 128.42.169.13
