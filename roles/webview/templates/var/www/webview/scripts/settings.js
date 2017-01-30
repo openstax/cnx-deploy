@@ -29,7 +29,7 @@
       legacy: '{{ zope_domain }}',
 
       // Webmaster E-mail address
-      webmaster: 'support@openstax.org',
+      webmaster: '{{ webmaster_email|default("support@openstax.org") }}',
 
       // Content shortcodes
       shortcodes: {{ content_shortcodes|default({})|to_json }},
@@ -43,9 +43,9 @@
 
       conceptCoach: {
         uuids: {{ concept_coach_webview_settings|default({})|to_json }},
-        url: 'https://{{ tutor_domain }}',
-        assetsUrl: 'https://{{ tutor_domain }}/assets',
-        revUrl: 'https://{{ tutor_domain }}/rev.txt'
+        url: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}',
+        assetsUrl: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}/assets',
+        revUrl: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}/rev.txt'
       }
 
     });
