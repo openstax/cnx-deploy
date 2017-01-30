@@ -16,20 +16,19 @@ memcached_hosts: localhost
 varnish_port: 80
 
 # Points to the haproxy running on tundra
-archive_host: tundra.cnx.rice.edu
-archive_base_port: 8888
+archive_host: staging07.cnx.org
+archive_base_port: "{{ default_archive_base_port }}"
 # Points to the publishing instance running on tundra
-publishing_host: tundra.cnx.rice.edu
-publishing_base_port: 6550
-authoring_host: staging00.cnx.org
+publishing_host: staging07.cnx.org
+publishing_base_port: "{{ default_publishing_base_port }}"
 zclient_base_port: 8280
 
 zope_domain: legacy-staging.cnx.org
 arclishing_domain: archive-staging.cnx.org
 frontend_domain: staging.cnx.org
-accounts_domain: accounts.openstax.org
+accounts_domain: accounts-staging.openstax.org
 tutor_domain: tutor-staging.openstax.org
-exercises_domain: exercises.openstax.org
+exercises_domain: exercises-staging.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
