@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 from __future__ import print_function
 
+import os
 import sys
 import argparse
 import shlex
@@ -9,7 +10,8 @@ from subprocess import PIPE, Popen
 
 # FIXME These initialize tasks run to failures. Ideally, it's be nice if
 #       they gracefully bailed out with a meaningful message.
-INIT_DB_CMD = "/var/cnx/venvs/archive/bin/cnx-archive-initdb /etc/cnx/archive/app.ini"
+DEPRECATED_EXECUTABLE = "/var/cnx/venvs/archive/bin/cnx-archive-initdb"
+DEPRECATED_INIT_DB_CMD = "{} /etc/cnx/archive/app.ini".format(DEPRECATED_EXECUTABLE)
 
 # This message is returned by the initdb command when the database exists.
 KNOWN_OK = "Database is already initialized"
@@ -36,16 +38,30 @@ def make_parser():
     parser.add_argument('user')
     return parser
 
+def run_cnxdb_cmd(subcmd, args):
+    """`subcmd` is the subcommand, something like `init` or `venv`.
+    `args` is the parsed args from argparse.
+    """
+    cmd = "/var/cnx/venvs/archive/bin/cnx-db {1} -h {0.host} -p {0.port} -d {0.name} -U {0.user}".format(args, subcmd)
+    retcode, out, err = call(cmd)
+    if retcode > 0:
+        print_issue(subcmd, out, err)
+        sys.exit(1)
+
 
 def main(argv=None):
     parser = make_parser()
     args = parser.parse_args(argv)
 
     # Initialize DB
-    retcode, out, err = call(INIT_DB_CMD)
-    if retcode > 0 and KNOWN_OK not in err:
-        print_issue('initdb', out, err)
-        return 1
+    if os.path.exists(DEPRECATED_EXECUTABLE):
+        # FIXME (30-Jan-12017) The cnx-archive-initdb command is deprecated.
+        retcode, out, err = call(DEPRECATED_INIT_DB_CMD)
+        if retcode > 0 and KNOWN_OK not in err:
+            print_issue('initdb', out, err)
+            sys.exit(1)
+    else:
+        run_cnxdb_cmd('init', args)
 
     # Initialize venv in db
     # FIXME (15-Nov-2016) The venv logic only works with localhost at this time.
@@ -53,11 +69,7 @@ def main(argv=None):
     #       As a result, we are temporarily hardcoding this to localhost, which
     #       means archive will be required to be on the same host as postgres.
     #       https://github.com/Connexions/cnx-deploy/issues/145
-    cmd = "/var/cnx/venvs/archive/bin/cnx-db venv -h {0.host} -p {0.port} -d {0.name} -U {0.user}".format(args)
-    retcode, out, err = call(cmd)
-    if retcode > 0:
-        print_issue('venv', out, err)
-        return 1
+    run_cnxdb_cmd('venv', args)
 
     # Database migration happens after cnx-publishing install.
     return 0
