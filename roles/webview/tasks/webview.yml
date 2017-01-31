@@ -49,7 +49,7 @@
   become: yes
   file:
     src: "/var/www/webview_{{ webview_version }}"
-    dest: "{{ root_prefix }}/var/www/webview"
+    dest: "/var/www/webview"
     state: link
     owner: www-data
   notify:
@@ -74,7 +74,7 @@
   become: yes
   template:
     src: etc/nginx/sites-available/webview
-    dest: "{{ root_prefix }}/etc/nginx/sites-available/webview"
+    dest: "/etc/nginx/sites-available/webview"
     owner: www-data
   notify:
     - reload nginx
@@ -82,8 +82,8 @@
 - name: enable the webview nginx site
   become: yes
   file:
-    src: "{{ root_prefix }}/etc/nginx/sites-available/webview"
-    dest: "{{ root_prefix }}/etc/nginx/sites-enabled/webview"
+    src: "/etc/nginx/sites-available/webview"
+    dest: "/etc/nginx/sites-enabled/webview"
     state: link
     owner: www-data
   notify:

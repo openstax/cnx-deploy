@@ -1,8 +1,8 @@
 ---
 # Installs archive and publishing with all the dependencies.
 #
-# The virtualenvs are installed to {{ root_prefix }}/var/cnx/venvs
-# and the configuration is installed to {{ root_prefix }}/etc/cnx/.
+# The virtualenvs are installed to /var/cnx/venvs
+# and the configuration is installed to /etc/cnx/.
 
 # +++
 # Prerequisites
