@@ -2,15 +2,11 @@
   'use strict';
 
   define(function (require) {
-    var makeSettings = require('settings/base');
+    var languages = require('cs!configs/languages');
 
-    // The follow properties have been defined with default values in "settings/base":
-    //  root, features, titleSuffix, analyticsID, languages, webmaster,
-    //  support, terpUrl, defaultLicense, conceptCoach
-    // Any new values here will override those default values.
-
-    return makeSettings({
-      features: {{ webview_features|default(["conceptCoach"])|to_json }},
+    return {
+      // Directory from which webview is served
+      root: '/',
 
       // Hostname and port for the cnx-archive server
       cnxarchive: {
@@ -22,6 +18,15 @@
         host: location.hostname
       },
 
+      // Prefix to prepend to page titles
+      titleSuffix: ' - OpenStax CNX',
+
+      // Google Analytics tracking ID
+      analyticsID: 'UA-7903479-1',
+
+      // Supported languages
+      languages: languages,
+
       // Legacy URL
       // URLs are concatenated using the following logic: location.protocol + '//' + legacy + '/' + view.url
       //   Example: 'http:' + '//' + 'cnx.org' + '/' + 'contents'
@@ -29,26 +34,32 @@
       legacy: '{{ zope_domain }}',
 
       // Webmaster E-mail address
-      webmaster: '{{ webmaster_email|default("support@openstax.org") }}',
+      webmaster: 'cnx@cnx.org',
 
       // Content shortcodes
-      shortcodes: {{ content_shortcodes|default({})|to_json }},
+      shortcodes: {
+      },
 
       accountProfile: 'https://{{ accounts_domain }}/profile',
       cnxSupport: 'http://openstax.force.com/support?l=en_US&c=Products%3ACNX',
+      terpUrl: function (itemCode) {
+        return 'https://openstaxtutor.org/terp/' + itemCode + '/quiz_start';
+      },
 
       exerciseUrl: function (itemCode) {
         return 'https://{{ exercises_domain|default("exercises-qa.openstax.org") }}/api/exercises?q=tag:' + itemCode;
       },
 
+      defaultLicense: {
+        code: 'by'
+      },
+
       conceptCoach: {
         uuids: {{ concept_coach_webview_settings|default({})|to_json }},
-        url: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}',
-        assetsUrl: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}/assets',
-        revUrl: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}/rev.txt'
+        url: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}'
       }
 
-    });
+    };
 
   });
 
