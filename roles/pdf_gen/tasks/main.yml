@@ -35,7 +35,7 @@
 
 - name: install princexml
   apt:
-    deb: "http://www.princexml.com/download/prince_10r7-1_ubuntu16.04_amd64.deb"
+    deb: "{{ princexml_deb_url }}"
   become: yes
 
 - name: stat princexml license file
