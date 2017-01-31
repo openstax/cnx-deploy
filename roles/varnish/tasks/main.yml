@@ -49,7 +49,7 @@
   become: yes
   template:
     src: etc/varnish/varnish.vcl
-    dest: "{{ root_prefix }}/etc/varnish/varnish.vcl"
+    dest: "/etc/varnish/varnish.vcl"
   notify:
     - reload varnish
 

@@ -14,7 +14,7 @@
 # Initialize
 # +++
 
-- stat: path="{{ root_prefix }}/etc/supervisor/supervisord.conf"
+- stat: path="/etc/supervisor/supervisord.conf"
   register: supervisord_conf
 
 - name: create supervisord.conf

@@ -5,7 +5,7 @@
   become: yes
   copy:
     src: "{{ cert_pem_filepath }}"
-    dest: "{{ root_prefix }}/etc/ssl/certs/{{ frontend_domain }}.pem"
+    dest: "/etc/ssl/certs/{{ frontend_domain }}.pem"
     owner: "{{ cert_owner|default('root') }}"
     group: "{{ cert_group|default('root') }}"
     mode: 0600
