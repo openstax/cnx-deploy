@@ -5,3 +5,6 @@
 
 - name: initialize archive db
   command: "/usr/local/bin/initialize-archive-db {{ archive_db_host }} {{ archive_db_port }} {{ archive_db_name }} {{ archive_db_user }}"
+
+- name: migrate repository db
+  command: "/var/cnx/venvs/archive/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"

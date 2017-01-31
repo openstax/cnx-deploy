@@ -94,6 +94,8 @@
   pip:
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
+  notify:
+    - migrate repository db
 
 # +++
 # Configure
@@ -132,22 +134,31 @@
 # Note, the setup current **assumes** that the publishing and archive database
 # is the same database. There has been no reason to split these yet, so we won't.
 
-# FIXME These initialize tasks run to failures. Ideally, it'd be nice if
-#       they gracefully bailed out with a meaningful message.
+# FIXME (30-Jan-12017) cnx-publishing-initdb is deprecated.
+- name: check for cnx-publishing-initdb
+  stat:
+    path: "/var/cnx/venvs/publishing/bin/cnx-publishing-initdb"
+  register: "publishing_initdb_executable"
 
 - name: initialize publishing db
+  when: "publishing_initdb_executable.stat.exists"
   command: "/var/cnx/venvs/publishing/bin/cnx-publishing-initdb /etc/cnx/publishing/app.ini"
   register: publishing_initdb_cmd
-  # FIXME (30-Mar-2016) We need to fail with a more reliable message, rather than
-  #       looking at the traceback line.
   failed_when: "publishing_initdb_cmd.rc > 0 and 'psycopg2.ProgrammingError: type \"publication_states\" already exists' not in publishing_initdb_cmd.stderr"
+# /FIXME
 
+# FIXME (30-Jan-12017) Migrations have been moved to cnx-db. Use the handler to migrate on install change.
 - name: initialize db-migrator
-  when: "'already exists' not in publishing_initdb_cmd.stderr"
+  when:
+    - "'already exists' not in publishing_initdb_cmd.stderr"
+    - "publishing_initdb_executable.stat.exists"
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
 
 - name: migrate database
+  # We check for the executable's existence because prior to its removal, the migrations lived in cnx-publishing.
+  when: "publishing_initdb_executable.stat.exists"
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing migrate"
+# /FIXME
 
 # +++
 # Init service
