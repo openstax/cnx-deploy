@@ -22,19 +22,16 @@ memcached_hosts: localhost
 varnish_port: 8990
 
 archive_host: qa00.cnx.org
-archive_port: 6789
 publishing_host: qa00.cnx.org
-publishing_port: 6543
 authoring_host: qa00.cnx.org
-authoring_port: 6420
 zclient_base_port: 8280
 
-zope_domain: legacy-dev00.cnx.org
-arclishing_domain: archive-dev00.cnx.org
-frontend_domain: dev00.cnx.org
+zope_domain: legacy-qa00.cnx.org
+arclishing_domain: archive-qa00.cnx.org
+frontend_domain: qa00.cnx.org
 accounts_domain: accounts-qa1.openstax.org
-tutor_domain: tutor-dev.openstax.org
-exercises_domain: exercises-dev.openstax.org
+tutor_domain: tutor-qa.openstax.org
+exercises_domain: exercises-qa.openstax.org
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"

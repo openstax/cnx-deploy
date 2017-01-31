@@ -1,9 +1,8 @@
-[local]
-127.0.0.1 ansible_connection=local
-
 [qa00]
-# frontend'ish and cnx-suite components host
+# all-in-one host
 qa00.cnx.org
+
+# Grouped Hosts
 
 [nfs:children]
 # placed on the same machine as the frontend
