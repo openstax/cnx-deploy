@@ -71,3 +71,5 @@ concept_coach_webview_settings:
   'NALcUxE9': ['art-exercise','multiple-choice','free-response']
   '99e127f8-f722-4907-a6b3-2d62fca135d6': ['art-exercise','multiple-choice','free-response','interactive-exercise']
   'meEn-Pci': ['art-exercise','multiple-choice','free-response']
+
+princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"

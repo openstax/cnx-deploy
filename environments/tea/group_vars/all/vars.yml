@@ -51,3 +51,5 @@ nfs_server_for_files2: tea00.cnx.org
 nfs_server_for_specials: tea00.cnx.org
 
 webview_version: latest
+
+princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
