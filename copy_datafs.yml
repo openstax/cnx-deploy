@@ -17,11 +17,25 @@
     source_location: "{{ source_location }}"
     destination_filename: "{{ source_filename }}.new"
   tasks:
+    - name: temporary filestorage permissions
+      file:
+        path: /var/lib/cnx/cnx-buildout/var/filestorage
+        owner: www-data
+        group: www-data
+        mode: 0775
+      tags: datafs-perms-temporary
     - name: copy datafs over
-      shell: "rsync -avP --temp-dir=/tmp/rsync.d --partial-dir=/tmp/rsync.d -e ssh {{ source_host }}:{{ source_location }}/{{ source_filename }} /var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
       become: yes
       become_user: administrator
+      shell: "rsync -aP --temp-dir=/tmp/rsync.d --inplace -e ssh {{ source_host }}:{{ source_location }}/{{ source_filename }} /var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
       tags: datafs-sync
+    - name: ensure filestorage permissions
+      file:
+        path: /var/lib/cnx/cnx-buildout/var/filestorage
+        owner: www-data
+        group: www-data
+        mode: 0755
+      tags: datafs-perms-reset
     - name: ensure datafs permissions
       file:
         path: "/var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
