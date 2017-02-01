@@ -2,6 +2,7 @@
 
 - name: copy datafs
   hosts: zeo
+  become: yes
   vars_prompt:
     - name: "source_host"
       prompt: "Where is the Data.fs hosted?"
