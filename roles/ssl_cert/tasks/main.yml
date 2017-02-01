@@ -1,6 +1,29 @@
 ---
 # Configures SSL sites for cnx sites.
 
+- name: check local for existing cert
+  local_action:
+    module: stat
+    path: "{{ cert_pem_filepath }}"
+    get_checksum: yes
+    checksum_algorithm: sha1
+  register: local_cert_stat
+  tags:
+    - install-ssl-check
+    - install-ssl
+
+- name: check destination for existing cert
+  become: yes
+  stat:
+    path: "/etc/ssl/certs/{{ frontend_domain }}.pem"
+    get_checksum: yes
+    checksum_algorithm: sha1
+    follow: yes
+  register: cert_stat
+  tags:
+    - install-ssl-check
+    - install-ssl
+
 - name: install certificate pem
   become: yes
   copy:
@@ -10,3 +33,7 @@
     group: "{{ cert_group|default('root') }}"
     mode: 0600
   notify: "{{ on_ssl_install }}"
+#  when: local_cert_stat.checksum != cert_stat.checksum
+  when: not cert_stat.exists
+  tags:
+    - install-ssl
