@@ -49,16 +49,16 @@ nfs_connections: "{{ vault_nfs_connections }}"
 
 webview_version: v0.21.11-dev7fefc3d
 
-xxx_hardcoded_zclients:
-  - ip_addr: 128.42.169.13
-    host: glad
-    count: 2
-  - ip_addr: 128.42.169.17
-    host: quil
-    count: 5
-  - ip_addr: 128.42.169.18
-    host: font
-    count: 5
+# xxx_hardcoded_zclients:
+#   - ip_addr: 128.42.169.13
+#     host: glad
+#     count: 2
+#   - ip_addr: 128.42.169.17
+#     host: quil
+#     count: 5
+#   - ip_addr: 128.42.169.18
+#     host: font
+#     count: 5
 
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 

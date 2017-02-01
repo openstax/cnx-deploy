@@ -19,7 +19,7 @@
 - name: disable default site
   become: yes
   file:
-    path: "{{ root_prefix }}/etc/nginx/sites-enabled/default"
+    path: "/etc/nginx/sites-enabled/default"
     state: absent
   register: disabled_default_site
 
@@ -37,6 +37,6 @@
   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
   become: yes
   file:
-    path: "{{ root_prefix }}/var/www"
+    path: "/var/www"
     state: directory
     mode: 0755
