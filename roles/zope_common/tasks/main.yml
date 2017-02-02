@@ -28,8 +28,11 @@
 - name: install postgres client
   become: yes
   apt:
-    name: "postgresql-client-{{ postgres_version }}"
+    name: "{{ item }}"
     state: present
+  with_items:
+    - "postgresql-client-{{ postgres_version }}"
+    - "libpq-dev"
 
 - include: configure_buildout.yml
 - include: configure_zclient.yml
