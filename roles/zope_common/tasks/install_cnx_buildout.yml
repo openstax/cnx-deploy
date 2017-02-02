@@ -18,23 +18,21 @@
     # lxml dependencies
     - libxml2-dev
     - libxslt1-dev
+  tags: buildout-apt
 
 # +++
 # Install virtualenv
 # +++
 
-- stat:
-    path: "/var/cnx/venvs"
-  register: venvs_dir
-
 - name: ensure the venvs directory exists
   become: yes
-  when: not venvs_dir.stat.exists
   file:
     path: "/var/cnx/venvs"
     state: directory
     mode: 0755
     owner: www-data
+    group: www-data
+  tags: buildout-venvs
 
 - shell: which python2.4
   register: python24_path
@@ -61,10 +59,22 @@
 
 - name: copy cached python packages downloads directory
   become: yes
-  copy:
+  synchronize:
     src: src/cnx-buildout/downloads
     dest: "/var/lib/cnx/cnx-buildout"
+    owner: no
+    group: no
+  tags: buildout-copy
+
+- name: ensure proper ownership of buildout
+  become: yes
+  file:
+    path: /var/lib/cnx/cnx-buildout
+    recurse: yes
+    state: directory
     owner: www-data
+    group: www-data
+  tags: buildout-perms
 
 - name: run bootstrap
   become: yes
@@ -72,6 +82,7 @@
   shell: "/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
+  tags: buildout-bootstrap
 
 - name: install simplejson 1.9.2
   become: yes
