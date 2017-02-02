@@ -10,10 +10,11 @@
   notify:
     - reload supervisord
 
+# TODO (01-Feb-12017) Use the 'supervisorctl' module's group feature
 - name: restart zclients
   when: "{{ not supervisor_conf_for_zclients|changed }}"
   become: yes
-  supervisorctl:
+  supervisorctl2:
     name: "{{ item }}"
     state: restarted
   with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
