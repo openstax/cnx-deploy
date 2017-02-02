@@ -25,6 +25,12 @@
   retries: 5
   delay: 30
 
+- name: install postgres client
+  become: yes
+  apt:
+    name: "postgresql-client-{{ postgres_version }}"
+    state: present
+
 - include: configure_buildout.yml
 - include: configure_zclient.yml
   when: "{{ inventory_hostname in groups.zclient }}"
