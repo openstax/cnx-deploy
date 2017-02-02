@@ -14,7 +14,7 @@ from supervisor.xmlrpc import SupervisorTransport
 DOCUMENTATION = """
 ---
 module: supervisorctl
-version: "1.1"
+version: "2.1"
 short_description:  Manage supervisord managed services
 description:
     - Controls supervisor managed services on remote hosts.
@@ -52,13 +52,13 @@ options:
 
 EXAMPLES = """
 # Example action to start service httpd, if not running
-- supervisorctl: name=httpd state=started
+- supervisorctl2: name=httpd state=started
 # Example action to stop service httpd, if running
-- supervisorctl: name=httpd state=stopped
+- supervisorctl2: name=httpd state=stopped
 # Example action to restart service httpd, in all cases
-- supervisorctl: name=httpd state=restarted
+- supervisorctl2: name=httpd state=restarted
 # Example action to restart the supervisor group programs under the name servu
-- supervisorctl: group=servu state=restarted
+- supervisorctl2: group=servu state=restarted
 """
 
 DEFAULT_URL = 'unix:///var/run/supervisor.sock'

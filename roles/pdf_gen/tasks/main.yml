@@ -87,6 +87,6 @@
 - name: restart pdf_gen
   when: "{{ not supervisor_conf_for_pdf_gen|changed }}"
   become: yes
-  supervisorctl:
+  supervisorctl2:
     name: pdf_gen
     state: restarted

@@ -2,6 +2,6 @@
 
 - name: restart publishing
   become: yes
-  supervisorctl:
+  supervisorctl2:
     group: "publishing"
     state: restarted
