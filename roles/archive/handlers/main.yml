@@ -3,5 +3,5 @@
 - name: restart archive
   become: yes
   supervisorctl:
-    name: "archive:*"
+    group: "archive"
     state: restarted

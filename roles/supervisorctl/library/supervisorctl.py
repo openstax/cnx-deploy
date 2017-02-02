@@ -14,16 +14,20 @@ from supervisor.xmlrpc import SupervisorTransport
 DOCUMENTATION = """
 ---
 module: supervisorctl
-version: "1.0"
+version: "1.1"
 short_description:  Manage supervisord managed services
 description:
     - Controls supervisor managed services on remote hosts.
       (Note, supervisord must be installed)
 options:
     name:
-        required: true
+        required: false
         description:
-        - Name of the service.
+        - Name of the service. (required if group is not supplied)
+    group:
+        required: false
+        description:
+        - Name of the service group. (required if name is not supplied)
     state:
         required: true
         choices: [ started, stopped, restarted ]
@@ -53,6 +57,8 @@ EXAMPLES = """
 - supervisorctl: name=httpd state=stopped
 # Example action to restart service httpd, in all cases
 - supervisorctl: name=httpd state=restarted
+# Example action to restart the supervisor group programs under the name servu
+- supervisorctl: group=servu state=restarted
 """
 
 DEFAULT_URL = 'unix:///var/run/supervisor.sock'
@@ -92,14 +98,34 @@ def restart(server, name, sleep=None):
     return True, None
 
 
+def start_group(server, group, wait=True):
+    return bool(server.supervisor.startProcessGroup(group, wait)), None
+
+
+def stop_group(server, group, wait=True):
+    return bool(server.supervisor.stopProcessGroup(group, wait)), None
+
+
+def restart_group(server, group, sleep=None):
+    stopped, message = stop_group(server, group)
+    started, message = start_group(server, group)
+    if not started:
+        return started, message
+    if sleep:
+        time.sleep(sleep)
+    return True, None
+
+
 def main():
     module = AnsibleModule(
         argument_spec = dict(
-            name = dict(required=True),
+            name = dict(required=False),
+            group = dict(required=False),
             state = dict(choices=['started', 'stopped', 'restarted']),
             sleep = dict(required=False, type='int', default=None),
             url = dict(required=False, default=DEFAULT_URL),
         ),
+        required_one_of=[('name', 'group')],
         supports_check_mode=True,
     )
 
@@ -108,17 +134,28 @@ def main():
     transport = SupervisorTransport(None, None, serverurl=server_url)
     server = ServerProxy('http://127.0.0.1', transport=transport)
 
+    name = module.params['name']
+    if name:
+        classification = 'proc'
+    else:
+        name = module.params['group']
+        classification = 'group'
+
     state_funcs = {
-        'started': partial(start, server),
-        'stopped': partial(stop, server),
-        'restarted': partial(restart, server,
-                             sleep=module.params['sleep']),
+        ('started', 'proc'): partial(start, server),
+        ('stopped', 'proc'): partial(stop, server),
+        ('restarted', 'proc'): partial(restart, server,
+                                       sleep=module.params['sleep']),
+        ('started', 'group'): partial(start_group, server),
+        ('stopped', 'group'): partial(stop_group, server),
+        ('restarted', 'group'): partial(restart_group, server,
+                                        sleep=module.params['sleep']),
     }
 
-    func = state_funcs[module.params['state']]
+    func = state_funcs[(module.params['state'], classification,)]
 
     try:
-        success, message = func(module.params['name'])
+        success, message = func(name)
     except Fault as exc:
         message = exc.faultString
         return module.fail_json(msg=message)
