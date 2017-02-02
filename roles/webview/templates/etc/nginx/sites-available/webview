@@ -73,6 +73,11 @@ server {
         proxy_pass  http://{{ archive_host }}:{{ archive_base_port|default(default_archive_base_port) }};
     }
 
+    location ~ [.](?:bmp|bz2|jpe?g|gif|png|svg|swf|t?[gb]z|zip)$ {
+        expires max;
+        add_header Cache-Control "public";
+    }
+
     location ~ ^.*/(data|scripts|styles|images|fonts)/(.*) {
         try_files   $uri $uri/ /$1/$2 =404;
     }
