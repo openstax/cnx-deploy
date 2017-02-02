@@ -122,6 +122,8 @@
        dest: "/etc/cnx/publishing/app.ini"}
     - {src: "etc/cnx/publishing/logging.yaml",
        dest: "/etc/cnx/publishing/logging.yaml"}
+  notify:
+    - restart publishing
 
 # TODO make logging configuration files for pyramid_sawing
 
