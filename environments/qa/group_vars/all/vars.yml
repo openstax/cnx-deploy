@@ -25,6 +25,7 @@ archive_host: qa00.cnx.org
 publishing_host: qa00.cnx.org
 authoring_host: qa00.cnx.org
 zclient_base_port: 8280
+zclient_count: 1
 
 zope_domain: legacy-qa00.cnx.org
 arclishing_domain: archive-qa00.cnx.org

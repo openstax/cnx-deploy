@@ -42,7 +42,6 @@ memcached_hosts:
 zope_host: legacy.cnx.org
 zope_port: 8888
 archive_host: archive.cnx.org
-archive_port: 6789
 
 zope_domain: legacy.cnx.org
 arclishing_domain: archive.cnx.org
