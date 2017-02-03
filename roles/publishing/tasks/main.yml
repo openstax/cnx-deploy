@@ -95,7 +95,7 @@
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
   notify:
-    - migrate repository db
+    - migrate repository database
 
 # +++
 # Configure
@@ -110,6 +110,8 @@
   with_items:
     - cnx
     - cnx/publishing
+  notify:
+    - initialize repository database
 
 - name: render configuration
   become: yes
@@ -124,6 +126,8 @@
        dest: "/etc/cnx/publishing/app.ini"}
     - {src: "etc/cnx/publishing/logging.yaml",
        dest: "/etc/cnx/publishing/logging.yaml"}
+  notify:
+    - restart publishing
 
 # TODO make logging configuration files for pyramid_sawing
 
@@ -150,7 +154,7 @@
 # FIXME (30-Jan-12017) Migrations have been moved to cnx-db. Use the handler to migrate on install change.
 - name: initialize db-migrator
   when:
-    - "'already exists' not in publishing_initdb_cmd.stderr"
+    - "publishing_initdb_cmd is defined and 'already exists' not in publishing_initdb_cmd.stderr"
     - "publishing_initdb_executable.stat.exists"
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init"
 

@@ -8,9 +8,11 @@ import shlex
 from subprocess import PIPE, Popen
 
 
+EXECUTABLE_ENV = '/var/cnx/venvs/publishing/'
+
 # FIXME These initialize tasks run to failures. Ideally, it's be nice if
 #       they gracefully bailed out with a meaningful message.
-DEPRECATED_EXECUTABLE = "/var/cnx/venvs/archive/bin/cnx-archive-initdb"
+DEPRECATED_EXECUTABLE = os.path.join(EXECUTABLE_ENV, 'bin/cnx-archive-initdb')
 DEPRECATED_INIT_DB_CMD = "{} /etc/cnx/archive/app.ini".format(DEPRECATED_EXECUTABLE)
 
 # This message is returned by the initdb command when the database exists.
@@ -38,11 +40,13 @@ def make_parser():
     parser.add_argument('user')
     return parser
 
-def run_cnxdb_cmd(subcmd, args):
+def run_cnxdb_cmd(subcmd, args, extra_args=''):
     """`subcmd` is the subcommand, something like `init` or `venv`.
     `args` is the parsed args from argparse.
+    `extra_args` is a string of other commandline arguments.
     """
-    cmd = "/var/cnx/venvs/archive/bin/cnx-db {1} -h {0.host} -p {0.port} -d {0.name} -U {0.user}".format(args, subcmd)
+    executable = os.path.join(EXECUTABLE_ENV, 'bin/cnx-db')
+    cmd = "{0} {1} -h {2.host} -p {2.port} -d {2.name} -U {2.user} {3}".format(executable, subcmd, args, extra_args)
     retcode, out, err = call(cmd)
     if retcode > 0:
         print_issue(subcmd, out, err)
@@ -54,6 +58,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     # Initialize DB
+    using_deprecated_logic = True
     if os.path.exists(DEPRECATED_EXECUTABLE):
         # FIXME (30-Jan-12017) The cnx-archive-initdb command is deprecated.
         retcode, out, err = call(DEPRECATED_INIT_DB_CMD)
@@ -61,6 +66,7 @@ def main(argv=None):
             print_issue('initdb', out, err)
             sys.exit(1)
     else:
+        using_deprecated_logic = False
         run_cnxdb_cmd('init', args)
 
     # Initialize venv in db
@@ -70,6 +76,13 @@ def main(argv=None):
     #       means archive will be required to be on the same host as postgres.
     #       https://github.com/Connexions/cnx-deploy/issues/145
     run_cnxdb_cmd('venv', args)
+
+    executable = os.path.join(EXECUTABLE_ENV, 'bin/dbmigrator')
+    cmd = "{} --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init".format(executable)
+    retcode, out, err = call(cmd)
+    if retcode > 0:
+        print_issue('dbmigrator init', out, err)
+        sys.exit(1)
 
     # Database migration happens after cnx-publishing install.
     return 0

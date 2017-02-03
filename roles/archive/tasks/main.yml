@@ -108,8 +108,6 @@
   with_items:
     - cnx
     - cnx/archive
-  notify:
-    - initialize archive db
 
 - name: render configuration
   become: yes
