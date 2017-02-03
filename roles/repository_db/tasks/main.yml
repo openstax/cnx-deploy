@@ -1,0 +1,9 @@
+---
+# Set up script so aid in the provisioning of the repository database.
+
+- name: create script to initialize repository db
+  become: yes
+  copy:
+    src: usr/local/bin/initialize-repository-db
+    dest: /usr/local/bin/initialize-repository-db
+    mode: 0755

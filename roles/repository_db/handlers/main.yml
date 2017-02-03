@@ -1,0 +1,10 @@
+---
+
+# Note, the setup current **assumes** that the publishing and archive database
+# is the same database. There has been no reason to split these yet, so we won't.
+
+- name: initialize repository database
+  command: "/usr/local/bin/initialize-repository-db {{ archive_db_host }} {{ archive_db_port }} {{ archive_db_name }} {{ archive_db_user }}"
+
+- name: migrate repository database
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"

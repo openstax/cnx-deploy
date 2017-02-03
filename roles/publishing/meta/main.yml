@@ -3,5 +3,6 @@
 dependencies:
   - _pgdg_repo
   - python2
+  - repository_db
   - memcached
   - supervisord
