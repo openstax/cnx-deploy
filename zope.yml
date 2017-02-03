@@ -13,8 +13,6 @@
 
 - name: create site
   hosts: zope
-  roles:
-    - supervisorctl
   tasks:
     - include: tasks/create_rhaptos_site.yml
       run_once: yes
