@@ -3,5 +3,5 @@
 - name: restart authoring
   become: yes
   supervisorctl:
-    name: "authoring:*"
+    name: "authoring:"
     state: restarted
