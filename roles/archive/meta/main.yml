@@ -6,4 +6,3 @@ dependencies:
   - archive_db
   - memcached
   - supervisord
-  - supervisorctl
