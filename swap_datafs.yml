@@ -1,13 +1,12 @@
 ---
 # This puts the Data.fs.new file in place
 
-- name: stop zclient applications
-  hosts: zclient
-  roles:
-    - supervisorctl
+- name: stop zclients
+  hosts:
+    - zclient
+    - pdf_gen
   tasks:
-    - name: stop zclients
-      become: yes
+    - become: yes
       supervisorctl:
         name: "{{ item }}"
         state: stopped
@@ -15,11 +14,8 @@
 
 - name: stop pdf_gen applications
   hosts: pdf_gen
-  roles:
-    - supervisorctl
   tasks:
-    - name: stop pdf_gen
-      become: yes
+    - become: yes
       supervisorctl:
         name: pdf_gen
         state: stopped
@@ -32,8 +28,6 @@
       private: no
       # Note: In production this is `app.devrep` everywhere else it's `app.plone.rhaptosDA`.
       default: "app.devrep"
-  roles:
-    - supervisorctl
   tasks:
     - name: stop zeo
       become: yes
@@ -68,11 +62,8 @@
 
 - name: start zclient applications
   hosts: zclient
-  roles:
-    - supervisorctl
   tasks:
-    - name: start zclients
-      become: yes
+    - become: yes
       supervisorctl:
         name: "{{ item }}"
         state: started
@@ -80,11 +71,8 @@
 
 - name: start pdf_gen applications
   hosts: pdf_gen
-  roles:
-    - supervisorctl
   tasks:
-    - name: start pdf_gen
-      become: yes
+    - become: yes
       supervisorctl:
         name: pdf_gen
         state: started
