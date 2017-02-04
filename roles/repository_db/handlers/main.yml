@@ -8,3 +8,8 @@
 
 - name: migrate repository database
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"
+
+
+# BBB (3-Feb-12017) Needs to be a handler
+- name: migrate repository database (deprecated)
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing migrate"

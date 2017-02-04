@@ -10,13 +10,44 @@ from subprocess import PIPE, Popen
 
 EXECUTABLE_ENV = '/var/cnx/venvs/publishing/'
 
-# FIXME These initialize tasks run to failures. Ideally, it's be nice if
-#       they gracefully bailed out with a meaningful message.
-DEPRECATED_EXECUTABLE = os.path.join(EXECUTABLE_ENV, 'bin/cnx-archive-initdb')
-DEPRECATED_INIT_DB_CMD = "{} /etc/cnx/archive/app.ini".format(DEPRECATED_EXECUTABLE)
 
-# This message is returned by the initdb command when the database exists.
-KNOWN_OK = "Database is already initialized"
+# BBB (3-Feb-12017) Backwards compatible database initialization.
+
+DEPRECATED_ARCHIVE_INIT_DB_CMD = "{} /etc/cnx/archive/app.ini".format(os.path.join(EXECUTABLE_ENV, 'bin/cnx-archive-initdb'))
+DEPRECATED_PUBLISHING_INIT_DB_CMD = "{} /etc/cnx/publishing/app.ini".format(os.path.join(EXECUTABLE_ENV, 'bin/cnx-publishing-initdb'))
+
+# These messages are returned by the initdb commands when the database exists.
+KNOWN_ARCHIVE_OK = 'Database is already initialized'
+KNOWN_PUBLISHING_OK = 'psycopg2.ProgrammingError: type \"publication_states\" already exists'
+
+
+def is_using_deprecated_init():
+    """Evaluate whether we are in a deprecated runtime environment."""
+    flag_file = os.path.join(EXECUTABLE_ENV, 'bin/cnx-publishing-initdb')
+    if os.path.exists(flag_file):
+        return True
+    else:
+        return False
+
+
+def run_deprecated_init():
+    # FIXME (30-Jan-12017) The cnx-archive-initdb command is deprecated.
+    retcode, out, err = call(DEPRECATED_ARCHIVE_INIT_DB_CMD)
+    if retcode > 0 and KNOWN_ARCHIVE_OK not in err:
+        print_issue('cnx-archive-initdb', out, err)
+        return 1
+    retcode, out, err = call(DEPRECATED_PUBLISHING_INIT_DB_CMD)
+    if retcode > 0 and KNOWN_PUBLISHING_OK not in err:
+        print_issue('cnx-publishing-initdb', out, err)
+        return 1
+    executable = os.path.join(EXECUTABLE_ENV, 'bin/dbmigrator')
+    cmd = "{} --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init".format(executable)
+    retcode, out, err = call(cmd)
+    if retcode > 0:
+        print_issue('dbmigrator init', out, err)
+        return 1
+    return 0
+# /BBB
 
 
 def call(cmd):
@@ -40,6 +71,7 @@ def make_parser():
     parser.add_argument('user')
     return parser
 
+
 def run_cnxdb_cmd(subcmd, args, extra_args=''):
     """`subcmd` is the subcommand, something like `init` or `venv`.
     `args` is the parsed args from argparse.
@@ -57,32 +89,23 @@ def main(argv=None):
     parser = make_parser()
     args = parser.parse_args(argv)
 
+    # Run deprecated init if check passes
+    if is_using_deprecated_init():
+        return run_deprecated_init()
+
     # Initialize DB
-    using_deprecated_logic = True
-    if os.path.exists(DEPRECATED_EXECUTABLE):
-        # FIXME (30-Jan-12017) The cnx-archive-initdb command is deprecated.
-        retcode, out, err = call(DEPRECATED_INIT_DB_CMD)
-        if retcode > 0 and KNOWN_OK not in err:
-            print_issue('initdb', out, err)
-            sys.exit(1)
-    else:
-        using_deprecated_logic = False
-        run_cnxdb_cmd('init', args)
+    run_cnxdb_cmd('init', args)
 
     # Initialize venv in db
-    # FIXME (15-Nov-2016) The venv logic only works with localhost at this time.
-    #       It doesn't fail when not localhost, instead it just warns...
-    #       As a result, we are temporarily hardcoding this to localhost, which
-    #       means archive will be required to be on the same host as postgres.
-    #       https://github.com/Connexions/cnx-deploy/issues/145
     run_cnxdb_cmd('venv', args)
 
+    # Initialize db-migrator
     executable = os.path.join(EXECUTABLE_ENV, 'bin/dbmigrator')
-    cmd = "{} --config /etc/cnx/publishing/app.ini --context cnx-archive --context cnx-publishing init".format(executable)
+    cmd = "{} --config /etc/cnx/publishing/app.ini --context cnx-db init".format(executable)
     retcode, out, err = call(cmd)
     if retcode > 0:
         print_issue('dbmigrator init', out, err)
-        sys.exit(1)
+        return 1
 
     # Database migration happens after cnx-publishing install.
     return 0
