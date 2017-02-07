@@ -2,6 +2,10 @@
 # all-in-one host
 qa00.cnx.org
 
+[qa00:vars]
+zclient_count=2
+single_instance=yes
+
 # Grouped Hosts
 
 [nfs:children]
