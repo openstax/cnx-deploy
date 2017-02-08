@@ -2,6 +2,7 @@
 -e git+https://github.com/Connexions/rhaptos.cnxmlutils.git#egg=rhaptos.cnxmlutils
 -e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
 -e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
+-e git+https://github.com/Connexions/cnx-db.git#egg=cnx-db
 
 db-migrator==0.1.4
 cnx-db>=0.2
