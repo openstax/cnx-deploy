@@ -9,11 +9,6 @@ server {
     listen   [::]:8080 default ipv6only=on;  ## listen for ipv6
     port_in_redirect off;
 
-    location ~ [.](?:bmp|bz2|jpe?g|gif|png|svg|swf|t?[gb]z|zip)$ {
-        expires max;
-        add_header Cache-Control "public";
-    }
-
     location /specials {
         add_header Access-Control-Allow-Origin $cors_header;
     }
