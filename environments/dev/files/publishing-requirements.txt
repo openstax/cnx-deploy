@@ -7,7 +7,6 @@
 -e git+https://github.com/Connexions/cnx-publishing.git#egg=cnx-publishing
 
 db-migrator==0.1.4
-cnx-db>=0.2
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.2
