@@ -41,3 +41,10 @@
     login_host: "{{ archive_db_host }}"
     port: "{{ archive_db_port }}"
     state: absent
+
+- name: assign pdf_gen settings
+  when: rhaptos_site|failed
+  include: tasks/assign_pdf_gen_settings.yml
+  tags:
+    - zope
+    - assign_pdf_gen_settings

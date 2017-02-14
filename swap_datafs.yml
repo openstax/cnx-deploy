@@ -59,6 +59,8 @@
       shell: echo 'import transaction; {{ db_conn_object_path }}.connection_string = "postgres://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"; transaction.commit()' | ./bin/instance debug
       args:
         chdir: "/var/lib/cnx/cnx-buildout"
+    - name: update pdf_gen settings
+      include: tasks/assign_pdf_gen_settings.yml
 
 - name: start zclient applications
   hosts: zclient
