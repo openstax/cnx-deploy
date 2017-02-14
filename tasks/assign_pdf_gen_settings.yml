@@ -1,0 +1,8 @@
+---
+
+- name: update pdf_gen settings in rhaptos site
+  when: rhaptos_site|failed
+  shell: >
+    echo 'import transaction; app.plone.queue_tool.dictServers = { {% for host in groups.pdf_gen %}"{{ host }}": 2, {% endfor %} }; transaction.commit()' | ./bin/instance debug
+  args:
+    chdir: "/var/lib/cnx/cnx-buildout"
