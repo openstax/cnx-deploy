@@ -21,7 +21,7 @@
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
         acl has_www hdr_beg(host) -i www 
-        reqirep ^Host:\ www\.(.*) Host:\ \1 if has_www
+        reqirep ^Host:\ www[^.]*\.(.*) Host:\ \1 if has_www
 
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
