@@ -21,8 +21,8 @@
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
         acl has_www hdr_beg(host) -i www 
-        http-request redirect prefix http://dev00.cnx.org%[req.uri] if has_www ! { ssl_fc }
-        http-request redirect prefix https://dev00.cnx.org%[req.uri] if has_www { ssl_fc }
+        http-request redirect prefix http://{{ frontend_domain }}%[req.uri] if has_www ! { ssl_fc }
+        http-request redirect prefix https://{{ frontend_domain }}%[req.uri] if has_www { ssl_fc }
 
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
