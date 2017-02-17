@@ -81,6 +81,8 @@
     - xfonts-base                  
     - xfonts-encodings             
     - xfonts-utils
+  tags:
+    - install-dependencies
 
 - name: install princexml
   apt:
