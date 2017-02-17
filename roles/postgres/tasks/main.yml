@@ -15,6 +15,15 @@
     - "postgresql-plpython-{{ postgres_version }}"
   notify:
     - restart postgresql
+
+- name: enable postgres
+  become: yes
+  service:
+    name: "postgresql@{{ postgresql_version }}-main.service"
+    state: started
+    enabled: yes
+  tags:
+    - postgres-enable
     
 # +++
 # Configure
