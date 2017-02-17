@@ -19,7 +19,7 @@
 - name: enable postgres
   become: yes
   service:
-    name: "postgresql@{{ postgresql_version }}-main.service"
+    name: "postgresql@{{ postgres_version }}-main.service"
     state: started
     enabled: yes
   tags:
