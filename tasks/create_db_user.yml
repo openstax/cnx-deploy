@@ -8,6 +8,8 @@
     state: present
 
 - name: create the db user
+  become: yes
+  become_user: postgres
   postgresql_user:
     db: postgres
     login_host: "{{ db_host|default('localhost') }}"
@@ -15,4 +17,6 @@
     login_user: postgres
     name: "{{ db_user }}"
     password: "{{ db_password|default('') }}"
-    role_attr_flags: "{{ role_attr_flags|default('SUPERUSER') }}"
+    role_attr_flags: "{{ role_attr_flags|default('CREATEDB,NOSUPERUSER') }}"
+  tags:
+    - create-db-user
