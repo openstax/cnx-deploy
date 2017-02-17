@@ -32,11 +32,62 @@
     - otf-stix
     - openjdk-8-jdk
     - jpegoptim
+    - fontconfig                   
+    - fontconfig-config            
+    - fonts-cabin                  
+    - fonts-comfortaa              
+    - fonts-crosextra-caladea      
+    - fonts-crosextra-carlito      
+    - fonts-dejavu                 
+    - fonts-dejavu-core            
+    - fonts-dejavu-extra           
+    - fonts-ebgaramond             
+    - fonts-ebgaramond-extra       
+    - fonts-font-awesome           
+    - fonts-freefont-otf           
+    - fonts-freefont-ttf           
+    - fonts-gfs-artemisia          
+    - fonts-gfs-complutum          
+    - fonts-gfs-didot              
+    - fonts-gfs-neohellenic        
+    - fonts-gfs-olga               
+    - fonts-gfs-solomos            
+    - fonts-inconsolata            
+    - fonts-junicode               
+    - fonts-lato                   
+    - fonts-liberation             
+    - fonts-linuxlibertine         
+    - fonts-lmodern                
+    - fonts-lobster                
+    - fonts-lobstertwo             
+    - fonts-oflb-asana-math        
+    - fonts-opensymbol             
+    - fonts-roboto-hinted          
+    - fonts-sil-gentium            
+    - fonts-sil-gentium-basic      
+    - fonts-sil-gentiumplus        
+    - fonts-stix                   
+    - fonts-texgyre                
+    - gsfonts                      
+    - libfont-afm-perl             
+    - libfontconfig1:amd64         
+    - libfontenc1:amd64            
+    - libxfont1:amd64              
+    - texlive-font-utils           
+    - texlive-fonts-extra          
+    - texlive-fonts-extra-doc      
+    - texlive-fonts-recommended    
+    - texlive-fonts-recommended-doc
+    - xfonts-base                  
+    - xfonts-encodings             
+    - xfonts-utils
 
 - name: install princexml
   apt:
     deb: "{{ princexml_deb_url }}"
   become: yes
+  tags:
+    - install-princexml
 
 - name: stat princexml license file
   local_action:
@@ -44,6 +95,7 @@
     path: "{{ princexml_license_filepath }}"
   register: princexml_license_stat
   tags:
+    - install-princexml
     - install-princexml-license
 
 - name: install princexml license file
@@ -54,6 +106,7 @@
     dest: "/usr/lib/prince/license/license.dat"
     mode: 0744
   tags:
+    - install-princexml
     - install-princexml-license
 
 - name: create directory for urw fonts
@@ -73,6 +126,15 @@
     - URWPalladioL-BoldItal.ttf
     - URWPalladioL-Ital.ttf
     - URWPalladioL-Roma.ttf
+
+- name: unarchive additional fonts
+  become: yes
+  unarchive:
+    src: files/fonts.tar.xz
+    dest: /usr/share/fonts
+    copy: yes
+  tags:
+    - font-extract
 
 - name: configure pdf_gen in supervisor
   become: yes
