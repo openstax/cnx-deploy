@@ -19,6 +19,7 @@
     - install-libreoffice
 
 - name: install libreoffice
+  when: "not libreoffice_installed_python.stat.exists"
   become: yes
   shell: "dpkg -i *.deb"
   args:
