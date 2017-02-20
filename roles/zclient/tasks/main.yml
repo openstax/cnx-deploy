@@ -2,15 +2,15 @@
 
 # Install LibreOffice
 
-- name: check for existing download
+- name: check for existing libreoffice install
   stat:
-    path: "/tmp/LibreOffice_4.1.6.2_Linux_x86-64_deb"
-  register: libreoffice_download_location
+    path: "/opt/libreoffice4.1/program/python"
+  register: libreoffice_installed_python
   tags:
     - install-libreoffice
 
 - name: unpack libreoffice tarball
-  when: "not libreoffice_download_location.stat.exists"
+  when: "not libreoffice_installed_python.stat.exists"
   unarchive:
     src: "https://packages.cnx.org/deb/LibreOffice_4.1.6.2_Linux_x86-64_deb.tar.gz"
     remote_src: yes
