@@ -1,5 +1,25 @@
 ---
 
+# These directories are used by the document importer
+- name: create import build directories
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+  with_items:
+    - /var/local/import-harvest
+    - /var/local/import-harvest/latex
+    - /var/local/import-harvest/latex/bad
+    - /var/local/import-harvest/latex/good
+    - /var/local/import-harvest/word
+    - /var/local/import-harvest/word/bad
+    - /var/local/import-harvest/word/good
+  tags:
+    - create-import-build-directories
+
 # Install LibreOffice
 
 - name: check for existing libreoffice install
