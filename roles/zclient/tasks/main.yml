@@ -1,5 +1,35 @@
 ---
 
+# Install LibreOffice
+
+- name: check for existing download
+  stat:
+    path: "/tmp/LibreOffice_4.1.6.2_Linux_x86-64_deb"
+  register: libreoffice_download_location
+  tags:
+    - install-libreoffice
+
+- name: unpack libreoffice tarball
+  when: "not libreoffice_download_location.stat.exists"
+  unarchive:
+    src: "https://packages.cnx.org/deb/LibreOffice_4.1.6.2_Linux_x86-64_deb.tar.gz"
+    remote_src: yes
+    dest: "/tmp"
+  tags:
+    - install-libreoffice
+
+- name: install libreoffice
+  become: yes
+  shell: "dpkg -i *.deb"
+  args:
+    chdir: "/tmp/LibreOffice_4.1.6.2_Linux_x86-64_deb/DEBS/"
+  tags:
+    - install-libreoffice
+
+# +++
+# Configure
+# +++
+
 - name: configure zclient in supervisor
   become: yes
   template:
