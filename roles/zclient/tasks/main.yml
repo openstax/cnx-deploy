@@ -49,10 +49,9 @@
 
 - name: install custom unoconv
   become: yes
-  get_url:
-    dest: /usr/local/bin/unoconv
-    force: yes
-    url: https://raw.githubusercontent.com/dagwieers/unoconv/master/unoconv
+  apt:
+    name: unoconv
+    state: present
   tags:
     - install-unoconv
 
