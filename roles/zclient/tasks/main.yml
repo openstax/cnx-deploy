@@ -20,32 +20,7 @@
   tags:
     - create-import-build-directories
 
-# Install LibreOffice
-
-- name: check for existing libreoffice install
-  stat:
-    path: "/opt/libreoffice4.1/program/python"
-  register: libreoffice_installed_python
-  tags:
-    - install-libreoffice
-
-- name: unpack libreoffice tarball
-  when: "not libreoffice_installed_python.stat.exists"
-  unarchive:
-    src: "https://packages.cnx.org/deb/LibreOffice_4.1.6.2_Linux_x86-64_deb.tar.gz"
-    remote_src: yes
-    dest: "/tmp"
-  tags:
-    - install-libreoffice
-
-- name: install libreoffice
-  when: "not libreoffice_installed_python.stat.exists"
-  become: yes
-  shell: "dpkg -i *.deb"
-  args:
-    chdir: "/tmp/LibreOffice_4.1.6.2_Linux_x86-64_deb/DEBS/"
-  tags:
-    - install-libreoffice
+# Install unoconv which installs LibreOffice
 
 - name: install custom unoconv
   become: yes
