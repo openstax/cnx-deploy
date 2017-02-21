@@ -54,12 +54,14 @@
     state: present
   tags:
     - install-unoconv
+  notify:
+    - reload supervisord
 
 # +++
 # Configure
 # +++
 
-- name: configure zclient in supervisor
+- name: configure zclient and unoconv in supervisor
   become: yes
   template:
     src: etc/supervisor/conf.d/zclients.conf
