@@ -10,6 +10,12 @@
     name: supervisor
     state: present
 
+- name: enable supervisor service
+  become: yes
+  service:
+    name: supervisor
+    enabled: yes
+
 # +++
 # Initialize
 # +++
