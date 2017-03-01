@@ -34,7 +34,7 @@
       legacy: '{{ zope_domain }}',
 
       // Webmaster E-mail address
-      webmaster: 'cnx@cnx.org',
+      webmaster: 'support@openstax.org',
 
       // Content shortcodes
       shortcodes: {
