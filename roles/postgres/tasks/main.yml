@@ -40,6 +40,16 @@
   notify:
     - reload postgresql
 
+- name: configure postgresql.conf to include replication
+  template:
+    src: etc/postgresql/_/main/postgresql.conf
+    dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify:
+    - reload postgresql
+    
 - name: allow remote connections to the database
   become: yes
   lineinfile:

@@ -21,8 +21,12 @@
 - name: install postgres database
   hosts:
     - database
+    - replicant
   roles:
     - cnx_database
+  tags:
+    - database
+    - be
 
 - name: create databases and users
   hosts:
@@ -59,6 +63,20 @@
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
+    - include: tasks/create_db_user.yml
+      when: XXX
+      vars:
+        db_user: "replicator"
   tags:
     - database
+    - be
+
+- name: set up replication on replicant
+  hosts:
+    - replicant
+  roles:
+    - pg_replicant
+  tags:
+    - database
+    - replication
     - be

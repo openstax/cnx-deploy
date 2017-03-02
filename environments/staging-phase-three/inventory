@@ -1,65 +1,74 @@
-[dev00]
-# frontend'ish and cnx-suite components host
-dev00.cnx.org
+[staging00]
+staging00.cnx.org
 
-[dev01]
-#  zeo & zclient(s) components host
-dev01.cnx.org
+[staging01]
+staging01.cnx.org
 
-[dev02]
-# dedicated zclients(s) host
-dev02.cnx.org
+[staging02]
+staging02.cnx.org
 
-[dev03]
-# pdf generation component(s) host
-dev03.cnx.org
+[staging03]
+staging03.cnx.org
 
-[dev04]
-# postgres database replicant
-dev04.cnx.org
+[staging04]
+staging04.cnx.org
+
+[staging05]
+staging05.cnx.org
+
+[staging06]
+staging06.cnx.org
+
+[staging07]
+staging07.cnx.org
+
+[stagingXX]
+stagingXX.cnx.org
+
+[staging_files00]
+staging-files00.cnx.org
 
 # Grouped Hosts
 
 [nfs:children]
-# placed on the same machine as the frontend
-dev00
+staging_files00
 
 [database:children]
-dev00
+staging07
 
 [replicant:children]
-dev04
+stagingXX
 
 [archive:children]
-dev00
+staging07
 
 [publishing:children]
-dev00
+staging07
 
 [authoring:children]
-dev00
 
 [lead_frontend:children]
-dev00
+staging00
 
 [legacy_frontend:children]
-dev00
+staging03
 
 [frontend:children]
-dev00
+staging01
+staging02
 
 [worker:children]
-dev00
+
 
 [zeo:children]
-dev01
+staging04
 
 [zclient:children]
-dev01
-dev02
+staging04
+staging05
 
 [pdf_gen:children]
-dev03
+staging06
 
 # Groups of groups
 
