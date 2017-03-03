@@ -1,0 +1,51 @@
+# based on https://github.com/lesovsky/ansible-postgresql-sr-on-el6
+
+- name: stop postgresql on replicant
+  become: yes
+  service:
+    name: postgresql
+    state: stopped
+
+- name: remove old postgresql cluster on replicant
+  become: yes
+  file:
+    path: /var/lib/postgreql/{{ postgres_version }}/main/
+    state: absent
+
+- name: create empty postgresql cluster directory
+  become: yes
+  file:
+    path: /var/lib/postgreql/{{ postgres_version }}/main/
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: write .pgpass for postgres user
+  become: yes
+  content: "*:*:*:{{ replicator_db_user }}:{{ replicator_db_password }}\n"
+  dest: ~postgres/.pgpass
+  owner: postgres
+  group: postgres
+  mode: 0600
+
+- name: copy database from master to replicant
+  become: yes
+  become_user: postgres
+  command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]] }} --port=5432 --username={{ replicator_db_user }} --xlog-method=stream --checkpoint=fast"
+
+- name: configure recovery.conf
+  become: yes
+  template:
+    src: "var/lib/postgresql/_/main/recovery.conf"
+    dest: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+
+- name: start postgresql service
+  become: yes
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
