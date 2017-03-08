@@ -2,7 +2,9 @@
 # Playbook for managing the database.
 
 - name: collect info on database connected hosts
-  hosts: db_connected
+  hosts:
+    - db_connected
+    - replicant
   # NOOP only to acquire IP address information about connected hosts.
   tasks: []
 
