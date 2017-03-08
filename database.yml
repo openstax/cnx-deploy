@@ -66,10 +66,10 @@
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
     - include: tasks/create_db_user.yml
-      when: XXX
       vars:
         db_user: "{{ replicator_db_user }}"
         db_password: "{{ replicator_db_password }}"
+        role_attr_flags: "replication"
   tags:
     - database
     - be
