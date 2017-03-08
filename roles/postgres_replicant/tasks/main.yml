@@ -10,61 +10,47 @@
     - replication
 
 - name: check for existence of recovery.conf
+  become: yes
   stat:
     path: /var/lib/postgresql/{{ postgres_version }}/main/recovery.conf
-    register: recover_file
+  register: recoveryconf_file
   tags:
     - database
     - replication
 
-- block:
-
-  - name: stop postgresql on replicant
-    service:
-      name: postgresql
-      state: stopped
-
-  - name: remove old postgresql cluster on replicant
-    file:
-      path: /var/lib/postgreql/{{ postgres_version }}/main/
-      state: absent
-
-  - name: create empty postgresql cluster directory
-    file:
-      path: /var/lib/postgreql/{{ postgres_version }}/main/
-      state: directory
-      owner: postgres
-      group: postgres
-      mode: 0700
-
-  - name: write .pgpass for postgres user
-    copy:
-      content: '*:*:*:{{ replicator_db_user }}:{{ replicator_db_password }}\n'
-      dest: ~postgres/.pgpass
-      owner: postgres
-      group: postgres
-      mode: 0600
-
-  - name: copy database from master to replicant
-    become_user: postgres
-    command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]] }} --port=5432 --username={{ replicator_db_user }} --xlog-method=stream --checkpoint=fast"
-
-  - name: configure recovery.conf
-    template:
-      src: "var/lib/postgresql/_/main/recovery.conf"
-      dest: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
-      owner: postgres
-      group: postgres
-      mode: 0640
-
-  - name: start postgresql service
-    service:
-      name: postgresql
-      state: started
-      enabled: yes
-
-  when: replication_running.stdout == 'f' and not recover_file.stat.exists
+- when: "'f' in replication_running.stdout and not recoveryconf_file.stat.exists"
   become: yes
   tags:
     - database
     - replication
+  block:
+    - name: stop postgresql on replicant
+      service:
+        name: postgresql
+        state: stopped
+    - name: remove old postgresql cluster on replicant
+      file:
+        path: /var/lib/postgresql/{{ postgres_version }}/main/
+        state: absent
+    - name: write .pgpass for postgres user
+      copy:
+        content: '*:*:*:{{ replicator_db_user }}:{{ replicator_db_password }}\n'
+        dest: ~postgres/.pgpass
+        owner: postgres
+        group: postgres
+        mode: 0600
+    - name: copy database from master to replicant
+      become_user: postgres
+      command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} --port=5432 --username={{ replicator_db_user }} --xlog-method=stream --checkpoint=fast"
+    - name: configure recovery.conf
+      template:
+        src: "var/lib/postgresql/_/main/recovery.conf"
+        dest: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
+        owner: postgres
+        group: postgres
+        mode: 0640
+    - name: start postgresql service
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
