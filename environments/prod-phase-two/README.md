@@ -1,8 +1,8 @@
 # Development environment
 
-This inventory is used to provision and update the staging servers.
+This inventory is used to provision and update the prod servers.
 
-The servers are at ``*staging00.cnx.org``.
+The servers are at ``*prod##.cnx.org``.
 
 ## Prerequisite
 
@@ -18,7 +18,7 @@ You will also need the vault password to decrypt the file at
 For provisioning:
 
 ```sh
-ansible-playbook -i environments/staging/inventory main.yml --ask-become-pass --ask-vault-pass
+ansible-playbook -i environments/prod/inventory main.yml --ask-become-pass --ask-vault-pass
 ```
 
 This will run the ``main.yml`` playbook on the systems.
