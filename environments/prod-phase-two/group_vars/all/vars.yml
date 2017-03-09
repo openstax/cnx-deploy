@@ -34,6 +34,8 @@ accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
 accounts_disable_verify_ssl: no
 
+exercises_token: "{{ vault_exercises_token }}"
+
 postgres_connections: "{{ vault_postgres_connections }}"
 
 slack_token: "{{ vault_slack_token }}"
@@ -47,17 +49,6 @@ nfs_connections: "{{ vault_nfs_connections }}"
 webview_version: v0.21.15rc4
 
 google_site_verification_filename: "{{ vault_google_site_verification_filename }}"
-
-xxx_hardcoded_zclients:
-  - ip_addr: 128.42.169.13
-    host: glad
-    count: 2
-  - ip_addr: 128.42.169.17
-    host: quil
-    count: 5
-  - ip_addr: 128.42.169.18
-    host: font
-    count: 5
 
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
