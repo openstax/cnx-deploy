@@ -10,9 +10,17 @@ prod02.cnx.org
 [prod03]
 prod03.cnx.org
 
+[prod04]
+prod04.cnx.org
+
+[prod05]
+prod05.cnx.org
+
+[prod06]
+prod06.cnx.org
+
 [prod_files00]
 prod-files00.cnx.org
-
 
 # Grouped Hosts
 
@@ -44,13 +52,14 @@ prod02
 
 
 [zeo:children]
-
+prod04
 
 [zclient:children]
-
+prod04
+prod05
 
 [pdf_gen:children]
-
+prod06
 
 # Groups of groups
 
@@ -64,5 +73,10 @@ pdf_gen
 [nfs_connected:children]
 legacy_frontend
 frontend
+zclient
+pdf_gen
+
+[zope:children]
+zeo
 zclient
 pdf_gen
