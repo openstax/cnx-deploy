@@ -35,9 +35,10 @@
 {% if open_udp_ports is defined %}
     -A INPUT -p udp -m udp -m multiport --dports {{ open_udp_ports|join(',') }} -m comment --comment "allowed UDP ports" -j ACCEPT
 {% endif -%}
+{% set base_port = zclient_base_port|default(default_zclient_base_port) %}
 {% if (inventory_hostname in groups.zclient) %}
     {% set num_instances = hostvars[inventory_hostname]['zclient_count'] %}
-    -A INPUT -p tcp --dport {{ zclient_base_port }}:{{ zclient_base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
+    -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
 {% endif %}
 -A INPUT -j LOGREJECT
 -A LOGREJECT -m comment --comment "Rejection log" -j LOG --log-prefix "FIREWALL-REJECTED: "

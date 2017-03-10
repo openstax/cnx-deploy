@@ -30,10 +30,11 @@
         # "maxconn" is how many connections can be sent to the server at once
         # "check" enables health checks
         # "rise 1" means consider Zope up after 1 successful health check
+      {% set base_port = zclient_base_port|default(default_zclient_base_port) %}
       {% for host in groups.zclient %}
       {% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
       {% for i in range(0, hostvars[host].zclient_count|default(1), 1) %}
-        server {{ host }}{{ i }} {{ ip_addr }}:{{ zclient_base_port + i }} check maxconn 4 rise 1
+        server {{ host }}{{ i }} {{ ip_addr }}:{{ base_port + i }} check maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
 
