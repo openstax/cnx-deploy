@@ -2,4 +2,4 @@
 
 dependencies:
   - supervisord
-  - mail
+  - exim4
