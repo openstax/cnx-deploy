@@ -9,9 +9,20 @@
   apt:
     name: exim4
     state: present
+  tags:
+    - mail
 
 # +++
 # Configure
 # +++
 
-# The default configuration should be sufficient
+- name: configure exim4
+  become: yes
+  template:
+    src: etc/exim4/update-exim4.conf.conf
+    dest: /etc/exim4/update-exim4.conf.conf
+    mode: 0644
+  notify: restart exim4
+  tags:
+    - mail
+

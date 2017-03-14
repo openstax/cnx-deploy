@@ -1,0 +1,7 @@
+---
+
+# update config and restart
+- name: restart exim4
+  become: yes
+  command: /usr/sbin/invoke-rc.d exim4 restart
+
