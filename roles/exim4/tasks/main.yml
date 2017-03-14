@@ -1,0 +1,17 @@
+---
+
+# +++
+# Install
+# +++
+  
+- name: install exim4
+  become: yes
+  apt:
+    name: exim4
+    state: present
+
+# +++
+# Configure
+# +++
+
+# The default configuration should be sufficient

@@ -73,3 +73,6 @@ pdf_gen
 zeo
 zclient
 pdf_gen
+
+[mail:children]
+zclient
