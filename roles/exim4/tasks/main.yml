@@ -16,6 +16,18 @@
 # Configure
 # +++
 
+- name: set mailname
+  become: yes
+  copy:
+    content: "{{ inventory_hostname }}\n"
+    dest: /etc/mailname
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart exim4
+  tags:
+    - mail
+
 - name: configure exim4
   become: yes
   template:
