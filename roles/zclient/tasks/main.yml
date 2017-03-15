@@ -53,3 +53,5 @@
     name: "{{ item }}"
     state: restarted
   with_items: "[{% for i in range(0, hostvars[inventory_hostname].zclient_count|default(1), 1) %}'{{ 'zclient_instance{}'.format(i) }}',{% endfor %}]"
+  tags:
+    - restart-zclients
