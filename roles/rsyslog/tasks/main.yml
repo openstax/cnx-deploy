@@ -15,5 +15,5 @@
     src: etc/rsyslog.d/60-graylog.conf
     dest: /etc/rsyslog.d/60-graylog.conf
     mode: 0644
-  notify: reload rsyslog
+  notify: restart rsyslog
   tags: rsyslog-conf
