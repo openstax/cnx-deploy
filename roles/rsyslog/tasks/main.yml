@@ -6,5 +6,14 @@
     src: etc/rsyslog.conf
     dest: /etc/rsyslog.conf
     mode: 0644
-  tags:
-    - iptables-rsyslog-conf
+  tags: rsyslog-conf
+
+- name: rsyslog config for graylog
+  become: yes
+  template:
+    sudo: yes
+    src: etc/rsyslog.d/60-graylog.conf
+    dest: /etc/rsyslog.d/60-graylog.conf
+    mode: 0644
+  notify: reload rsyslog
+  tags: rsyslog-conf
