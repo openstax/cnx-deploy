@@ -9,10 +9,11 @@
     marker: "# {mark} zcluster block ANSIBLE MANAGED BLOCK"
     insertafter: EOF
     block: |
+      {% if single_instance is undefined %}
       frontend zcluster
         bind :8888
         default_backend zclients
-
+      {% endif %}
       # Load balancing over the zope instances
       backend zclients
         # Use Zope's __ac cookie as a basis for session stickiness if present.
@@ -54,3 +55,5 @@
     mode: 0644
   notify:
     - reload haproxy
+  tags:
+    - haproxy
