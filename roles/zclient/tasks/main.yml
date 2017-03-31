@@ -32,6 +32,14 @@
   notify:
     - reload supervisord
 
+- name: install tralics package
+  become: yes
+  apt:
+    name: tralics
+    state: present
+  tags:
+    - install-tralics
+
 # +++
 # Configure
 # +++
