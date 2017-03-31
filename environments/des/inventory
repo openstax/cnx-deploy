@@ -1,0 +1,76 @@
+[des00]
+# frontend'ish and cnx-suite components host
+des00.cnx.org
+
+[des01]
+#  database
+des01.cnx.org
+
+[des02]
+# replicant
+des02.cnx.org
+
+[des03]
+# cnx-suite
+des03.cnx.org
+
+# Grouped Hosts
+
+[nfs:children]
+# placed on the same machine as the frontend
+des00
+
+[database:children]
+des01
+
+[replicant:children]
+des02
+
+[archive:children]
+des03
+
+[publishing:children]
+des03
+
+[authoring:children]
+
+[lead_frontend:children]
+des00
+
+[legacy_frontend:children]
+des00
+
+[frontend:children]
+des00
+
+[worker:children]
+des00
+
+[zeo:children]
+des00
+
+[zclient:children]
+des00
+
+[pdf_gen:children]
+des00
+
+# Groups of groups
+
+[db_connected:children]
+archive
+publishing
+authoring
+zclient
+pdf_gen
+
+[nfs_connected:children]
+legacy_frontend
+frontend
+zclient
+pdf_gen
+
+[zope:children]
+zeo
+zclient
+pdf_gen
