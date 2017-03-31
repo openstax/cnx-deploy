@@ -32,13 +32,6 @@
       file:
         path: /var/lib/postgresql/{{ postgres_version }}/main/
         state: absent
-    - name: write .pgpass for postgres user
-      copy:
-        content: '*:*:*:{{ replicator_db_user }}:{{ replicator_db_password }}\n'
-        dest: ~postgres/.pgpass
-        owner: postgres
-        group: postgres
-        mode: 0600
     - name: copy database from master to replicant
       become_user: postgres
       command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} --port=5432 --username={{ replicator_db_user }} --xlog-method=stream --checkpoint=fast"

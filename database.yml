@@ -68,7 +68,6 @@
     - include: tasks/create_db_user.yml
       vars:
         db_user: "{{ replicator_db_user }}"
-        db_password: "{{ replicator_db_password }}"
         role_attr_flags: "replication"
   tags:
     - database
