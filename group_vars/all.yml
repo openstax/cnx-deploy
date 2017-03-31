@@ -14,6 +14,8 @@ default_zclient_base_port: 8280
 # Change in group_vars or host_vars for environment specific settings
 role_attr_flags: CREATEDB,NOSUPERUSER
 
+default_replicator_db_user: replicator
+
 # postgres_connections:
 #   - name: <human readable name>
 #     addr: <hostname | ip | mask>
