@@ -1,0 +1,8 @@
+-e git+https://github.com/Connexions/cnx-query-grammar.git#egg=cnx-query-grammar
+-e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
+-e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
+-e git+https://github.com/Connexions/cnx-authoring.git#egg=cnx-authoring
+
+# Deployment specific dependencies
+pyramid_sawing==1.1.2
+waitress>=1.0,<2
