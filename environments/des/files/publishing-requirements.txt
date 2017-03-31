@@ -1,0 +1,13 @@
+-r archive-requirements.txt
+
+-e git+https://github.com/Connexions/cssselect2.git#egg=cssselect2
+-e git+https://github.com/Connexions/cnx-easybake.git#egg=cnx-easybake
+
+-e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
+-e git+https://github.com/Connexions/cnx-publishing.git#egg=cnx-publishing
+
+db-migrator==0.1.4
+
+# Deployment specific dependencies
+pyramid_sawing==1.1.2
+waitress>=1.0,<2
