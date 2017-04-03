@@ -38,9 +38,9 @@
     name: "{{ item }}"
     state: present
   with_items:
-    tralics
-    texlive-latex-base
-    imagemagick
+    - tralics
+    - texlive-latex-base
+    - imagemagick
   tags:
     - install-latex-import
 
