@@ -23,21 +23,21 @@
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
 {# end default -#}
-{% if ldap_enabled %}
+{% if ldap_enabled -%}
     -A INPUT -s 128.42.169.11/32 -p tcp -m tcp -m comment --comment "homedirs1.cnx.org" -j ACCEPT
 {% endif -%}
 {# Newer versions allow this #}
 {# -A INPUT -p tcp -m tcp -s 52.27.240.129,128.42.169.16,128.42.169.79 --dport 10050:10051 -j ACCEPT #}
-{% for ipaddr in zabbix_allowed %}
+{% for ipaddr in zabbix_allowed -%}
     -A INPUT -s {{ ipaddr }} -p tcp -m tcp --dport 10050:10051 -m comment --comment "Zabbix allowed host" -j ACCEPT
 {% endfor -%}
 -A INPUT -p tcp -m tcp -m multiport --dports {{ open_tcp_ports|join(',') }} -m comment --comment "allowed TCP ports" -j ACCEPT
-{% if open_udp_ports is defined %}
+{% if open_udp_ports is defined -%}
     -A INPUT -p udp -m udp -m multiport --dports {{ open_udp_ports|join(',') }} -m comment --comment "allowed UDP ports" -j ACCEPT
 {% endif -%}
 {% set base_port = zclient_base_port|default(default_zclient_base_port) %}
-{% if (inventory_hostname in groups.zclient) %}
-    {% set num_instances = hostvars[inventory_hostname]['zclient_count'] %}
+{% if (inventory_hostname in groups.zclient) -%}
+    {%- set num_instances = hostvars[inventory_hostname]['zclient_count'] -%}
     -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
 {% endif %}
 -A INPUT -j LOGREJECT

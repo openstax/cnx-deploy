@@ -1,4 +1,9 @@
 ---
+- name: iptables apt install
+  become: yes
+  apt:
+    name: iptables
+    state: installed
 
 - name: iptables chain setup
   become: yes

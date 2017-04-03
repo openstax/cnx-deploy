@@ -17,3 +17,6 @@
     mode: 0644
   notify: restart rsyslog
   tags: rsyslog-conf
+  when:
+    - graylog_server is defined
+    - graylog_port is defined

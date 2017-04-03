@@ -68,6 +68,11 @@
     - lead_fe
     - fe
 
+- include: iptables.yml
+  tags:
+    - iptables
+    - firewall
+
 - name: "notify #cnx-stream of the deployment (end)"
   hosts: all
   vars:
