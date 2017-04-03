@@ -32,13 +32,17 @@
   notify:
     - reload supervisord
 
-- name: install tralics package
+- name: install packages for latex import
   become: yes
   apt:
-    name: tralics
+    name: {{ item }}
     state: present
+  with_items:
+    tralics
+    texlive-latex-base
+    imagemagick
   tags:
-    - install-tralics
+    - install-latex-import
 
 # +++
 # Configure
