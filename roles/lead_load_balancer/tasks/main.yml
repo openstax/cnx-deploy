@@ -13,7 +13,7 @@
         bind *:80
         bind *:443 ssl crt /etc/ssl/certs/{{ frontend_domain }}.pem
 
-        http-response set-header Strict-Transport-Security "max-age=16000000; includeSubDomains; preload;"
+        http-response set-header Strict-Transport-Security "max-age=16000000"
         http-request set-header X-Secure true if { ssl_fc }
         http-request set-header X-Forwarded-Proto https if { ssl_fc }
 
