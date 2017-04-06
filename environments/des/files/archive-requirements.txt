@@ -1,10 +1,12 @@
--e git+https://github.com/Connexions/cnx-query-grammar.git#egg=cnx-query-grammar
--e git+https://github.com/Connexions/rhaptos.cnxmlutils.git#egg=rhaptos.cnxmlutils
--e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
--e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
--e git+https://github.com/Connexions/cnx-db.git#egg=cnx-db
+# on production as cnx-query-grammar==0.2.1 Maybe?
+cnx-query-grammar==0.2.2
+# on production as rhaptos.cnxmlutils@19dc4204159c61fa698bcdf9579328aacc8066ab
+rhaptos.cnxmlutils==1.2
+cnx-epub==0.10.0
+cnx-archive==2.5.1
 
 db-migrator==0.1.4
+cnx-db>=0.2
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.2

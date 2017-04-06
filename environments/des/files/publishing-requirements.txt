@@ -1,12 +1,15 @@
--r archive-requirements.txt
+# on production as cnx-query-grammar==0.2.1 Maybe?
+cnx-query-grammar==0.2.2
+# on production as rhaptos.cnxmlutils@19dc4204159c61fa698bcdf9579328aacc8066ab
+rhaptos.cnxmlutils==1.2
+cnx-epub==0.10.0
+cnx-archive==2.5.1
 
--e git+https://github.com/Connexions/cssselect2.git#egg=cssselect2
--e git+https://github.com/Connexions/cnx-easybake.git#egg=cnx-easybake
-
--e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
--e git+https://github.com/Connexions/cnx-publishing.git#egg=cnx-publishing
+openstax-accounts==1.0.0
+cnx-publishing==0.6.0
 
 db-migrator==0.1.4
+cnx-db>=0.2
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.2
