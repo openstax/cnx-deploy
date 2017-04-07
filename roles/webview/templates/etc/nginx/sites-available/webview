@@ -1,3 +1,4 @@
+# FIXME (07-Apr-12017) Usages of `hostvars[groups.authoring[0]].ansible_default_ipv4.address` in this file are temporary. Production (aka beta.cnx.org) is currently setup with only one instance of authoring. This configuration change keeps that accurate.
 server {
     listen          8081;
     server_name     {{ frontend_domain }};
@@ -11,49 +12,57 @@ server {
         return 200;
     }
 
+{% if groups.authoring|length > 0 %}
+
+    location @authoring {
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+    }
+
     location /login {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /callback {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /logout {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /users/profile {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /users/contents {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /users/search {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location /publish {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location ~ ^/contents/.*@draft\.json {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location ~ ^/contents/.*@draft/users/me {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location ~ ^/contents/.*@draft/acceptance {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
 
     location ~ ^/resources$ {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        proxy_pass http://{{ hostvars[groups.authoring[0]].ansible_default_ipv4.address }}:{{ authoring_base_port|default(default_authoring_base_port) }};
     }
+
+{% endif %}
 
     # Try to fetch resources from archive (most common)
     # and if they do not exist, fall back to cnx-authoring
@@ -63,11 +72,7 @@ server {
         proxy_pass http://localhost:{{ varnish_port }};
         proxy_intercept_errors on;
         recursive_error_pages on;
-        error_page 404 = @authoring;
-    }
-
-    location @authoring {
-        proxy_pass http://{{ authoring_host }}:{{ authoring_base_port|default(default_authoring_base_port) }};
+        {% if groups.authoring|length > 0 %}error_page 404 = @authoring;{% endif %}
     }
 
     location /resources/ {
@@ -91,11 +96,8 @@ server {
         try_files   /files/$1 /files2/$1 =404;
     }
 
-    {% if ansible_os_family != "Darwin" %}
     location /nginx_status {
         stub_status on;
         access_log  off;
     }
-
-    {% endif %}
 }
