@@ -10,18 +10,6 @@
 
 - name: install postgres database
   hosts:
-    # FIXME The zclient group's rhaptos site creation requires a local database.
-    #       This is only required during provisioning. =/
-    - zclient
-  roles:
-    - postgres
-  tags:
-    - database
-    - legacy_be
-    - be
-
-- name: install postgres database
-  hosts:
     - database
     - replicant
   roles:
