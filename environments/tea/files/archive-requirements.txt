@@ -3,7 +3,7 @@
 -e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
 -e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
 
-db-migrator==0.1.4
+db-migrator==0.2.0
 cnx-db>=0.2
 
 # Deployment specific dependencies
