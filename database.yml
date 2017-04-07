@@ -1,5 +1,5 @@
 ---
-# Playbook for managing the database.
+# Playbook for managing the database and replicant.
 
 - name: collect info on database connected hosts
   hosts:
