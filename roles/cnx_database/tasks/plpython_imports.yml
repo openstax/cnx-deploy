@@ -1,0 +1,87 @@
+---
+# This installs the python packages required for the in-database plpython
+# operations.
+
+# FIXME (10-Apr-12017) in-database-logic:
+#       The imports are within cnx-archive. In the future this will
+#       hopefully be simplified to only install cnx-db.
+#       Many of the following tasks are copied directly from the archive
+#       role. Compare changes between there and here before debugging.
+
+
+# +++
+# Prerequisites
+# +++
+
+- name: install build utilities
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - libxml2-dev
+    - libxslt-dev
+    - zlib1g-dev
+
+# +++
+# Install virtualenv(s)
+# +++
+
+- stat:
+    path: "/var/cnx/venvs"
+  register: venvs_dir
+
+- name: ensure the venvs directory exists
+  become: yes
+  when: not venvs_dir.stat.exists
+  file:
+    path: "/var/cnx/venvs"
+    state: directory
+    mode: 0755
+    owner: www-data
+
+- name: set the owner of venvs directory
+  become: yes
+  file:
+    path: "/var/cnx/venvs"
+    state: directory
+    recurse: yes
+    owner: www-data
+
+- name: create the archive virtualenv
+  become: yes
+  become_user: www-data
+  pip:
+    name: pip
+    virtualenv: "/var/cnx/venvs/archive"
+    virtualenv_python: python2
+
+# +++
+# Install
+# +++
+
+- name: ensure /var/lib/cnx exists
+  become: yes
+  file:
+    path: "/var/lib/cnx"
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: copy over requirements.txt
+  become: yes
+  copy:
+    src: "{{ inventory_dir }}/files/archive-requirements.txt"
+    dest: "/var/lib/cnx/archive-requirements.txt"
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: install archive
+  become: yes
+  become_user: www-data
+  pip:
+    requirements: "/var/lib/cnx/archive-requirements.txt"
+    virtualenv: "/var/cnx/venvs/archive"
