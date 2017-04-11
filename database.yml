@@ -28,19 +28,18 @@
   hosts:
     - database
   tasks:
-    - name: check for the database
-      become: yes
-      become_user: postgres
-      command: psql -U postgres --tuples-only -c "select true from pg_database where datname='{{ archive_db_name }}'"
-      register: archive_db_exists
     - include: tasks/create_db_user.yml
       vars:
         db_user: "{{ archive_db_user }}"
         db_password: "{{ archive_db_password }}"
-        # FIXME (8-Mar-12017) New databases currently require the user to have
-        #       superuser privileges. This is only required for database
-        #       initialization. This is to be correct in cnx-db.
-        role_attr_flags: "{{ 't' in archive_db_exists.stdout and 'CREATEDB,NOSUPERUSER' or 'SUPERUSER' }}"
+        # FIXME (8-Mar-12017) db-role-perms:
+        #       New databases and migrations currently
+        #       require the user to have superuser privileges.
+        #       This is only required for database
+        #       initialization and migrations.
+        #       This is to be correct in cnx-db and db-migrator.
+        #       In the mean time use xxx_archive_db_user_role_attr_flags.
+        role_attr_flags: "{{ xxx_archive_db_user_role_attr_flags|default('CREATEDB,NOSUPERUSER') }}"
     - include: tasks/create_db.yml
       vars:
         db_owner: "{{ archive_db_user }}"
