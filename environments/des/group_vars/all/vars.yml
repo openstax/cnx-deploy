@@ -62,3 +62,6 @@ concept_coach_webview_settings:
   'meEn-Pci': ['art-exercise','multiple-choice','free-response']
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
+
+graylog_server: "{{ default_graylog_server }}"
+graylog_port: "{{ default_graylog_port }}"
