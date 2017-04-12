@@ -8,6 +8,14 @@
     mode: 0644
   tags: rsyslog-conf
 
+- name: rsyslog default conf template
+  become: yes
+  template:
+    src: etc/rsyslog.d/50-default.conf
+    dest: /etc/rsyslog.d/50-default.conf
+    mode: 0644
+  tags: rsyslog-conf
+
 - name: rsyslog config for graylog
   become: yes
   template:
