@@ -19,7 +19,6 @@
 - name: rsyslog config for graylog
   become: yes
   template:
-    sudo: yes
     src: etc/rsyslog.d/60-graylog.conf
     dest: /etc/rsyslog.d/60-graylog.conf
     mode: 0644
