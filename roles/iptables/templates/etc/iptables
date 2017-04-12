@@ -40,6 +40,9 @@
     {%- set num_instances = hostvars[inventory_hostname].zclient_count|default(1) -%}
     -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
 {% endif %}
+{% if (inventory_hostname in groups.database or inventory_hostname in groups.replicant) -%}
+    -A INPUT -p tcp --dport 5432} -m comment --comment "allowed Postgres client ports" -j  ACCEPT
+{% endif %}
 -A INPUT -j LOGREJECT
 -A LOGREJECT -m comment --comment "Rejection log" -j LOG --log-prefix "FIREWALL-REJECTED: "
 -A LOGREJECT -j REJECT --reject-with icmp-port-unreachable
