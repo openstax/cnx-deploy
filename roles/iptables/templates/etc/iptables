@@ -37,7 +37,7 @@
 {% endif -%}
 {% set base_port = zclient_base_port|default(default_zclient_base_port) %}
 {% if (inventory_hostname in groups.zclient) -%}
-    {%- set num_instances = hostvars[inventory_hostname]['zclient_count'] -%}
+    {%- set num_instances = hostvars[inventory_hostname].zclient_count|default(1) -%}
     -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
 {% endif %}
 -A INPUT -j LOGREJECT
