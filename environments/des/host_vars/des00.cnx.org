@@ -1,0 +1,2 @@
+# Points to replicant
+archive_db_host: des02.cnx.org
