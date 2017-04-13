@@ -110,7 +110,7 @@ sub vcl_init {
     new resource_cluster = directors.round_robin();
 {% for host in groups.archive %}
 {% for i in range(0, hostvars[host].archive_count|default(1), 1) %}
-{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set name = host.split('.')[0]|replace('-','_') %}
 {% set backend_name = '{}_archive{}'.format(name, i) %}
     archive_cluster.add_backend({{ backend_name }});
     resource_cluster.add_backend({{ backend_name }});
@@ -121,7 +121,7 @@ sub vcl_init {
     new publishing_cluster = directors.hash();
 {% for host in groups.publishing %}
 {% for i in range(0, hostvars[host].publishing_count|default(1), 1) %}
-{% set name = host.split('.')[-1]|replace('-','_') %}
+{% set name = host.split('.')[0]|replace('-','_') %}
 {% set backend_name = '{}_publishing{}'.format(name, i) %}
     publishing_cluster.add_backend({{ backend_name }}, 1.0);
 {% endfor %}
