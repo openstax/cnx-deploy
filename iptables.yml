@@ -4,6 +4,9 @@
   gather_facts: no
   roles:
     - role: iptables
+      when:
+        - install_firewall is defined
+        - install_firewall|bool
       tags:
         - iptables
         - firewall
