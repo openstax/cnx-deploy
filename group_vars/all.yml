@@ -15,6 +15,7 @@ default_zclient_base_port: 8280
 role_attr_flags: CREATEDB,NOSUPERUSER
 
 default_replicator_db_user: replicator
+default_haproxy_zcluster_port: 8888
 
 # postgres_connections:
 #   - name: <human readable name>

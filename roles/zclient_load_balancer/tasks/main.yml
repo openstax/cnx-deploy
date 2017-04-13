@@ -10,7 +10,7 @@
     insertafter: EOF
     block: |
       frontend zcluster
-        bind :8888
+        bind :{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}
         default_backend zclients
 
       # Load balancing over the zope instances
