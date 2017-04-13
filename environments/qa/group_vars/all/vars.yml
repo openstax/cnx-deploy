@@ -1,16 +1,17 @@
 ---
 root_prefix: ""
+_host_prefix: qa
 
 archive_db_name: "{{ vault_archive_db_name }}"
 archive_db_user: "{{ vault_archive_db_user }}"
 archive_db_password: "{{ vault_archive_db_password }}"
-archive_db_host: qa00.cnx.org
+archive_db_host: "{{ _host_prefix }}.cnx.org"
 archive_db_port: 5432
 
 authoring_db_name: "{{ vault_authoring_db_name }}"
 authoring_db_user: "{{ vault_authoring_db_user }}"
 authoring_db_password: "{{ vault_authoring_db_password }}"
-authoring_db_host: qa00.cnx.org
+authoring_db_host: "{{ _host_prefix }}.cnx.org"
 authoring_db_port: 5432
 
 # FIXME Not really yaml'ish to use space separated values...
@@ -21,15 +22,15 @@ memcached_hosts: localhost
 
 varnish_port: 8990
 
-archive_host: qa00.cnx.org
-publishing_host: qa00.cnx.org
-authoring_host: qa00.cnx.org
+archive_host: "{{ _host_prefix }}.cnx.org"
+publishing_host: "{{ _host_prefix }}.cnx.org"
+authoring_host: "{{ _host_prefix }}.cnx.org"
 zclient_base_port: 8280
 zclient_count: 1
 
-zope_domain: legacy-qa00.cnx.org
-arclishing_domain: archive-qa00.cnx.org
-frontend_domain: qa00.cnx.org
+zope_domain: "legacy-{{ _host_prefix }}.cnx.org"
+arclishing_domain: "archive-{{ _host_prefix }}.cnx.org"
+frontend_domain: "{{ _host_prefix }}.cnx.org"
 accounts_domain: accounts-qa1.openstax.org
 tutor_domain: tutor-qa.openstax.org
 exercises_domain: exercises-qa.openstax.org
@@ -44,9 +45,9 @@ postgres_connections: "{{ vault_postgres_connections }}"
 
 slack_token: "{{ vault_slack_token }}"
 
-nfs_server_for_files1: qa00.cnx.org
-nfs_server_for_files2: qa00.cnx.org
-nfs_server_for_specials: qa00.cnx.org
+nfs_server_for_files1: "{{ _host_prefix }}.cnx.org"
+nfs_server_for_files2: "{{ _host_prefix }}.cnx.org"
+nfs_server_for_specials: "{{ _host_prefix }}.cnx.org"
 
 webview_version: latest
 
