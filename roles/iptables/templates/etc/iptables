@@ -35,21 +35,19 @@
 {% if open_udp_ports is defined -%}
     -A INPUT -p udp -m udp -m multiport --dports {{ open_udp_ports|join(',') }} -m comment --comment "allowed UDP ports" -j ACCEPT
 {% endif -%}
-{% if (inventory_hostname in groups.zclient) -%}
-    {% set base_port = zclient_base_port|default(default_zclient_base_port) %}
-    {%- set num_instances = hostvars[inventory_hostname].zclient_count|default(1) -%}
-    -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed Zope client ports" -j  ACCEPT
-{% endif %}
-{% if (inventory_hostname in groups.archive) -%}
-    {%- set base_port = archive_base_port|default(default_archive_base_port) -%}
-    {%- set num_instances = hostvars[inventory_hostname].archive_count|default(1) -%}
-    -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed archive client ports" -j  ACCEPT
-{% endif %}
-{% if (inventory_hostname in groups.publishing) -%}
-    {% set base_port = publishing_base_port|default(default_publishing_base_port) %}
-    {%- set num_instances = hostvars[inventory_hostname].publishing_count|default(1) -%}
-    -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed publishing client ports" -j  ACCEPT
-{% endif %}
+
+{% macro instance_ports(group, group_base_port, default_group_base_port, instance_count) -%}
+    {% if (inventory_hostname in group) -%}
+        {%- set base_port = group_base_port|default(default_group_base_port) -%}
+        {%- set num_instances = instance_count|default(1) -%}
+        -A INPUT -p tcp --dport {{ base_port }}:{{ base_port + num_instances - 1 }} -m comment --comment "allowed {{ group }} client ports" -j  ACCEPT
+    {% endif %}
+{%- endmacro %}
+{% set hv = hostvars[inventory_hostname] %}
+{{ instance_ports(groups.zclient, zclient_base_port, default_zclient_base_port, hv.zclient_count) }}
+{{ instance_ports(groups.archive, archive_base_port, default_archive_base_port, hv.archive_count) }}
+{{ instance_ports(groups.publishing, publishing_base_port, default_publishing_base_port, hv.publishing_count) }}
+
 {% if (inventory_hostname in groups.database or inventory_hostname in groups.replicant) -%}
     -A INPUT -p tcp --dport 5432 -m comment --comment "allowed Postgres client ports" -j  ACCEPT
 {% endif %}
