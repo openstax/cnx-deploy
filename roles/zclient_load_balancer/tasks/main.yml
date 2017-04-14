@@ -19,7 +19,7 @@
         # appsession __ac len 32 timeout 1d
         # Otherwise add a cookie called "serverid" for maintaining session stickiness.
         # This cookie lasts until the client's browser closes, and is invisible to Zope.
-        #  cookie serverid insert nocache indirect
+        cookie serverid insert nocache indirect
         # If no session found, use the roundrobin load-balancing algorithm to pick a backend.
         balance leastconn
         # Use / (the default) for periodic backend health checks
