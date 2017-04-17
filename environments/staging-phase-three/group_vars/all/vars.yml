@@ -4,25 +4,18 @@ root_prefix: ""
 archive_db_name: "{{ vault_archive_db_name }}"
 archive_db_user: "{{ vault_archive_db_user }}"
 archive_db_password: "{{ vault_archive_db_password }}"
-archive_db_host: staging07.cnx.org
+archive_db_host: staging09.cnx.org
 archive_db_port: 5432
 
-# FIXME Not really yaml'ish to use space separated values...
-# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
-# 'hosts' is a space separated value containing hostnames or ip addresses
-# where a memcached instance is running.
 memcached_hosts: localhost
 
 varnish_port: 80
 
 # Points to the haproxy running on tundra
-archive_host: staging07.cnx.org
 archive_base_port: "{{ default_archive_base_port }}"
 # Points to the publishing instance running on tundra
-publishing_host: staging07.cnx.org
 publishing_base_port: "{{ default_publishing_base_port }}"
-authoring_host: cnx.org
-zclient_base_port: 8280
+zclient_base_port: "{{ default_zclient_base_port }}"
 
 zope_domain: legacy-staging.cnx.org
 arclishing_domain: archive-staging.cnx.org
@@ -48,17 +41,6 @@ nfs_server_for_specials: staging-files00.cnx.org
 nfs_connections: "{{ vault_nfs_connections }}"
 
 webview_version: v0.21.11-dev7fefc3d
-
-# xxx_hardcoded_zclients:
-#   - ip_addr: 128.42.169.13
-#     host: glad
-#     count: 2
-#   - ip_addr: 128.42.169.17
-#     host: quil
-#     count: 5
-#   - ip_addr: 128.42.169.18
-#     host: font
-#     count: 5
 
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 

@@ -22,8 +22,14 @@ staging06.cnx.org
 [staging07]
 staging07.cnx.org
 
-[stagingXX]
-stagingXX.cnx.org
+[staging08]
+staging08.cnx.org
+
+[staging09]
+staging09.cnx.org
+
+[staging10]
+staging10.cnx.org
 
 [staging_files00]
 staging-files00.cnx.org
@@ -34,16 +40,17 @@ staging-files00.cnx.org
 staging_files00
 
 [database:children]
-staging07
+staging09
 
 [replicant:children]
-stagingXX
+staging10
 
 [archive:children]
 staging07
 
 [publishing:children]
 staging07
+staging08
 
 [authoring:children]
 
