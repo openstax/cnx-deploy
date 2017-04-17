@@ -1,0 +1,5 @@
+---
+
+archive_count: 6
+# Point at the replicant:
+archive_db_host: staging10.cnx.org
