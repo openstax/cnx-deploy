@@ -2,7 +2,7 @@
 # Notify a slack channel with a message
 
 - name: notify slack
-  when: "slack_token is defined"
+  when: slack_token is defined
   local_action:
     module: slack
     token: "{{ slack_token }}"

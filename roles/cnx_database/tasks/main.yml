@@ -15,8 +15,8 @@
   register: session_exec_so
 
 - include: install_plxslt.yml
-  when: "{{ not plxslt_so.stat.exists }}"
+  when: not plxslt_so.stat.exists
 - include: install_session_exec.yml
-  when: "{{ not session_exec_so.stat.exists }}"
+  when: not session_exec_so.stat.exists
 
 - include: plpython_imports.yml

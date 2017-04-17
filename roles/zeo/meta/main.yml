@@ -5,4 +5,4 @@ dependencies:
   - role: zeopack
     # Default environments should have this, production should disable it
     # because the backup server does the packing during backup.
-    when: "{{ enable_zeopack|default(True) }}"
+    when: enable_zeopack|default(True)

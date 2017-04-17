@@ -59,7 +59,7 @@
     - reload supervisord
 
 - name: restart zclients
-  when: "{{ not supervisor_conf_for_zclients|changed }}"
+  when: not supervisor_conf_for_zclients|changed
   become: yes
   supervisorctl:
     name: "{{ item }}"
