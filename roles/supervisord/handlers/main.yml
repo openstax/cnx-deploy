@@ -8,7 +8,7 @@
   register: restart_supervisor_handler
 
 - name: reload supervisord
-  when: "{{ restart_supervisor_handler is not defined }}"
+  when: restart_supervisor_handler is undefined
   become: yes
   service:
     name: supervisor

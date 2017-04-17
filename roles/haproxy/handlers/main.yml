@@ -14,7 +14,7 @@
   register: restart_haproxy_handler
 
 - name: reload haproxy
-  when: "{{ restart_haproxy_handler is not defined }}"
+  when: restart_haproxy_handler is undefined
   become: yes
   service:
     name: haproxy

@@ -28,7 +28,7 @@
   register: read_version
 
 - name: "obtain version when 'latest'"
-  when: "{{ 'latest' in webview_version }}"
+  when: "'latest' in webview_version"
   set_fact:
     webview_version: "{{ read_version.stdout }}"
 

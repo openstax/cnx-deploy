@@ -8,7 +8,7 @@
   register: restart_postgresql_handler
 
 - name: reload postgresql
-  when: "{{ restart_postgresql_handler is not defined }}"
+  when: restart_postgresql_handler is undefined
   become: yes
   service:
     name: postgresql

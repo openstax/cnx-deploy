@@ -101,7 +101,7 @@
     - install-princexml-license
 
 - name: install princexml license file
-  when: "princexml_license_stat.stat.exists"
+  when: princexml_license_stat.stat.exists
   become: yes
   copy:
     src: "{{ princexml_license_filepath }}"
@@ -149,7 +149,7 @@
     - reload supervisord
 
 - name: restart pdf_gen
-  when: "{{ not supervisor_conf_for_pdf_gen|changed }}"
+  when: not supervisor_conf_for_pdf_gen|changed
   become: yes
   supervisorctl:
     name: pdf_gen

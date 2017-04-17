@@ -23,7 +23,7 @@
 
 - name: configure nfs mount for files
   become: yes
-  when: "{{ inventory_hostname not in groups.nfs }}"
+  when: inventory_hostname not in groups.nfs
   mount:
     src: "{{ nfs_server_for_files1 }}:/var/www/files"
     name: /var/www/files
@@ -35,7 +35,7 @@
 
 - name: configure nfs mount for files2
   become: yes
-  when: "{{ inventory_hostname not in groups.nfs }}"
+  when: inventory_hostname not in groups.nfs
   mount:
     src: "{{ nfs_server_for_files2 }}:/var/www/files2"
     name: /var/www/files2
@@ -47,7 +47,7 @@
 
 - name: configure nfs mount for specials
   become: yes
-  when: "{{ inventory_hostname not in groups.nfs }}"
+  when: inventory_hostname not in groups.nfs
   mount:
     src: "{{ nfs_server_for_specials }}:/var/www/specials"
     name: /var/www/specials
@@ -59,7 +59,7 @@
 
 - name: configure nfs mount for varnish_logs
   become: yes
-  when: "{{ inventory_hostname not in groups.nfs }}"
+  when: inventory_hostname not in groups.nfs
   mount:
     src: "{{ nfs_server_for_varnish_logs }}:/var/www/varnish_logs"
     name: /var/www/specials
