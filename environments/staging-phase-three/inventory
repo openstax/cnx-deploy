@@ -47,9 +47,9 @@ staging10
 
 [archive:children]
 staging07
+staging08
 
 [publishing:children]
-staging07
 staging08
 
 [authoring:children]
