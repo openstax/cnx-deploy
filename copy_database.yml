@@ -33,7 +33,6 @@
         db_owner: "postgres"
     - name: pipe database in
       shell: "pg_dump -U postgres -h {{ source_db_host }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
-    - name: initialize db-migrator
-      command: "{{ root_prefix }}/var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" {{ dbmigrate_context_args }} init --version 0"
     - name: migrate database
-      command: "{{ root_prefix }}/var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" {{ dbmigrate_context_args }} migrate"
+      debug:
+        msg: "Now run the database migration if needed: /var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" ... migrate"
