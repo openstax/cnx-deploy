@@ -1,0 +1,39 @@
+---
+# This dumps the data from a production server
+# This will dump the data into a new database, initialize db-migrator and migrate the data/schema.
+
+- name: get database details
+  hosts: database
+  vars_prompt:
+    - name: "source_db_host"
+      prompt: "Where is the database hosted?"
+      private: no
+      default: tundra.cnx.rice.edu
+    - name: "db_name"
+      prompt: "What database are we pull from to dump onto this machine?"
+      private: no
+      default: repository
+  tasks:
+    - set_fact:
+        source_db_host: "{{ source_db_host }}"
+        source_db_name: "{{ db_name }}"
+        db_name: "{{ db_name }}_new"
+
+- name: transfer database
+  hosts: database
+  vars:
+    # If working with authoring, set venv_environment to 'authoring' at
+    # and set dbmigrate_context_args value to `--content cnx-authoring`
+    # at runtime.
+    dbmigrate_context_args: "{{ migration_contexts|default('--context cnx-publishing --context cnx-archive') }}"
+    db_connection_string: "dbname={{ db_name }} user=postgres host=localhost port=5432"
+  tasks:
+    - include: tasks/create_db.yml
+      vars:
+        db_owner: "postgres"
+    - name: pipe database in
+      shell: "pg_dump -U postgres -h {{ source_db_host }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
+    - name: initialize db-migrator
+      command: "{{ root_prefix }}/var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" {{ dbmigrate_context_args }} init --version 0"
+    - name: migrate database
+      command: "{{ root_prefix }}/var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" {{ dbmigrate_context_args }} migrate"
