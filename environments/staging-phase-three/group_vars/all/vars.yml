@@ -20,7 +20,7 @@ zclient_base_port: "{{ default_zclient_base_port }}"
 zope_domain: legacy-staging.cnx.org
 arclishing_domain: archive-staging.cnx.org
 frontend_domain: staging.cnx.org
-accounts_domain: accounts-staging.openstax.org
+accounts_domain: accounts-stage1.openstax.org
 tutor_domain: tutor-staging.openstax.org
 exercises_domain: exercises-staging.openstax.org
 
