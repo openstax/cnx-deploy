@@ -46,7 +46,6 @@
 - name: stop zclients
   hosts:
     - zclient
-    - pdf_gen
   tasks:
     - become: yes
       supervisorctl:
