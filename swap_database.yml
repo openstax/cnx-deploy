@@ -39,6 +39,11 @@
   hosts: publishing
   tasks:
     - become: yes
+      stat:
+        path: "/var/cnx/venvs/publishing/bin/cnx-publishing-post-publication"
+      register: post_publication_bin
+    - become: yes
+      when: post_publication_bin.stat.exists
       supervisorctl:
         name: "post_publication:"
         state: stopped
@@ -93,6 +98,11 @@
   hosts: publishing
   tasks:
     - become: yes
+      stat:
+        path: "/var/cnx/venvs/publishing/bin/cnx-publishing-post-publication"
+      register: post_publication_bin
+    - become: yes
+      when: post_publication_bin.stat.exists
       supervisorctl:
         name: "post_publication:"
         state: started
