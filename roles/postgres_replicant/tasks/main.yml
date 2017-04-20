@@ -18,7 +18,9 @@
     - database
     - replication
 
-- when: "'f' in replication_running.stdout and not recoveryconf_file.stat.exists"
+- when:
+    - "'f' in replication_running.stdout"
+    - not recoveryconf_file.stat.exists
   become: yes
   tags:
     - database
@@ -35,15 +37,17 @@
     - name: copy database from master to replicant
       become_user: postgres
       command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} --port=5432 --username={{ replicator_db_user|default(default_replicator_db_user) }} --xlog-method=stream --checkpoint=fast"
-    - name: configure recovery.conf
-      template:
-        src: "var/lib/postgresql/_/main/recovery.conf"
-        dest: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
-        owner: postgres
-        group: postgres
-        mode: 0640
-    - name: start postgresql service
-      service:
-        name: postgresql
-        state: started
-        enabled: yes
+
+- name: configure recovery.conf
+  template:
+    src: "var/lib/postgresql/_/main/recovery.conf"
+    dest: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+
+- name: start postgresql service
+  service:
+    name: postgresql
+    state: started
+    enabled: yes

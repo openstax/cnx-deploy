@@ -19,6 +19,20 @@
         source_db_name: "{{ db_name }}"
         db_name: "{{ db_name }}_new"
 
+- name: disable replicant
+  hosts: replicant
+  tasks:
+    - name: stop replicant service
+      become: yes
+      service:
+        name: postgresql
+        state: stopped
+    - name: remove data directory
+      become: yes
+      file:
+        path: /var/lib/postgresql/{{ postgres_version }}/main/
+        state: absent
+
 - name: transfer database
   hosts: database
   vars:
