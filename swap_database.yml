@@ -78,6 +78,27 @@
         ALTER DATABASE {{ origin_db_name }} RENAME TO {{ target_db_name }};
         EOSQL
 
+- name: bootstrap replicant
+  hosts: replicant
+  tasks:
+    - name: copy database from master to replicant
+      become_user: postgres
+      command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} --port=5432 --username={{ replicator_db_user|default(default_replicator_db_user) }} --xlog-method=stream --checkpoint=fast"
+    # Touch recovery.conf to prevent data removal during postgres_replicant's role execution.
+    - name: touch recovery.conf
+      file:
+        path: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
+        owner: postgres
+        grouap: postgres
+        mode: 0640
+        state: touch
+    # The replicant service should still be stopped at this point.
+
+- name: enable replicant
+  hosts: replicant
+  roles:
+    - postgres_replicant
+
 - name: start archive
   hosts: archive
   tasks:
