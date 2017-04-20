@@ -6,7 +6,9 @@
 
 restart_threshold=30
 
-idle_before=$(psql -h "$host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+db_host=$(grep -Po '^db-connection-string.+ host=\K[^ ]+' /etc/cnx/archive/app.ini)
+
+idle_before=$(psql -h "$db_host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
 
 (( idle_after = idle_before ))
 tries=0
@@ -18,16 +20,16 @@ then
         if [[ $status == RUNNING || $status == STOPPED ]]
         then
             sudo supervisorctl restart "$instance"
-            sleep 2
+            sleep 10
         fi
     done < <(sudo supervisorctl status 'archive:*')
 
     while (( idle_after >= idle_before && ++tries <= 10 ))
     do
         sleep 60
-        idle_after=$(psql -h "$host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+        idle_after=$(psql -h "$db_host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
     #    echo "$(date) Try $tries, Before $idle_before, After $idle_after" >&2
     done
 fi
 
-logger -p local0.notice -t "ARCHIVE-RESTART[$$]" "Postgresql idle connections to $host - before restart: $idle_before, after: $idle_after"
+logger -p local0.notice -t "ARCHIVE-RESTART[$$]" "Postgresql idle connections to $db_host - before restart: $idle_before, after: $idle_after"
