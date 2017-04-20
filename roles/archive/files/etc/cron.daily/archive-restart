@@ -4,25 +4,30 @@
 
 #set -vx
 
-idle_before=$(psql -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+restart_threshold=30
 
-while read -r instance status _
-do
-    if [[ $status == RUNNING || $status == STOPPED ]]
-    then
-        sudo supervisorctl restart "$instance"
-        sleep 2
-    fi
-done < <(sudo supervisorctl status 'archive:*')
+idle_before=$(psql -h "$host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
 
 (( idle_after = idle_before ))
-(( tries = 0 ))
+tries=0
 
-while (( idle_after >= idle_before && ++tries <= 10 ))
-do
-    sleep 60
-    idle_after=$(psql -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
-#    echo "$(date) Try $tries, Before $idle_before, After $idle_after" >&2
-done
+if (( idle_before > restart_threshold ))
+then
+    while read -r instance status _
+    do
+        if [[ $status == RUNNING || $status == STOPPED ]]
+        then
+            sudo supervisorctl restart "$instance"
+            sleep 2
+        fi
+    done < <(sudo supervisorctl status 'archive:*')
 
-logger -p local0.notice -t "ARCHIVE-RESTART[$$]" "Postgresql idle connections before restart: $idle_before, after: $idle_after"
+    while (( idle_after >= idle_before && ++tries <= 10 ))
+    do
+        sleep 60
+        idle_after=$(psql -h "$host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+    #    echo "$(date) Try $tries, Before $idle_before, After $idle_after" >&2
+    done
+fi
+
+logger -p local0.notice -t "ARCHIVE-RESTART[$$]" "Postgresql idle connections to $host - before restart: $idle_before, after: $idle_after"
