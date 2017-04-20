@@ -10,7 +10,7 @@ db_host=$(grep -Po '^db-connection-string.+ host=\K[^ ]+' /etc/cnx/archive/app.i
 
 idle_before=$(psql -h "$db_host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
 
-(( idle_after = idle_before ))
+idle_after=$idle_before
 tries=0
 
 if (( idle_before > restart_threshold ))
