@@ -154,8 +154,8 @@
 - name: install archive instance restart cron script as workaround for unclosed connections
   become: yes
   copy:
-    src: "etc/cron.daily/archive-restarts"
-    dest: "/etc/cron.daily/archive-restarts"
+    src: "etc/cron.daily/archive-restart"
+    dest: "/etc/cron.daily/archive-restart"
     owner: root
     group: root
     mode: 0750
