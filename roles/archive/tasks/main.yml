@@ -112,14 +112,14 @@
 - name: render configuration
   become: yes
   template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: 0744
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
     owner: root
     group: root
   with_items:
-    - {src: "etc/cnx/archive/app.ini",
-       dest: "/etc/cnx/archive/app.ini"}
+    - "etc/cnx/archive/app.ini"
+    - "etc/cnx/archive/vars.sh"
   notify:
     - restart archive
 

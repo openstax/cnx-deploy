@@ -116,16 +116,15 @@
 - name: render configuration
   become: yes
   template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: 0744
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
     owner: root
     group: root
   with_items:
-    - {src: "etc/cnx/publishing/app.ini",
-       dest: "/etc/cnx/publishing/app.ini"}
-    - {src: "etc/cnx/publishing/logging.yaml",
-       dest: "/etc/cnx/publishing/logging.yaml"}
+    - "etc/cnx/publishing/app.ini"
+    - "etc/cnx/publishing/logging.yaml"
+    - "etc/cnx/publishing/vars.sh"
   notify:
     - restart publishing
 
