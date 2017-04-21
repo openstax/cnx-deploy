@@ -6,9 +6,14 @@
 
 restart_threshold=30
 
-db_host=$(grep -Po '^db-connection-string.+ host=\K[^ ]+' /etc/cnx/archive/app.ini)
+source /etc/cnx/archive/vars.sh
 
-idle_before=$(psql -h "$db_host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+db_host=$archive_db_host
+db_port=$archive_db_port
+db_name=$archive_db_name
+db_user=$archive_db_user
+
+idle_before=$(psql -h "$db_host" -p "$db_port" -U "$db_user" "$db_name" -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
 
 idle_after=$idle_before
 tries=0
@@ -27,7 +32,7 @@ then
     while (( idle_after >= idle_before && ++tries <= 10 ))
     do
         sleep 60
-        idle_after=$(psql -h "$db_host" -U rhaptos repository -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
+        idle_after=$(psql -h "$db_host" -p "$db_port" -U "$db_user" "$db_name" -tA -c "SELECT COUNT(*) FROM pg_stat_activity WHERE (state = 'idle');")
     #    echo "$(date) Try $tries, Before $idle_before, After $idle_after" >&2
     done
 fi
