@@ -2,9 +2,7 @@
 # This puts the Data.fs.new file in place
 
 - name: stop zclients
-  hosts:
-    - zclient
-    - pdf_gen
+  hosts: zclient
   tasks:
     - become: yes
       supervisorctl:
