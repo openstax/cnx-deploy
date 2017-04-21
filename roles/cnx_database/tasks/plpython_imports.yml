@@ -20,6 +20,8 @@
     state: present
   with_items:
     - build-essential
+    - git
+    - libpq-dev
     - libxml2-dev
     - libxslt-dev
     - zlib1g-dev
@@ -27,6 +29,15 @@
 # +++
 # Install virtualenv(s)
 # +++
+
+- name: create the build location
+  become: yes
+  file:
+    state: directory
+    path: /var/www
+    owner: www-data
+    group: www-data
+    mode: 0755
 
 - stat:
     path: "/var/cnx/venvs"
