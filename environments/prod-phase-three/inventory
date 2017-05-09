@@ -19,6 +19,18 @@ prod05.cnx.org
 [prod06]
 prod06.cnx.org
 
+[prod07]
+prod07.cnx.org
+
+[prod08]
+prod08.cnx.org
+
+[prod09]
+prod09.cnx.org
+
+[prod10]
+prod10.cnx.org
+
 [prod_files00]
 prod-files00.cnx.org
 
@@ -28,13 +40,17 @@ prod-files00.cnx.org
 prod_files00
 
 [database:children]
+prod09
 
+[replicant:children]
+prod10
 
 [archive:children]
-
+prod07
+prod08
 
 [publishing:children]
-
+prod08
 
 [authoring:children]
 
