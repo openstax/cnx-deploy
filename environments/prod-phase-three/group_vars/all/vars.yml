@@ -7,21 +7,14 @@ archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: prod00.cnx.org
 archive_db_port: 5432
 
-# FIXME Not really yaml'ish to use space separated values...
-# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
-# 'hosts' is a space separated value containing hostnames or ip addresses
-# where a memcached instance is running.
 memcached_hosts: localhost
 
 varnish_port: 80
 
-# Points to the haproxy running on tundra
-archive_host: tundra.cnx.rice.edu
-archive_base_port: 8888
-# Points to the publishing instance running on tundra
-publishing_host: tundra.cnx.rice.edu
-publishing_base_port: 6550
-authoring_host: cnx.org
+archive_base_port: "{{ default_archive_base_port }}"
+publishing_base_port: "{{ default_publishing_base_port }}"
+zclient_base_port: "{{ default_zclient_base_port }}"
+authoring_host: beta.cnx.org
 
 zope_domain: legacy.cnx.org
 arclishing_domain: archive.cnx.org
@@ -43,10 +36,11 @@ slack_token: "{{ vault_slack_token }}"
 nfs_server_for_files1: prod-files00.cnx.org
 nfs_server_for_files2: prod-files00.cnx.org
 nfs_server_for_specials: prod-files00.cnx.org
+nfs_server_for_varnish_logs: prod-files00.cnx.org
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.21.15rc4
+webview_version: v0.22.2
 
 google_site_verification_filename: "{{ vault_google_site_verification_filename }}"
 
