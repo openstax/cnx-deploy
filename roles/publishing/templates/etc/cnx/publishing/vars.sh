@@ -1,7 +1,6 @@
 # this is a shell script which can be sourced into other scripts
 # to provide access to configuration values specific to this host
 
-publishing_port="{{ publishing_port }}"
 publishing_base_port="{{ publishing_base_port }}"
 publishing_count="{{ publishing_count }}"
 # NOTE: some of the hosts in this list may point to a different db_host
