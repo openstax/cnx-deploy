@@ -4,7 +4,7 @@ root_prefix: ""
 archive_db_name: "{{ vault_archive_db_name }}"
 archive_db_user: "{{ vault_archive_db_user }}"
 archive_db_password: "{{ vault_archive_db_password }}"
-archive_db_host: prod00.cnx.org
+archive_db_host: prod09.cnx.org
 archive_db_port: 5432
 
 memcached_hosts: localhost
