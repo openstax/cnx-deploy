@@ -2,7 +2,10 @@
 # Install frontend components
 
 - name: collect info on legacy_frontend host(s)
-  hosts: legacy_frontend
+  hosts:
+    - legacy_frontend
+    - archive
+    - publishing
   # NOOP only to acquire IP address information about connected hosts.
   tasks: []
   tags:
