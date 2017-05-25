@@ -91,7 +91,7 @@
       file:
         path: "/var/lib/postgresql/{{ postgres_version }}/main/recovery.conf"
         owner: postgres
-        grouap: postgres
+        group: postgres
         mode: 0640
         state: touch
     # The replicant service should still be stopped at this point.
