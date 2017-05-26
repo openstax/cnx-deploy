@@ -1,0 +1,15 @@
+---
+# Installs publishing with all the dependencies.
+
+# +++
+# Init service
+# +++
+
+- name: configure channel-processing under supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/channel_processing.conf
+    dest: "/etc/supervisor/conf.d/channel_processing.conf"
+    mode: 0644
+  notify:
+    - reload supervisord
