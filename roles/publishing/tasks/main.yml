@@ -2,141 +2,8 @@
 # Installs publishing with all the dependencies.
 
 # +++
-# Prerequisites
-# +++
-
-# TODO Kill this dependency by prebuilding or using packaged versions
-#      of the application/library.
-- name: install build utilities
-  become: yes
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - build-essential
-    - git
-    - libpq-dev
-    - libxml2-dev
-    - libxslt-dev
-    - zlib1g-dev
-
-- name: install postgres client
-  become: yes
-  apt:
-    name: "postgresql-client-{{ postgres_version }}"
-    state: present
-
-# +++
-# Install virtualenv(s)
-# +++
-
-- stat:
-    path: "/var/cnx/venvs"
-  register: venvs_dir
-
-- name: ensure the venvs directory exists
-  become: yes
-  when: not venvs_dir.stat.exists
-  file:
-    path: "/var/cnx/venvs"
-    state: directory
-    mode: 0755
-    owner: www-data
-
-- name: set the owner of venvs directory
-  become: yes
-  file:
-    path: "/var/cnx/venvs"
-    state: directory
-    recurse: yes
-    owner: www-data
-
-- name: create the publishing virtualenv
-  become: yes
-  become_user: www-data
-  pip:
-    name: pip
-    virtualenv: "/var/cnx/venvs/publishing"
-    virtualenv_python: python2
-
-# +++
-# Install
-# +++
-
-- name: ensure /var/www exists
-  become: yes
-  file:
-    path: "/var/www"
-    state: directory
-    mode: 0755
-    owner: www-data
-    group: www-data
-
-- name: ensure /var/lib/cnx exists
-  become: yes
-  file:
-    path: "/var/lib/cnx"
-    state: directory
-    mode: 0755
-    owner: www-data
-    group: www-data
-
-- name: copy over requirements.txt
-  become: yes
-  copy:
-    src: "{{ inventory_dir }}/files/publishing-requirements.txt"
-    dest: "/var/lib/cnx/publishing-requirements.txt"
-    owner: www-data
-    group: www-data
-    mode: 0755
-
-- name: install publishing
-  become: yes
-  become_user: www-data
-  pip:
-    requirements: "/var/lib/cnx/publishing-requirements.txt"
-    virtualenv: "/var/cnx/venvs/publishing"
-  notify:
-    - migrate repository database
-
-# +++
-# Configure
-# +++
-
-- name: ensure the etc directories exists
-  become: yes
-  file:
-    path: "/etc/{{ item }}"
-    state: directory
-    mode: 0755
-  with_items:
-    - cnx
-    - cnx/publishing
-  notify:
-    - initialize repository database
-
-- name: render configuration
-  become: yes
-  template:
-    src: "{{ item }}"
-    dest: "/{{ item }}"
-    mode: 0644
-    owner: root
-    group: root
-  with_items:
-    - "etc/cnx/publishing/app.ini"
-    - "etc/cnx/publishing/logging.yaml"
-    - "etc/cnx/publishing/vars.sh"
-  notify:
-    - restart publishing
-
-# TODO make logging configuration files for pyramid_sawing
-
-
-# +++
 # Init databases
 # +++
-
 
 # BBB (3-Feb-12017) cnx-publishing-initdb is deprecated.
 - name: check for cnx-publishing-initdb
@@ -165,11 +32,12 @@
   notify:
     - reload supervisord
 
+# BBB (26-May-12017) mv-post-publishing-to-channel-processing
 - name: configure post publication worker under supervisor
   become: yes
-  template:
-    src: etc/supervisor/conf.d/post_publication.conf
-    dest: "/etc/supervisor/conf.d/post_publication.conf"
-    mode: 0644
+  file:
+    path: "/etc/supervisor/conf.d/post_publication.conf"
+    state: absent
   notify:
     - reload supervisord
+# /BBB
