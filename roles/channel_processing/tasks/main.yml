@@ -1,0 +1,24 @@
+---
+# Installs publishing with all the dependencies.
+
+# BBB (26-May-12017) mv-post-publishing-to-channel-processing
+- name: create script to start channel-processing
+  become: yes
+  copy:
+    src: usr/local/bin/xxx_channel_processing
+    dest: /usr/local/bin/xxx_channel_processing
+    mode: 0755
+# /BBB
+
+# +++
+# Init service
+# +++
+
+- name: configure channel-processing under supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/channel_processing.conf
+    dest: "/etc/supervisor/conf.d/channel_processing.conf"
+    mode: 0644
+  notify:
+    - reload supervisord
