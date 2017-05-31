@@ -27,8 +27,6 @@
   notify:
     - reload varnish
 
-# BBB (21-Dec-2015) Ubuntu 15.10 still uses /etc/default/varnish,
-#     while Debian 8.2 has moved to using the systemd service configuration.
 - name: configure varnish runtime (init config)
   become: yes
   template:
@@ -42,53 +40,6 @@
     - restart varnish
   tags:
     - varnish-configure
-
-#- name: configure varnish runtime (systemd)
-#  become: yes
-#  template:
-#    src: lib/systemd/varnish.service
-#    dest: /etc/systemd/system/multi-user.target.wants/varnish.service
-#  tags:
-#    - varnish-configure
-#  notify:
-#    - restart daemon tools
-#    - restart varnish
-
-## FIXME Maybe we should make our own service file and link it to
-##       /etc/systemd/system/multi-user.target.wants/varnish.service
-##       These files actually live at /lib/systemd/system/*.service
-#- name: configure varnish runtime (systemd config)
-#  become: yes
-#  lineinfile:
-#    dest: /etc/systemd/system/multi-user.target.wants/varnish.service
-#    regexp: "ExecStart=/usr/sbin/varnishd( -j unix,user=vcache -F)? -a :\\d+ -T localhost:6082 -f /etc/varnish/\\w+\\.vcl -S /etc/varnish/secret -s malloc,\\d+[KkGgMmTt]{1}( -p vcc_allow_inline_c=on)?"
-#    line: "ExecStart=/usr/sbin/varnishd -j unix,user=vcache -F -a :{{ varnish_port }} -T localhost:6082 -f /etc/varnish/varnish.vcl -S /etc/varnish/secret -s malloc,{{ varnish_memory_allocation }} -p vcc_allow_inline_c=on"
-#    insertafter: "^LimitMEMLOCK.*"
-#  notify:
-#    - restart daemon tools
-#    - restart varnish
-#
-#- name: configure varnishlog runtime (systemd config)
-#  become: yes
-#  lineinfile:
-#    dest: /etc/systemd/system/multi-user.target.wants/varnishlog.service
-#    regexp: "^Restart=always"
-#    line: "Restart=always"
-#    insertafter: "^ProtectSystem=.*"
-#  notify:
-#    - restart daemon tools
-#    - start varnishlog
-#
-#- name: configure varnishncsa runtime (systemd config)
-#  become: yes
-#  lineinfile:
-#    dest: /etc/systemd/system/multi-user.target.wants/varnishncsa.service
-#    regexp: "^Restart=always"
-#    line: "Restart=always"
-#    insertafter: "^ProtectSystem=.*"
-#  notify:
-#    - restart daemon tools
-#    - start varnishncsa
 
 # +++
 # Cron Configuration
