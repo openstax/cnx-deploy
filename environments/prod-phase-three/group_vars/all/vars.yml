@@ -10,7 +10,6 @@ archive_db_port: 5432
 memcached_hosts: localhost
 
 varnish_port: 80
-varnish_malloc: 16g
 
 archive_base_port: "{{ default_archive_base_port }}"
 publishing_base_port: "{{ default_publishing_base_port }}"
