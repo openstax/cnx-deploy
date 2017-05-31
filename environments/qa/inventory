@@ -11,6 +11,9 @@ qa00
 [database:children]
 qa00
 
+[replicant:children]
+# None, because single-machine install
+
 [archive:children]
 qa00
 
