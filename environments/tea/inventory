@@ -17,6 +17,9 @@ tea00
 [database:children]
 tea00
 
+[replicant:children]
+# None, because single-machine install
+
 [archive:children]
 tea00
 
