@@ -1,0 +1,23 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+{#
+vim: syntax=jinja ft=jinja
+#}
+[Unit]
+Description=Varnish HTTP accelerator log daemon
+After=varnish.service
+
+[Service]
+EnvironmentFile=-/etc/default/varnishncsa
+User=varnishlog
+Group=varnish
+ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -f /var/log/varnish/varnishncsa.format
+ExecReload=/bin/kill -HUP $MAINPID
+PrivateDevices=true
+PrivateNetwork=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

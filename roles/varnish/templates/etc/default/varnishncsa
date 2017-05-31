@@ -1,0 +1,5 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+{#
+vim: syntax=jinja ft=jinja
+#}
+
