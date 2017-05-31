@@ -6,5 +6,5 @@ DAEMON_OPTS="-j unix,user=vcache -F \
              -T 127.0.0.1:6082 \
              -f /etc/varnish/varnish.vcl \
              -S /etc/varnish/secret \
-             -s malloc,{{ varnish.malloc|default('16G') }} \
+             -s malloc,{{ varnish.malloc }} \
              -p vcc_allow_inline_c=on"
