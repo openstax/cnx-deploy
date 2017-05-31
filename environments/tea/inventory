@@ -26,6 +26,9 @@ tea00
 [publishing:children]
 tea00
 
+[channel_processing:children]
+tea00
+
 [authoring:children]
 
 [lead_frontend:children]
