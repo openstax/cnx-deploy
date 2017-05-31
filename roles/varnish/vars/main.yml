@@ -3,7 +3,7 @@ varnish:
   user: varnishlog
   group: varnish
   port: "{{ varnish_port|default(80) }}"
-  malloc: "{{ varnish_malloc|default('16g') }}"
+  malloc: "{{ varnish_malloc|default('256m') }}"
   templates:
     - {src: varnishncsa.format, dest: /var/log/varnish/varnishncsa.format, user: varnishlog, group: varnish}
     - {src: lib/systemd/system/varnish.service, dest: /etc/systemd/system/multi-user.target.wants/varnish.service}
