@@ -40,6 +40,7 @@
 
 - include: archive.yml
 - include: publishing.yml
+- include: channel_processing.yml
 - include: authoring.yml
 
 - include: zope.yml

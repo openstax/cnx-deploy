@@ -20,6 +20,9 @@ qa00
 [publishing:children]
 qa00
 
+[channel_processing:children]
+qa00
+
 [authoring:children]
 qa00
 

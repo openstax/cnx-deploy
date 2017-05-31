@@ -36,6 +36,9 @@ dev00
 [publishing:children]
 dev00
 
+[channel_processing:children]
+dev00
+
 [authoring:children]
 dev00
 

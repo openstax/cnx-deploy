@@ -1,0 +1,9 @@
+---
+
+- name: install channel_processing
+  hosts: channel_processing
+  roles:
+    - channel_processing
+  tags:
+    - channel_processing
+    - be
