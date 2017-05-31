@@ -18,9 +18,19 @@
     - database
     - replication
 
+- name: check that replication connection is possible
+  become: yes
+  become_user: postgres
+  command: psql 'dbname=postgres replication=database host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} user={{ replicator_db_user|default(default_replicator_db_user) }}' -c 'IDENTIFY_SYSTEM;'
+  register: replication_connection
+  tags:
+    - database
+    - replication
+
 - when:
     - "'f' in replication_running.stdout"
     - not recoveryconf_file.stat.exists
+    - "'systemid' in replication_connection.stdout"
   become: yes
   tags:
     - database
