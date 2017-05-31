@@ -1,0 +1,18 @@
+[Unit]
+Description=Varnish HTTP accelerator
+Documentation=https://www.varnish-cache.org/docs/ man:varnishd
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/varnish
+LimitNOFILE=$NFILES
+LimitMEMLOCK=$MEMLOCK
+ExecStart=/usr/sbin/varnishd $DAEMON_OPTS
+ExecReload=/usr/share/varnish/reload-vcl
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+
+[Install]
+WantedBy=multi-user.target
