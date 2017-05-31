@@ -21,7 +21,6 @@ authoring_db_port: 5432
 memcached_hosts: localhost
 
 varnish_port: 8990
-varnish_malloc: 256m
 
 archive_host: "{{ _host_prefix }}.cnx.org"
 publishing_host: "{{ _host_prefix }}.cnx.org"
