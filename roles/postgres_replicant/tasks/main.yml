@@ -48,7 +48,11 @@
       become_user: postgres
       command: "pg_basebackup --write-recovery-conf --pgdata=/var/lib/postgresql/{{ postgres_version }}/main --host={{ hostvars[groups.database[0]].ansible_default_ipv4.address }} --port=5432 --username={{ replicator_db_user|default(default_replicator_db_user) }} --xlog-method=stream --checkpoint=fast"
 
-- name: configure recovery.conf
+- when:
+    - "'f' in replication_running.stdout"
+    - not recoveryconf_file.stat.exists
+    - "'systemid' in replication_connection.stdout"
+  name: configure recovery.conf
   become: yes
   template:
     src: "var/lib/postgresql/_/main/recovery.conf"
