@@ -25,6 +25,7 @@ acl block {
 }
 
 # haproxy load balancing for zope
+{% if groups.legacy_frontend %}
 backend legacy_frontend {
 .host = "{{ hostvars[groups.legacy_frontend[0]].ansible_default_ipv4.address }}";
 .port = "{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}";
@@ -32,6 +33,16 @@ backend legacy_frontend {
 .first_byte_timeout = 1200s;
 .between_bytes_timeout = 600s;
 }
+{% else %}
+{# Not implemented for some environments (e.g. beta) #}
+backend legacy_frontend {
+.host = "localhost";
+.port = "{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}";
+.connect_timeout = 0.4s;
+.first_byte_timeout = 1200s;
+.between_bytes_timeout = 600s;
+}
+{% endif %}
 
 # static files
 backend static_files {
