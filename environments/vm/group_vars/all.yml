@@ -45,4 +45,4 @@ exercises_token: "somekindoftoken"
 nfs_server_for_files1: local.cnx.org
 nfs_server_for_files2: local.cnx.org
 
-webview_version: latest
+webview_version: master
