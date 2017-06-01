@@ -1,59 +1,45 @@
 ---
 # Installs webview with all the dependencies.
 
+- name: check for existing version
+  stat:
+    path: "{{ _install_location }}"
+  register: webview_install
+
 # +++
 # Install
 # +++
 
-- name: create temp unpack location
-  command: "mktemp -d /tmp/ansible.XXXXXXXX"
-  register: temp_webview_location
-
-# FIXME (29-Sept-2016) missing-unarchive-feature
-#       The unarchive `remote_src` option isn't available until Ansible 2.2.
-- name: download and unpack webview
-  become: yes
-  unarchive:
-    src: "https://packages.cnx.org/js-builds/webview_{{ webview_version }}.tar.gz"
-    # remote_src: yes
-    copy: no
-    # ^^^ changes needed to make this work until the ansible 2.2
-    dest: "{{ temp_webview_location.stdout }}"
-    owner: www-data
-    group: www-data
-# /FIXME missing-unarchive-feature
-
-- name: read tarball version.txt
-  command: "cat {{ temp_webview_location.stdout }}/version.txt"
-  register: read_version
-
-- name: "obtain version when 'latest'"
-  when: "'latest' in webview_version"
-  set_fact:
-    webview_version: "{{ read_version.stdout }}"
-
-- name: move download to /var/www
-  become: yes
-  command: "mv {{ temp_webview_location.stdout }} /var/www/webview_{{ webview_version }}"
-
-- name: reassign ownership to www-data
-  become: yes
-  file:
-    path: "/var/www/webview_{{ webview_version }}"
-    state: directory
-    owner: www-data
-    group: www-data
-    mode: 0755
-
-- name: link to /var/www/webview
-  become: yes
-  file:
-    src: "/var/www/webview_{{ webview_version }}"
-    dest: "/var/www/webview"
-    state: link
-    owner: www-data
-  notify:
-    - restart nginx
+- when:
+    - (not webview_install.stat.exists) or (webview_version == 'master')
+  block:
+    - name: create the webview install location
+      become: yes
+      file:
+        path: "{{ _install_location }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+    - name: download and unpack webview
+      become: yes
+      unarchive:
+        src: "https://packages.cnx.org/js-builds/webview_{{ webview_version }}.tar.gz"
+        remote_src: yes
+        dest: "{{ _install_location }}"
+        owner: www-data
+        group: www-data
+    - name: write version.txt
+      command: "echo '{{ webview_version }}' > {{ _install_location }}/version.txt"
+    - name: link to /var/www/webview
+      become: yes
+      file:
+        src: "{{ _install_location }}"
+        dest: "/var/www/webview"
+        state: link
+        owner: www-data
+      notify:
+        - restart nginx
 
 # TODO Cleanup old webview versions
 
