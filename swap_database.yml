@@ -96,10 +96,12 @@
         state: touch
     # The replicant service should still be stopped at this point.
 
-- name: enable replicant
-  hosts: replicant
-  roles:
-    - postgres_replicant
+- name: start postgresql service
+  become: yes
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
 
 - name: start archive
   hosts: archive
