@@ -50,7 +50,7 @@ nfs_server_for_files2: dev00.cnx.org
 nfs_server_for_specials: dev00.cnx.org
 nfs_server_for_varnish_logs: dev00.cnx.org
 
-webview_version: latest
+webview_version: master
 
 concept_coach_webview_settings:
   '08df2bee-3db4-4243-bd76-ee032da173e8': ['self-check-questions','review-questions','critical-thinking','problems']
