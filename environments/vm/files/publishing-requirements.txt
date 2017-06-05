@@ -6,7 +6,7 @@ cnx-epub==0.10.0
 cnx-archive==2.5.1
 
 openstax-accounts==1.0.0
-cnx-publishing==0.6.0
+cnx-publishing==0.7.0
 
 db-migrator==0.2.0
 cnx-db>=0.2
