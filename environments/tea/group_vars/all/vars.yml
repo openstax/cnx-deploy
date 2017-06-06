@@ -46,6 +46,7 @@ slack_token: "{{ vault_slack_token }}"
 nfs_server_for_files1: tea00.cnx.org
 nfs_server_for_files2: tea00.cnx.org
 nfs_server_for_specials: tea00.cnx.org
+nfs_server_for_varnish_logs: tea00.cnx.org
 
 webview_version: latest
 
