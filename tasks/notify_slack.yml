@@ -13,6 +13,7 @@
     parse: 'none'
   with_items: "{{ channels }}"
   run_once: true
+  ignore_errors: true
   tags:
     - notify
     - slack
