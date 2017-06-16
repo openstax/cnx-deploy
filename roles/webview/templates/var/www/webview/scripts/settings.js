@@ -36,6 +36,9 @@
       // Webmaster E-mail address
       webmaster: 'support@openstax.org',
 
+      // Donate E-mail address
+      donation: 'openstaxgiving@rice.edu',
+
       // Content shortcodes
       shortcodes: {
       },
