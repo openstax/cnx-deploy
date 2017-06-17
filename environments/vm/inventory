@@ -12,6 +12,9 @@ local.cnx.org
 [database:children]
 local.cnx.org
 
+[broker:children]
+local.cnx.org
+
 [archive:children]
 local.cnx.org
 
