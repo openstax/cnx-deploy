@@ -41,6 +41,7 @@
 - include: archive.yml
 - include: publishing.yml
 - include: channel_processing.yml
+#- include: publishing_worker.yml
 - include: authoring.yml
 
 - include: zope.yml

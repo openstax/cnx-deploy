@@ -1,0 +1,9 @@
+---
+
+- name: install publishing celery worker
+  hosts: publishing_worker
+  roles:
+    - publishing_worker
+  tags:
+    - publishing_worker
+    - be
