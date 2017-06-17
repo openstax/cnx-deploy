@@ -18,6 +18,9 @@ local.cnx.org
 [publishing:children]
 local.cnx.org
 
+[channel_processing:children]
+local.cnx.org
+
 [authoring:children]
 local.cnx.org
 
@@ -47,6 +50,7 @@ zope.local.cnx.org
 [db_connected:children]
 archive
 publishing
+channel_processing
 authoring
 zclient
 pdf_gen

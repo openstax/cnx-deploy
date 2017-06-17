@@ -52,6 +52,7 @@ qa00
 [db_connected:children]
 archive
 publishing
+channel_processing
 authoring
 zclient
 pdf_gen
