@@ -23,6 +23,9 @@ qa00
 [channel_processing:children]
 qa00
 
+[publishing_worker:children]
+qa00
+
 [authoring:children]
 qa00
 
@@ -33,9 +36,6 @@ qa00
 qa00
 
 [frontend:children]
-qa00
-
-[worker:children]
 qa00
 
 [zeo:children]
@@ -53,6 +53,7 @@ qa00
 archive
 publishing
 channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen

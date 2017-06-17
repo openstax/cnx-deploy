@@ -21,6 +21,9 @@ local.cnx.org
 [channel_processing:children]
 local.cnx.org
 
+[publishing_worker:children]
+local.cnx.org
+
 [authoring:children]
 local.cnx.org
 
@@ -31,9 +34,6 @@ local.cnx.org
 local.cnx.org
 
 [frontend:children]
-local.cnx.org
-
-[worker:children]
 local.cnx.org
 
 [zeo:children]
@@ -51,6 +51,7 @@ zope.local.cnx.org
 archive
 publishing
 channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen
