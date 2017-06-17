@@ -1,0 +1,7 @@
+---
+
+- debug: msg="todo"
+
+# TODO install rabbitmq
+
+# TODO disable or enable guest access using the ``enable_guest_broker_access`` varable, which has a value of `yes|no`.
