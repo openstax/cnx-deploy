@@ -1,2 +1,0 @@
----
-varnish_memory_allocation: 16G
