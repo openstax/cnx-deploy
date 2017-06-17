@@ -39,6 +39,9 @@ dev00
 [channel_processing:children]
 dev00
 
+[publishing_worker:children]
+dev00
+
 [authoring:children]
 dev00
 
@@ -49,9 +52,6 @@ dev00
 dev00
 
 [frontend:children]
-dev00
-
-[worker:children]
 dev00
 
 [zeo:children]
@@ -70,6 +70,7 @@ dev03
 archive
 publishing
 channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen

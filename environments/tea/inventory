@@ -29,6 +29,9 @@ tea00
 [channel_processing:children]
 tea00
 
+[publishing_worker:children]
+tea00
+
 [authoring:children]
 
 [lead_frontend:children]
@@ -38,9 +41,6 @@ tea00
 tea00
 
 [frontend:children]
-tea00
-
-[worker:children]
 tea00
 
 [zeo:children]
@@ -58,6 +58,7 @@ tea01
 archive
 publishing
 channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen
