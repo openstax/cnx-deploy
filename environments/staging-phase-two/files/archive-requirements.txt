@@ -5,7 +5,7 @@ rhaptos.cnxmlutils==1.2
 cnx-epub==0.10.0
 cnx-archive==2.5.1
 
-db-migrator==0.1.4
+db-migrator==0.2.0
 cnx-db>=0.2
 
 # Deployment specific dependencies
