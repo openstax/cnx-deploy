@@ -4,7 +4,7 @@ cnx-archive==2.5.1
 cnx-db==0.7.0
 cnx-easybake==0.6.0
 cnx-epub==0.10.0
-cnx-publishing==0.6.0
+cnx-publishing==0.8.0
 cnx-query-grammar==0.2.2
 cssselect==0.9.1
 -e git+https://github.com/SimonSapin/cssselect2.git#egg=cssselect2
