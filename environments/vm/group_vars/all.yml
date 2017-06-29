@@ -7,11 +7,8 @@ archive_db_password: cnxarchive
 archive_db_host: localhost
 archive_db_port: 5432
 
-broker_host: localhost
-broker_port: 5672
-broker_user: guest
-broker_password: guest
-enable_guest_broker_access: yes
+publishing_broker_user: cnxpublishing
+publishing_broker_password: cnxpublishing
 
 authoring_db_name: cnxauthoring
 authoring_db_user: cnxauthoring

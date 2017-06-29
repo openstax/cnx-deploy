@@ -17,6 +17,8 @@ role_attr_flags: CREATEDB,NOSUPERUSER
 default_replicator_db_user: replicator
 default_haproxy_zcluster_port: 8888
 
+default_publishing_broker_vhost: /publishing
+
 # postgres_connections:
 #   - name: <human readable name>
 #     addr: <hostname | ip | mask>

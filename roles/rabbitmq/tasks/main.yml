@@ -1,7 +1,17 @@
 ---
+# Install and configure RabbitMQ
+# See also https://www.rabbitmq.com/install-debian.html
 
-- debug: msg="todo"
+- name: install rabbitmq
+  become: yes
+  apt:
+    name: rabbitmq-server
+    state: present
 
-# TODO install rabbitmq
+# Install plugins
 
-# TODO disable or enable guest access using the ``enable_guest_broker_access`` varable, which has a value of `yes|no`.
+- name: enable rabbitmq management plugin
+  become: yes
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled

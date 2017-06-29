@@ -7,3 +7,28 @@
   tags:
     - publishing_worker
     - be
+
+- name: configure broker vhost and users
+  hosts: broker
+  vars:
+    vhost: "{{ publishing_broker_vhost|default(default_publishing_broker_vhost) }}"
+  tasks:
+    - name: create publishing vhost
+      become: yes
+      rabbitmq_vhost:
+        name: "{{ vhost }}"
+        state: present
+    - name: create user
+      become: yes
+      rabbitmq_user:
+        user: "{{ publishing_broker_user }}"
+        password: "{{ publishing_broker_password }}"
+        permissions:
+          - vhost: "{{ vhost }}"
+            configure_priv: ".*"
+            read_priv: ".*"
+            write_priv: ".*"
+        state: present
+  tags:
+    - rabbitmq
+    - be
