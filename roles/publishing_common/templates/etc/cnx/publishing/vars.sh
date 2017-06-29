@@ -6,7 +6,7 @@ publishing_count="{{ publishing_count|default(1) }}"
 # NOTE: some of the hosts in this list may point to a different db_host
 publishing_hosts_list=( "{{ groups.publishing | join(" ") }}" )
 
-archive_db_name="{{ vault_archive_db_name }}"
-archive_db_user="{{ vault_archive_db_user }}"
+archive_db_name="{{ archive_db_name }}"
+archive_db_user="{{ archive_db_user }}"
 archive_db_host="{{ archive_db_host }}"
 archive_db_port="{{ archive_db_port }}"
