@@ -21,6 +21,7 @@
 - include: nfs_connected.yml
 
 - include: database.yml
+- include: broker.yml
 
 - name: install cnxml dtd pkgs
   hosts:
@@ -41,7 +42,7 @@
 - include: archive.yml
 - include: publishing.yml
 - include: channel_processing.yml
-#- include: publishing_worker.yml
+- include: publishing_worker.yml
 - include: authoring.yml
 
 - include: zope.yml

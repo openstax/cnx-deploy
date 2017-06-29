@@ -61,6 +61,7 @@ pdf_gen
 
 [nfs_connected:children]
 legacy_frontend
+publishing_worker
 frontend
 zclient
 pdf_gen
