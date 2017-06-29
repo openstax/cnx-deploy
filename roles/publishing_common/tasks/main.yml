@@ -84,11 +84,15 @@
 - name: copy over requirements.txt
   become: yes
   copy:
-    src: "{{ inventory_dir }}/files/publishing-requirements.txt"
-    dest: "/var/lib/cnx/publishing-requirements.txt"
+    src: "{{ inventory_dir }}/files/{{ item }}-requirements.txt"
+    dest: "/var/lib/cnx/{{ item }}-requirements.txt"
     owner: www-data
     group: www-data
     mode: 0755
+  with_items:
+    # We do both because these are sometimes ref'ing one another.
+    - archive
+    - publishing
 
 - name: install publishing
   become: yes
