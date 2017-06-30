@@ -66,6 +66,11 @@ dev03
 
 # Groups of groups
 
+[broker_connected:children]
+publishing
+channel_processing
+publishing_worker
+
 [db_connected:children]
 archive
 publishing
