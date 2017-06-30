@@ -39,6 +39,9 @@ des03
 [publishing_worker:children]
 des03
 
+[channel_processing:children]
+des03
+
 [authoring:children]
 
 [lead_frontend:children]
@@ -63,6 +66,11 @@ des00
 des00
 
 # Groups of groups
+
+[broker_connected:children]
+publishing
+channel_processing
+publishing_worker
 
 [db_connected:children]
 archive
