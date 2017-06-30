@@ -17,6 +17,9 @@ qa00
 [archive:children]
 qa00
 
+[broker:children]
+qa00
+
 [publishing:children]
 qa00
 
