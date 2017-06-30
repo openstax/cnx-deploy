@@ -1,5 +1,10 @@
 ---
 
+- name: collect info on broker connected hosts
+  hosts: broker
+  # NOOP only to acquire IP address information about connected hosts.
+  tasks: []
+
 - name: install publishing celery worker
   hosts: publishing_worker
   roles:
