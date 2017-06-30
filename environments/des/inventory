@@ -26,11 +26,17 @@ des01
 [replicant:children]
 des02
 
+[broker:children]
+des01
+
 [archive:children]
 des00
 des03
 
 [publishing:children]
+des03
+
+[publishing_worker:children]
 des03
 
 [authoring:children]
@@ -61,6 +67,7 @@ des00
 [db_connected:children]
 archive
 publishing
+publishing_worker
 authoring
 zclient
 pdf_gen
@@ -68,6 +75,7 @@ pdf_gen
 [nfs_connected:children]
 legacy_frontend
 frontend
+publishing_worker
 zclient
 pdf_gen
 
