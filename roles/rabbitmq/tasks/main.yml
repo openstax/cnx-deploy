@@ -9,9 +9,16 @@
     state: present
 
 # Install plugins
-
 - name: enable rabbitmq management plugin
   become: yes
   rabbitmq_plugin:
     names: rabbitmq_management
     state: enabled
+
+- name: configure rabbitmq
+  become: yes
+  template:
+    src: etc/rabbitmq/rabbitmq
+    dest: /etc/rabbitmq/rabbitmq
+  notify:
+    - restart rabbitmq

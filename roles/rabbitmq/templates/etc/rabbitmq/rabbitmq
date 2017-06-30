@@ -1,0 +1,12 @@
+
+
+[
+  {rabbit, [
+      {tcp_listeners, [
+          {% for host in groups.broker_connected %}
+          {"{{ hostvars[host].ansible_default_ipv4.address }}", 5672},
+          {% endfor %}
+          {"127.0.0.1", 5672}
+      ]}
+  ]}
+].
