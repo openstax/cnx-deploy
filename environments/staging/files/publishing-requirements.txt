@@ -6,7 +6,7 @@ cnx-easybake==0.6.0
 cnx-epub==0.10.0
 cnx-publishing==0.8.0
 cnx-query-grammar==0.2.2
-cssselect==0.9.1
+cssselect==1.0.1
 -e git+https://github.com/SimonSapin/cssselect2.git#egg=cssselect2
 db-migrator==0.2.0
 funcsigs==1.0.2
