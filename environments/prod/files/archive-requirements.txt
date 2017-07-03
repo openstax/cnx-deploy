@@ -14,7 +14,7 @@ Paste==2.0.3
 PasteDeploy==1.5.2
 PasteScript==2.0.2
 psycopg2==2.7.1
-pyramid==1.6a2
+pyramid==1.9
 pyramid-jinja2==2.6.2
 pyramid-multiauth==0.8.0
 pyramid-translogger==0.1
