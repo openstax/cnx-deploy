@@ -3,9 +3,7 @@
 [
   {rabbit, [
       {tcp_listeners, [
-          {% for host in groups.broker_connected %}
-          {"{{ hostvars[host].ansible_default_ipv4.address }}", 5672},
-          {% endfor %}
+          {"{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}", 5672},
           {"127.0.0.1", 5672}
       ]}
   ]}
