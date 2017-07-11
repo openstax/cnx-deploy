@@ -51,6 +51,9 @@
 {% if (inventory_hostname in groups.database or inventory_hostname in groups.replicant) -%}
     -A INPUT -p tcp --dport 5432 -m comment --comment "allowed Postgres client ports" -j  ACCEPT
 {% endif %}
+{% if (inventory_hostname in groups.broker) -%}
+    -A INPUT -p tcp --dport 5672 -m comment --comment "allowed RabbitMQ client ports" -j  ACCEPT
+{% endif %}
 {% if (inventory_hostname in groups.legacy_frontend -%}
     -A INPUT -p tcp --dport {{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }} -m comment --comment "allow haproxy zcluster port" -j  ACCEPT
 {% endif %}
