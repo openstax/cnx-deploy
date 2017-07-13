@@ -23,18 +23,6 @@
 - include: database.yml
 - include: broker.yml
 
-- name: install cnxml dtd pkgs
-  hosts:
-    - database
-    - replicant
-    - zeo
-    - zclient
-    - pdf_gen
-  tasks:
-    - include: tasks/install_cnxml_dtd.yml
-  tags:
-    - install-cnxml-dtd-pkgs
-
 # +++
 # Applications
 # +++

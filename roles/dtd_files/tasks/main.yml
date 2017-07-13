@@ -6,23 +6,31 @@
   apt:
     name: apt-transport-https
     state: present
+  tags:
+    - install-cnxml-dtd-pkgs
 
 - name: configure apt to not verify the cnx repo
   become: yes
   copy:
     src: etc/apt/apt.conf.d/90packages-cnx-org
     dest: "/etc/apt/apt.conf.d/90packages-cnx-org"
+  tags:
+    - install-cnxml-dtd-pkgs
 
 - name: add cnx apt repo
   become: yes
   apt_repository:
     repo: "deb http://packages.cnx.org/ deb/"
     state: present
+  tags:
+    - install-cnxml-dtd-pkgs
 
 - name: update apt cache
   become: yes
   apt:
     update_cache: yes
+  tags:
+    - install-cnxml-dtd-pkgs
 
 - name: install connexions pkgs
   become: yes
@@ -38,3 +46,5 @@
     - connexions-bibtexml-1.0
     - connexions-mathml-2.0
     - connexions-collxml-1.0
+  tags:
+    - install-cnxml-dtd-pkgs
