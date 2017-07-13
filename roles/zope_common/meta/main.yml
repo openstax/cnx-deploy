@@ -3,3 +3,4 @@
 dependencies:
   - _pgdg_repo
   - python24
+  - dtd_files
