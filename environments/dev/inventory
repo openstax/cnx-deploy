@@ -30,6 +30,9 @@ dev00
 [replicant:children]
 dev04
 
+[broker:children]
+dev04
+
 [archive:children]
 dev00
 

@@ -9,6 +9,9 @@ archive_db_port: 5432
 # FIXME (10-Apr-12017) db-role-perms: assign the role superuser privileges.
 xxx_archive_db_user_role_attr_flags: 'SUPERUSER'
 
+publishing_broker_user: "{{ vault_publishing_broker_user }}"
+publishing_broker_password: "{{ vault_publishing_broker_password }}"
+
 authoring_db_name: "{{ vault_authoring_db_name }}"
 authoring_db_user: "{{ vault_authoring_db_user }}"
 authoring_db_password: "{{ vault_authoring_db_password }}"
