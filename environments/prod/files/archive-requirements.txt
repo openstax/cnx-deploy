@@ -4,7 +4,7 @@ cnx-archive==2.5.1
 cnx-db==0.3.0
 cnx-epub==0.10.0
 cnx-query-grammar==0.2.2
-db-migrator==0.1.4
+db-migrator==0.2.0
 funcsigs==1.0.2
 Jinja2==2.7.3
 lxml==3.4.0
