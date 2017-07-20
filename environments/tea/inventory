@@ -20,6 +20,9 @@ tea00
 [replicant:children]
 # None, because single-machine install
 
+[broker:children]
+tea00
+
 [archive:children]
 tea00
 
