@@ -7,6 +7,9 @@ archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: tea00.cnx.org
 archive_db_port: 5432
 
+publishing_broker_user: "{{ vault_publishing_broker_user }}"
+publishing_broker_password: "{{ vault_publishing_broker_password }}"
+
 # authoring_db_name: "{{ vault_authoring_db_name }}"
 # authoring_db_user: "{{ vault_authoring_db_user }}"
 # authoring_db_password: "{{ vault_authoring_db_password }}"
