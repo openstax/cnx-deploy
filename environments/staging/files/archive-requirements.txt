@@ -31,5 +31,5 @@ waitress==1.0.2
 webencodings==0.5.1
 WebOb==1.7.3
 wsgiref==0.1.2
-zope.deprecation==4.1.2
+zope.deprecation==4.2.0
 zope.interface==4.1.2
