@@ -45,14 +45,6 @@
         name: "publishing:"
         state: stopped
 
-- name: stop post publication worker
-  hosts: publishing
-  tasks:
-    - become: yes
-      supervisorctl:
-        name: "post_publication:"
-        state: stopped
-
 - name: stop zclients
   hosts:
     - zclient
@@ -112,14 +104,6 @@
     - become: yes
       supervisorctl:
         name: "publishing:"
-        state: started
-
-- name: start post publication worker
-  hosts: publishing
-  tasks:
-    - become: yes
-      supervisorctl:
-        name: "post_publication:"
         state: started
 
 - name: start zclients
