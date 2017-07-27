@@ -2,7 +2,8 @@
 local.cnx.org
 
 [zope.local.cnx.org]
-zope.local.cnx.org
+# If zope is on a different machine, use zope.local.cnx.org
+local.cnx.org
 
 # Grouped Hosts
 
