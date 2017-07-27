@@ -9,7 +9,7 @@
       default: cnxarchive
     - name: "db_user"
       prompt: "What database user should we use?"
-      default: postgres
+      default: cnxarchive
     - name: "db_password"
       prompt: "What password should we use for the database user?"
   tasks:
@@ -68,6 +68,8 @@
   hosts: database
   tasks:
     - include: tasks/create_db_user.yml
+      vars:
+        role_attr_flags: 'SUPERUSER'
     - name: drop database
       become: yes
       become_user: postgres
@@ -81,10 +83,10 @@
       shell: "zcat /tmp/cnxarchive_dump/cnxarchive_dump_without_files.sql.gz | psql -U {{ db_user }} {{ db_name }} -f -"
 
     - name: load files table
-      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_files.txt.gz' '/tmp/cnxarchive_dump/cnxarchive_other_files.txt.gz' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE files DISABLE TRIGGER ALL; COPY files (fileid, md5, sha1, file, media_type) FROM STDIN; ALTER TABLE files ENABLE TRIGGER ALL;"
+      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_files.txt.gz' '/tmp/cnxarchive_dump/cnxarchive_other_files.txt.gz' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE files DISABLE TRIGGER USER; COPY files (fileid, md5, sha1, file, media_type) FROM STDIN; ALTER TABLE files ENABLE TRIGGER USER;"
 
     - name: load module files table
-      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER ALL; COPY module_files (module_ident, fileid, filename) FROM STDIN; ALTER TABLE module_files ENABLE TRIGGER ALL;"
+      shell: zcat '/tmp/cnxarchive_dump/cnxarchive_index_module_files.txt' | psql -U {{ db_user }} {{ db_name }} -c "ALTER TABLE module_files DISABLE TRIGGER USER; COPY module_files (module_ident, fileid, filename) FROM STDIN; ALTER TABLE module_files ENABLE TRIGGER USER;"
     - name: remove dump files
       file:
         path: /tmp/cnxarchive_dump
