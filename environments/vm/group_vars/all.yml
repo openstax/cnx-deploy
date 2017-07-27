@@ -6,6 +6,7 @@ archive_db_user: cnxarchive
 archive_db_password: cnxarchive
 archive_db_host: localhost
 archive_db_port: 5432
+xxx_archive_db_user_role_attr_flags: 'SUPERUSER'
 
 publishing_broker_user: cnxpublishing
 publishing_broker_password: cnxpublishing
@@ -47,5 +48,9 @@ exercises_token: "somekindoftoken"
 
 nfs_server_for_files1: local.cnx.org
 nfs_server_for_files2: local.cnx.org
+nfs_server_for_specials: local.cnx.org
+nfs_server_for_varnish_logs: local.cnx.org
 
 webview_version: master
+
+princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
