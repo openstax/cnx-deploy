@@ -12,6 +12,9 @@ local.cnx.org
 [database:children]
 local.cnx.org
 
+[replicant:children]
+# None, because single-machine install
+
 [broker:children]
 local.cnx.org
 
@@ -65,6 +68,8 @@ zclient
 pdf_gen
 
 [nfs_connected:children]
+archive
+publishing
 legacy_frontend
 publishing_worker
 frontend
