@@ -6,7 +6,7 @@
 -e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
 -e git+https://github.com/Connexions/cnx-publishing.git#egg=cnx-publishing
 
-db-migrator==0.1.4
+db-migrator==0.2.0
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.2
