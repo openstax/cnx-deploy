@@ -34,10 +34,14 @@ prod10.cnx.org
 [prod_files00]
 prod-files00.cnx.org
 
+[prod_files01]
+prod-files01.cnx.org
+
 # Grouped Hosts
 
 [nfs:children]
 prod_files00
+prod_files01
 
 [database:children]
 prod09
