@@ -19,7 +19,7 @@ server {
             set $fname $1; 
         }
         add_header Content-Disposition "attachment; filename=$fname";
-        try_files  /files/$1 /files2/$1 $uri  =404;
+        try_files  {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} $uri  =404;
     }   
 
 }

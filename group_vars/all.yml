@@ -52,3 +52,7 @@ default_haproxy_zcluster_port: 8888
 
 default_graylog_server: graylog.cnx.org
 default_graylog_port: 5140
+
+default_archive_exports_directories:
+  - files
+  - files2
