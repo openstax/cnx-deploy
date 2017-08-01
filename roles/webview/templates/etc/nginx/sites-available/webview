@@ -87,13 +87,13 @@ server {
     location ~ /exports/(.+?)/(.+)$ {
         root        /var/www/;
         add_header  Content-Disposition "attachment; filename=$2";
-        try_files   /files/$1 /files2/$1 =404;
+        try_files   {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} =404;
     }
 
     location ~ /exports/(.+)$ {
         root        /var/www/;
         add_header  Content-Disposition "attachment; filename=$1";
-        try_files   /files/$1 /files2/$1 =404;
+        try_files   {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} =404;
     }
 
     location /nginx_status {
