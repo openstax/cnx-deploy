@@ -38,10 +38,31 @@ postgres_connections: "{{ vault_postgres_connections }}"
 
 slack_token: "{{ vault_slack_token }}"
 
-nfs_server_for_files1: staging-files00.cnx.org
-nfs_server_for_files2: staging-files00.cnx.org
-nfs_server_for_specials: staging-files00.cnx.org
-nfs_server_for_varnish_logs: staging-files00.cnx.org
+archive_exports_directories:
+  - files
+  - files2
+  - files3
+  - files4
+
+nfs_mounts:
+  - name: /var/www/files
+    src: /var/www/files
+    server: staging-files00.cnx.org
+  - name: /var/www/files2
+    src: /var/www/files2
+    server: staging-files00.cnx.org
+  - name: /var/www/files3
+    src: /var/www/files3
+    server: staging-files01.cnx.org
+  - name: /var/www/files4
+    src: /var/www/files4
+    server: staging-files01.cnx.org
+  - name: /var/www/specials
+    src: /var/www/specials
+    server: staging-files00.cnx.org
+  - name: /var/www/varnish_logs
+    src: /var/www/varnish_logs
+    server: staging-files00.cnx.org
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
