@@ -34,10 +34,14 @@ staging10.cnx.org
 [staging_files00]
 staging-files00.cnx.org
 
+[staging_files01]
+staging-files01.cnx.org
+
 # Grouped Hosts
 
 [nfs:children]
 staging_files00
+staging_files01
 
 [database:children]
 staging09
