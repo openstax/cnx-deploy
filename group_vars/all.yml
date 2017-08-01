@@ -55,3 +55,16 @@ default_graylog_port: 5140
 default_archive_exports_directories:
   - files
   - files2
+default_nfs_mounts:
+  - name: /var/www/files
+    src: /var/www/files
+    server: "{{ nfs_server_for_files1 }}"
+  - name: /var/www/files2
+    src: /var/www/files2
+    server: "{{ nfs_server_for_files2 }}"
+  - name: /var/www/specials
+    src: /var/www/specials
+    server: "{{ nfs_server_for_specials }}"
+  - name: /var/www/varnish_logs
+    src: /var/www/varnish_logs
+    server: "{{ nfs_server_for_varnish_logs }}"

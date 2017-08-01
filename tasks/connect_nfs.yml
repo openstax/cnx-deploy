@@ -9,14 +9,10 @@
 
 - name: make nfs directories
   become: yes
-  with_items:
-    - /var/www/files
-    - /var/www/files2
-    - /var/www/specials
-    - /var/www/varnish_logs
+  with_items: "{{ nfs_mounts|default(default_nfs_mounts) }}"
   file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ item.name }}"
     owner: www-data
     group: www-data
     mode: 0755
@@ -24,45 +20,10 @@
 - name: configure nfs mount for files
   become: yes
   when: inventory_hostname not in groups.nfs
+  with_items: "{{ nfs_mounts|default(default_nfs_mounts) }}"
   mount:
-    src: "{{ nfs_server_for_files1 }}:/var/www/files"
-    name: /var/www/files
-    fstype: nfs
-    opts: rw
-    dump: 0
-    passno: 2
-    state: mounted
-
-- name: configure nfs mount for files2
-  become: yes
-  when: inventory_hostname not in groups.nfs
-  mount:
-    src: "{{ nfs_server_for_files2 }}:/var/www/files2"
-    name: /var/www/files2
-    fstype: nfs
-    opts: rw
-    dump: 0
-    passno: 2
-    state: mounted
-
-- name: configure nfs mount for specials
-  become: yes
-  when: inventory_hostname not in groups.nfs
-  mount:
-    src: "{{ nfs_server_for_specials }}:/var/www/specials"
-    name: /var/www/specials
-    fstype: nfs
-    opts: rw
-    dump: 0
-    passno: 2
-    state: mounted
-
-- name: configure nfs mount for varnish_logs
-  become: yes
-  when: inventory_hostname not in groups.nfs
-  mount:
-    src: "{{ nfs_server_for_varnish_logs }}:/var/www/varnish_logs"
-    name: /var/www/specials
+    src: "{{ item.server }}:{{ item.src }}"
+    name: "{{ item.name }}"
     fstype: nfs
     opts: rw
     dump: 0
