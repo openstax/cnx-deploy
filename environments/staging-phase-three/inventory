@@ -91,6 +91,8 @@ zclient
 pdf_gen
 
 [nfs_connected:children]
+archive
+publishing
 legacy_frontend
 frontend
 zclient
