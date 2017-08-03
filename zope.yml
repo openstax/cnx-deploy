@@ -16,6 +16,8 @@
   tasks:
     - include: tasks/create_rhaptos_site.yml
       run_once: yes
+    - include: tasks/set_up_localfs_folders.yml
+      run_once: yes
   tags:
     - zope
     - create_rhaptos_site
