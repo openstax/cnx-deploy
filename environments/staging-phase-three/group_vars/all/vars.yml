@@ -39,9 +39,9 @@ postgres_connections: "{{ vault_postgres_connections }}"
 slack_token: "{{ vault_slack_token }}"
 
 archive_exports_directories:
+  - files3
   - files
   - files2
-  - files3
   - files4
 
 nfs_mounts:
