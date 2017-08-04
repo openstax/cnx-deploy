@@ -36,3 +36,4 @@
 
 - include: configure_buildout.yml
 - include: install_cnx_buildout.yml
+- include: pdf_gen_dependencies.yml
