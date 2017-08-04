@@ -3,3 +3,4 @@
 dependencies:
   - supervisord
   - exim4
+  - pdf_gen_common

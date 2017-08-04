@@ -3,3 +3,4 @@
 dependencies:
   - supervisord
   - memcached
+  - pdf_gen_common
