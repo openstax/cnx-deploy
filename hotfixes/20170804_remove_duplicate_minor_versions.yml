@@ -10,6 +10,9 @@
         url: "https://raw.githubusercontent.com/Connexions/devops/master/scripts/remove_duplicate_minor_version_books.py"
         dest: "/tmp"
 
+    - name: run python script to remove duplicate minor versions (dry run)
+      shell: "/var/cnx/venvs/publishing/bin/python /tmp/remove_duplicate_minor_version_books.py -d 'dbname={{ archive_db_name }} user={{ archive_db_user }} password={{ archive_db_password }} host={{ archive_db_host }} port={{ archive_db_port }}' --dry-run >/tmp/remove_duplicate_minor_version_books.out"
+
     - name: run python script to remove duplicate minor versions
       shell: "/var/cnx/venvs/publishing/bin/python /tmp/remove_duplicate_minor_version_books.py -d 'dbname={{ archive_db_name }} user={{ archive_db_user }} password={{ archive_db_password }} host={{ archive_db_host }} port={{ archive_db_port }}'"
 
