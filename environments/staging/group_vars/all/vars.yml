@@ -45,7 +45,7 @@ nfs_server_for_varnish_logs: staging-files00.cnx.org
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.21.11-dev7fefc3d
+webview_version: v0.22.2
 
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
