@@ -65,7 +65,7 @@ nfs_mounts:
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.22.2
+webview_version: v0.22.4
 
 google_site_verification_filename: "{{ vault_google_site_verification_filename }}"
 
