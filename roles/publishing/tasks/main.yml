@@ -106,7 +106,7 @@
   register: publishing_migrations_dir
 
 - name: migrate repository database
-  when: publishing_migrations_dir.stat.exists
+  when: not publishing_migrations_dir.stat.exists
   become: yes
   become_user: www-data
   command: /bin/true
