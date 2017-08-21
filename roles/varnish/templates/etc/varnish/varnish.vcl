@@ -158,6 +158,14 @@ sub vcl_recv {
         return (pass);
     }
 
+{% if accounts_stub|default(False) %}
+    # cnx rewrite stub login form
+    if (req.url ~ "^/stub-login-form") {
+        set req.backend_hint = publishing_cluster.backend(req.http.cookie);
+        return (pass);
+    }
+
+{% endif %}
     # cnx rewrite archive
     if (req.url ~ "^/a/") {
         set req.backend_hint = publishing_cluster.backend(req.http.cookie);
