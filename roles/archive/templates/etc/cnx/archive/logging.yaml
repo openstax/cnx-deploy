@@ -1,0 +1,66 @@
+###
+# logging configuration
+###
+version: 1
+
+formatters:
+  generic:
+    format    : '%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s'
+  papertrail:
+    # requires filters [context]
+    format    : '%(asctime)s %(hostname)s publishing %(message)s'
+    datefmt   : '%Y-%m-%dT%H:%M:%S'
+  apache_style:
+    # requires filters [environ]
+    format    : '%(REMOTE_ADDR)s - %(REMOTE_USER)s [%(asctime)s] "%(REQUEST_METHOD)s %(REQUEST_URI)s %(HTTP_VERSION)s" %(status)s %(bytes)s "%(HTTP_REFERER)s" "%(HTTP_USER_AGENT)s"'
+    datefmt   : '%d/%b/%Y:%H:%M:%S'
+filters:
+  context:
+    ()        : pyramid_sawing.filters.ContextFilter
+  environ:
+    ()        : pyramid_sawing.filters.EnvironFilter
+handlers:
+  console:
+    class     : logging.StreamHandler
+    level     : NOTSET
+    formatter : generic
+    stream    : 'ext://sys.stdout'
+  # syslog:
+  #   # Streams directly to papertrailapp.com.
+  #   # You'll need to change the host and port in order to use this.
+  #   class     : logging.handlers.SysLogHandler
+  #   level     : DEBUG
+  #   formatter : papertrail
+  #   # Note, the environ filter is automatically included by pyramid_sawing.
+  #   filters   : [context, environ]
+  #   address   : ['<host>.papertrailapp.com', 11111]
+  transit:
+    # Streams to standard out (STDOUT) using the apache-style formatter.
+    class     : logging.StreamHandler
+    level     : NOTSET
+    formatter : apache_style
+    stream    : 'ext://sys.stdout'
+loggers:
+  cnxpublishing:
+    # This is our pyramid application logger.
+    level     : DEBUG
+    handlers  : [console]
+    propagate : 0
+  post_publication:
+    level     : DEBUG
+    handlers  : [console]
+    propagate : 0
+  transit_logger:
+    # This is the transit logger in pyramid_sawing.
+    level     : INFO
+    handlers  : [transit]
+    propagate : 0
+  waitress:
+    # The logger for the waitress http server.
+    # Note, that this logger is responsible for reporting 500 errors
+    # with the traceback.
+    level     : DEBUG
+    propagate : 1
+root:
+  level       : NOTSET
+  handlers    : [console]
