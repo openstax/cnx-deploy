@@ -121,6 +121,7 @@
     group: root
   with_items:
     - "etc/cnx/archive/app.ini"
+    - "etc/cnx/archive/logging.yaml"
     - "etc/cnx/archive/vars.sh"
   notify:
     - restart archive
