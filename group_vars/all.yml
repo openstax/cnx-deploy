@@ -41,11 +41,8 @@ default_publishing_broker_vhost: /publishing
 # authoring_db_port: 5432
 
 # archive_host: 0.0.0.0
-# archive_port: 6789
 # publishing_host: 0.0.0.0
-# publishing_port: 6543
 # authoring_host: 0.0.0.0
-# authoring_port: 8080
 
 # zope_domain: legacy.cnx.org
 # arclishing_domain: archive.cnx.org
