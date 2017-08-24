@@ -37,6 +37,7 @@
     group: "{{ item.group|default('root') }}"
   with_items: "{{ varnish['templates'] }}"
   notify:
+    - restart daemon tools
     - restart varnish
   tags:
     - varnish-configure
