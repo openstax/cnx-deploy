@@ -51,3 +51,11 @@
     src: "etc/cron.daily/copy_varnish_logs"
     dest: "/etc/cron.daily/copy_varnish_logs"
     mode: 0755
+
+# +++
+# Always Restart Varnish (to ensure Varnish is using the correct port)
+# +++
+- name: always restart varnish
+  command: /bin/true
+  notify:
+    - restart varnish
