@@ -16,6 +16,17 @@
     - start varnishncsa
 
 # +++
+# Fix reload-vcl script
+# See https://bugs.launchpad.net/ubuntu/+source/varnish/+bug/1676242
+# +++
+- name: fix reload-vcl script
+  become: yes
+  replace:
+    dest: "/usr/share/varnish/reload-vcl"
+    regexp: 'while getopts a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag \$DAEMON_OPTS'
+    replace: 'while getopts a:b:CdFf:g:h:i:j:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS'
+
+# +++
 # Configure
 # +++
 
