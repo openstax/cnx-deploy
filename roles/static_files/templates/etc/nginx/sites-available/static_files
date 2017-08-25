@@ -13,11 +13,9 @@ server {
         add_header Access-Control-Allow-Origin $cors_header;
     }
 
-    location /files {
+    location ~ ^/files/(.+)$ {
         autoindex off;
-        if ($uri ~ "^/files/(.+)$") {
-            set $fname $1; 
-        }
+        set $fname $1;
         add_header Content-Disposition "attachment; filename=$fname";
         try_files  {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} $uri  =404;
     }   
