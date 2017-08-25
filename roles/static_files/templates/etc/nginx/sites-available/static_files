@@ -13,13 +13,11 @@ server {
         add_header Access-Control-Allow-Origin $cors_header;
     }
 
-    location /files {
+    location ~ ^/files/(.+)$ {
         autoindex off;
-        if ($uri ~ "^/files/(.+)$") {
-            set $fname $1; 
-        }
+        set $fname $1;
         add_header Content-Disposition "attachment; filename=$fname";
         try_files  /files/$1 /files2/$1 $uri  =404;
-    }   
+    }
 
 }
