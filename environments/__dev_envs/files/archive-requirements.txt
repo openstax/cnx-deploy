@@ -4,7 +4,7 @@
 -e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
 -e git+https://github.com/Connexions/cnx-db.git#egg=cnx-db
 
-db-migrator==1.0.0
+db-migrator==1.0.1
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.2
