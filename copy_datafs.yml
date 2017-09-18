@@ -2,7 +2,6 @@
 
 - name: copy datafs
   hosts: zeo
-  become: yes
   vars_prompt:
     - name: "source_host"
       prompt: "Where is the Data.fs hosted?"
@@ -19,18 +18,18 @@
     destination_filename: "{{ source_filename }}.new"
   tasks:
     - name: temporary filestorage permissions
+      become: yes
       file:
         path: /var/lib/cnx/cnx-buildout/var/filestorage
-        owner: www-data
+        owner: "{{ ansible_user_id }}"
         group: www-data
         mode: 0775
       tags: datafs-perms-temporary
     - name: copy datafs over
-      become: yes
-      become_user: administrator
       shell: "rsync -aP --temp-dir=/tmp/rsync.d --inplace -e ssh {{ source_host }}:{{ source_location }}/{{ source_filename }} /var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
       tags: datafs-sync
     - name: ensure filestorage permissions
+      become: yes
       file:
         path: /var/lib/cnx/cnx-buildout/var/filestorage
         owner: www-data
@@ -38,6 +37,7 @@
         mode: 0755
       tags: datafs-perms-reset
     - name: ensure datafs permissions
+      become: yes
       file:
         path: "/var/lib/cnx/cnx-buildout/var/filestorage/{{ destination_filename }}"
         owner: www-data
