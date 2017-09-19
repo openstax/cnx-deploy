@@ -82,6 +82,12 @@
 - name: bootstrap replicant
   hosts: replicant
   tasks:
+    - name: remove old postgresql cluster on replicant
+      become: yes
+      become_user: postgres
+      file:
+        path: "/var/lib/postgresql/{{ postgres_version }}/main/"
+        state: absent
     - name: copy database from master to replicant
       become: yes
       become_user: postgres
