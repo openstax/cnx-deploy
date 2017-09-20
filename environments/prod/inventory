@@ -49,11 +49,20 @@ prod09
 [replicant:children]
 prod10
 
+[broker:children]
+prod08
+
 [archive:children]
 prod07
 prod08
 
 [publishing:children]
+prod08
+
+[channel_processing:children]
+prod08
+
+[publishing_worker:children]
 prod08
 
 [authoring:children]
@@ -67,9 +76,6 @@ prod03
 [frontend:children]
 prod01
 prod02
-
-[worker:children]
-
 
 [zeo:children]
 prod04
@@ -91,6 +97,8 @@ publishing_worker
 [db_connected:children]
 archive
 publishing
+channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen
