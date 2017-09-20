@@ -49,11 +49,20 @@ staging09
 [replicant:children]
 staging10
 
+[broker:children]
+staging08
+
 [archive:children]
 staging07
 staging08
 
 [publishing:children]
+staging08
+
+[channel_processing:children]
+staging08
+
+[publishing_worker:children]
 staging08
 
 [authoring:children]
@@ -67,9 +76,6 @@ staging03
 [frontend:children]
 staging01
 staging02
-
-[worker:children]
-
 
 [zeo:children]
 staging04
@@ -91,6 +97,8 @@ publishing_worker
 [db_connected:children]
 archive
 publishing
+channel_processing
+publishing_worker
 authoring
 zclient
 pdf_gen
