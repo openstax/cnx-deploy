@@ -8,7 +8,7 @@
     - name: "source_db_host"
       prompt: "Where is the database hosted?"
       private: no
-      default: tundra.cnx.rice.edu
+      default: prod09.cnx.org
     - name: "db_name"
       prompt: "What database are we pull from to dump onto this machine?"
       private: no
