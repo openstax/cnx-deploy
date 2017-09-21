@@ -7,6 +7,9 @@ archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: staging09.cnx.org
 archive_db_port: 5432
 
+publishing_broker_user: "{{ vault_publishing_broker_user }}"
+publishing_broker_password: "{{ vault_publishing_broker_password }}"
+
 memcached_hosts: localhost
 
 varnish_port: 80
