@@ -20,6 +20,7 @@
     repo: "https://github.com/Rhaptos/cnx-buildout.git"
     dest: "/var/lib/cnx/cnx-buildout"
     version: "HEAD"
+    force: yes
   register: git_result
   until: git_result|success
   retries: 5
