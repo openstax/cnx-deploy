@@ -7,7 +7,7 @@ cnx-epub==0.12.0
 cnx-publishing==0.9.1
 cnx-query-grammar==0.2.2
 cssselect==0.9.1
--e git+https://github.com/SimonSapin/cssselect2.git#egg=cssselect2
+-e git+https://github.com/Connexions/cssselect2.git#egg=cssselect2
 db-migrator==1.0.1
 funcsigs==1.0.2
 Jinja2==2.7.3
