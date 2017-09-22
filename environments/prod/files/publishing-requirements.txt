@@ -1,10 +1,10 @@
 argparse==1.2.1
 Beaker==1.8.0
 cnx-archive==2.6.0
-cnx-db==0.10.2
+cnx-db==0.10.3
 cnx-easybake==0.7.0
 cnx-epub==0.12.0
-cnx-publishing==0.9.1
+cnx-publishing==0.9.2
 cnx-query-grammar==0.2.2
 cssselect==0.9.1
 -e git+https://github.com/Connexions/cssselect2.git#egg=cssselect2
