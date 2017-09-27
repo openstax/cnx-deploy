@@ -21,8 +21,9 @@
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
         acl has_www hdr_beg(host) -i www 
-        acl is_specials path_beg /specials
-        http-request redirect scheme https if is_specials ! { ssl_fc }
+        acl from_zope src 127.0.0.1 {% for host in groups.zope %}{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %}
+
+        http-request redirect scheme https if ! from_zope ! { ssl_fc }
         http-request redirect prefix http://{{ frontend_domain }}%[req.uri] if has_www ! { ssl_fc }
         http-request redirect prefix https://{{ frontend_domain }}%[req.uri] if has_www { ssl_fc }
 

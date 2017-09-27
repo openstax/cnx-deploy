@@ -5,6 +5,7 @@
   hosts:
     - frontend
     - legacy_frontend
+    - zope
   # NOOP only to acquire IP address information about hosts.
   tasks: []
 
