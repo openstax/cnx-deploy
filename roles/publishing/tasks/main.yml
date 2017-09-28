@@ -41,3 +41,19 @@
   notify:
     - reload supervisord
 # /XXX
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect publishing log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-publishing.conf"
+    dest: "/etc/rsyslog.d/10-publishing.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - publishing-rsyslog

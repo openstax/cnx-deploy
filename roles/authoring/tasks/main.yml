@@ -148,3 +148,19 @@
     mode: 0644
   notify:
     - reload supervisord
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect authoring log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-authoring.conf"
+    dest: "/etc/rsyslog.d/10-authoring.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - authoring-rsyslog

@@ -6,6 +6,8 @@
     name: supervisor
     state: restarted
   register: restart_supervisor_handler
+  notify:
+    - set up supervisor logs
 
 - name: reload supervisord
   when: restart_supervisor_handler is undefined
@@ -13,3 +15,9 @@
   service:
     name: supervisor
     state: reloaded
+  notify:
+    - set up supervisor logs
+
+- name: set up supervisor logs
+  become: yes
+  shell: "chmod 644 /var/log/supervisor/*"
