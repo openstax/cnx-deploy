@@ -95,6 +95,8 @@
   pip:
     requirements: "/var/lib/cnx/authoring-requirements.txt"
     virtualenv: "/var/cnx/venvs/authoring"
+  notify:
+    - restart authoring
 
 # +++
 # Configure
@@ -121,6 +123,8 @@
   with_items:
     - {src: "etc/cnx/authoring/app.ini",
        dest: "/etc/cnx/authoring/app.ini"}
+  notify:
+    - restart authoring
 
 # TODO make logging configuration files for pyramid_sawing
 
