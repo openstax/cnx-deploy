@@ -96,6 +96,8 @@
   pip:
     requirements: "/var/lib/cnx/archive-requirements.txt"
     virtualenv: "/var/cnx/venvs/archive"
+  notify:
+    - restart archive
 
 # +++
 # Configure
@@ -125,8 +127,6 @@
     - "etc/cnx/archive/vars.sh"
   notify:
     - restart archive
-
-# TODO make logging configuration files for pyramid_sawing
 
 # +++
 # Init service

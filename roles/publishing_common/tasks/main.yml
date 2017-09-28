@@ -100,6 +100,10 @@
   pip:
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
+  notify:
+    - restart publishing
+    - restart publishing workers
+    - restart channel processing
 
 # FIXME this won't be necessary once publishing is >=0.7
 - name: check existence of publishing migrations
@@ -147,5 +151,5 @@
     - "etc/cnx/publishing/vars.sh"
   notify:
     - restart publishing
-
-# TODO make logging configuration files for pyramid_sawing
+    - restart publishing workers
+    - restart channel processing

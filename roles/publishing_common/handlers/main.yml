@@ -1,7 +1,26 @@
 ---
+- name: list supervisor applications
+  become: yes
+  command: supervisorctl avail
+  register: supervisorctl_avail
 
 - name: restart publishing
   become: yes
   supervisorctl:
     name: "publishing:"
     state: restarted
+  when: supervisorctl_avail.stdout.find('publishing:') != -1
+
+- name: restart publishing workers
+  become: yes
+  supervisorctl:
+    name: "publishing_worker:"
+    state: restarted
+  when: supervisorctl_avail.stdout.find('publishing_worker:') != -1
+
+- name: restart channel processing
+  become: yes
+  supervisorctl:
+    name: channel_processing
+    state: restarted
+  when: supervisorctl_avail.stdout.find('channel_processing') != -1
