@@ -5,3 +5,4 @@ dependencies:
   - python2
   - memcached
   - supervisord
+  - rsyslog

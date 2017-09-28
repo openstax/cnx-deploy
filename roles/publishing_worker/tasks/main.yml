@@ -13,3 +13,19 @@
     mode: 0644
   notify:
     - reload supervisord
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect publishing worker log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-publishing-worker.conf"
+    dest: "/etc/rsyslog.d/10-publishing-worker.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - publishing-worker-rsyslog

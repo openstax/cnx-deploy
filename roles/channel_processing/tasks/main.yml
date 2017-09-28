@@ -13,3 +13,19 @@
     mode: 0644
   notify:
     - reload supervisord
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect channel processing log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-channel-processing.conf"
+    dest: "/etc/rsyslog.d/10-channel-processing.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - channel-processing-rsyslog

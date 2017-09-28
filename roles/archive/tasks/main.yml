@@ -160,3 +160,19 @@
     owner: root
     group: root
     mode: 0750
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect archive log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-archive.conf"
+    dest: "/etc/rsyslog.d/10-archive.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - archive-rsyslog

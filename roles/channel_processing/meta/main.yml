@@ -2,3 +2,4 @@
 
 dependencies:
   - publishing_common
+  - rsyslog
