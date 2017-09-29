@@ -55,13 +55,7 @@
 
       defaultLicense: {
         code: 'by'
-      },
-
-      conceptCoach: {
-        uuids: {{ concept_coach_webview_settings|default({})|to_json }},
-        url: 'https://{{ tutor_domain|default("tutor-qa.openstax.org") }}'
       }
-
     };
 
   });
