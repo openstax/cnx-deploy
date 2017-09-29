@@ -15,7 +15,7 @@ lxml==4.0.0
 MarkupSafe==1.0
 openstax-accounts==1.0.0
 parsimonious==0.8.0
-Paste==1.7.5.1
+Paste==2.0.3
 PasteDeploy==1.5.2
 PasteScript==1.7.5
 psycopg2==2.7.3.1
