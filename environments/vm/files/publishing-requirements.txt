@@ -1,4 +1,4 @@
-db-migrator==1.0.1
+db-migrator==1.0.2
 
 -r archive-requirements.txt
 
