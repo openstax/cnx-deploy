@@ -27,7 +27,7 @@ pyramid-translogger==0.1
 python-memcached==1.58
 pytz==2017.2
 repoze.lru==0.7
-requests==2.7.0
+requests==2.18.4
 rhaptos.cnxmlutils==1.3.0
 sanction==0.4.1
 tinycss2==0.5
