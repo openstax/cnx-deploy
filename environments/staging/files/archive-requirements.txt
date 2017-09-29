@@ -16,7 +16,7 @@ PasteScript==2.0.2
 psycopg2==2.7.3.1
 pyramid==1.9.1
 pyramid-jinja2==2.7
-pyramid-multiauth==0.8.0
+pyramid-multiauth==0.9.0
 pyramid_sawing==1.1.3
 pyramid-translogger==0.1
 python-memcached==1.53
