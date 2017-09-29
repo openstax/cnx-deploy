@@ -8,7 +8,7 @@ cnx-publishing==0.9.3
 cnx-query-grammar==0.2.2
 cssselect==0.9.1
 -e git+https://github.com/Connexions/cssselect2.git#egg=cssselect2
-db-migrator==1.0.1
+db-migrator==1.0.2
 funcsigs==1.0.2
 Jinja2==2.7.3
 lxml==3.4.0
