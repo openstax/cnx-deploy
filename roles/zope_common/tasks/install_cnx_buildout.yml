@@ -82,6 +82,7 @@
   shell: "/var/cnx/venvs/cnx-buildout/bin/python bootstrap.py"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
+    executable: "/bin/sh"
   tags: buildout-bootstrap
 
 - name: install simplejson 1.9.2
