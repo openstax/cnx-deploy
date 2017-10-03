@@ -39,10 +39,16 @@
 
 - name: stop publishing
   hosts: publishing
+  become: yes
   tasks:
-    - become: yes
-      supervisorctl:
+    - supervisorctl:
         name: "publishing:"
+        state: stopped
+    - supervisorctl:
+        name: "publishing_worker:"
+        state: stopped
+    - supervisorctl:
+        name: "channel_processing"
         state: stopped
 
 - name: stop zclients
@@ -102,10 +108,16 @@
 
 - name: start publishing
   hosts: publishing
+  become: yes
   tasks:
-    - become: yes
-      supervisorctl:
+    - supervisorctl:
         name: "publishing:"
+        state: started
+    - supervisorctl:
+        name: "publishing_worker:"
+        state: started
+    - supervisorctl:
+        name: "channel_processing"
         state: started
 
 - name: start zclients
