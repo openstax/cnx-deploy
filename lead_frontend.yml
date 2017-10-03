@@ -9,22 +9,22 @@
   # NOOP only to acquire IP address information about hosts.
   tasks: []
 
-- name: generate a self-signed certificate
-  hosts: 127.0.0.1
-  connection: local
-  vars:
-    cert_password: "password"
-    cert_domain: "*.{{ frontend_domain }}"
-    cert_dir: "{{ inventory_dir }}/secrets/certs"
-    cert_pem_filepath: "{{ cert_dir }}/{{ frontend_domain }}.pem"
-  tasks:
-    - file:
-        path: "{{ cert_dir }}"
-        state: directory
-    - stat: path="{{ cert_pem_filepath }}"
-      register: pem_file
-    - include: tasks/create_self_signed_cert.yml
-      when: not pem_file.stat.exists
+#- name: generate a self-signed certificate
+#  hosts: 127.0.0.1
+#  connection: local
+#  vars:
+#    cert_password: "password"
+#    cert_domain: "*.{{ frontend_domain }}"
+#    cert_dir: "{{ inventory_dir }}/secrets/certs"
+#    cert_pem_filepath: "{{ cert_dir }}/{{ frontend_domain }}.pem"
+#  tasks:
+#    - file:
+#        path: "{{ cert_dir }}"
+#        state: directory
+#    - stat: path="{{ cert_pem_filepath }}"
+#      register: pem_file
+#    - include: tasks/create_self_signed_cert.yml
+#      when: not pem_file.stat.exists
 
 - name: setup initial request frontend services
   hosts:
