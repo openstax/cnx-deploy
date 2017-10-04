@@ -7,9 +7,9 @@ varnish:
   malloc: "{{ varnish_memory_allocation|default('256m') }}"
   templates:
     - {src: varnishncsa.format, dest: /var/log/varnish/varnishncsa.format, user: varnishlog, group: varnish}
-    - {src: lib/systemd/system/varnish.service, dest: /etc/systemd/system/multi-user.target.wants/varnish.service}
-    - {src: lib/systemd/system/varnishncsa.service, dest: /etc/systemd/system/multi-user.target.wants/varnishncsa.service}
-    - {src: lib/systemd/system/varnishlog.service, dest: /etc/systemd/system/multi-user.target.wants/varnishlog.service}
+    - {src: etc/systemd/system/varnish.service, dest: /etc/systemd/system/varnish.service}
+    - {src: etc/systemd/system/varnishncsa.service, dest: /etc/systemd/system/varnishncsa.service}
+    - {src: etc/systemd/system/varnishlog.service, dest: /etc/systemd/system/varnishlog.service}
     - {src: etc/default/varnish, dest: /etc/default/varnish}
     - {src: etc/default/varnishncsa, dest: /etc/default/varnishncsa}
     - {src: etc/default/varnishlog, dest: /etc/default/varnishlog}
