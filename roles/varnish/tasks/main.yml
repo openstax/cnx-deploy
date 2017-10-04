@@ -49,6 +49,9 @@
   with_items: "{{ varnish['templates'] }}"
   notify:
     - restart daemon tools
+    - enable varnish
+    - enable varnishlog
+    - enable varnishncsa
     - restart varnish
   tags:
     - varnish-configure

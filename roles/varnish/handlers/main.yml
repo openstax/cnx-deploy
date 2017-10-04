@@ -5,6 +5,34 @@
   # This makes our service file changes available for use.
   shell: systemctl daemon-reload
 
+- name: enable varnishlog
+  become: yes
+  # Usually we would do "systemctl enable varnishlog", but it is failing:
+  # Synchronizing state of varnishlog.service with SysV init with /lib/systemd/systemd-sysv-install...
+  # Executing /lib/systemd/systemd-sysv-install enable varnishlog
+  # Failed to execute operation: Invalid argument
+  file:
+    src: "/etc/systemd/system/varnishlog.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/varnishlog.service"
+    state: link
+    force: yes
+
+- name: enable varnishncsa
+  become: yes
+  file:
+    src: "/etc/systemd/system/varnishncsa.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/varnishncsa.service"
+    state: link
+    force: yes
+
+- name: enable varnish
+  become: yes
+  file:
+    src: "/etc/systemd/system/varnish.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/varnish.service"
+    state: link
+    force: yes
+
 - name: start varnishlog
   become: yes
   service:
