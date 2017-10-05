@@ -14,11 +14,11 @@
 - name: create site
   hosts: zope
   tasks:
-    - include: tasks/create_rhaptos_site.yml
+    - import_tasks: tasks/create_rhaptos_site.yml
       run_once: yes
-    - include: tasks/set_up_localfs_folders.yml
+    - import_tasks: tasks/set_up_localfs_folders.yml
       run_once: yes
-    - include: tasks/set_up_rhaptos_print_host.yml
+    - import_tasks: tasks/set_up_rhaptos_print_host.yml
       run_once: yes
   tags:
     - zope

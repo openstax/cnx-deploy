@@ -73,7 +73,7 @@
 - name: forcibly push data
   hosts: database
   tasks:
-    - include: tasks/create_db_user.yml
+    - import_tasks: tasks/create_db_user.yml
       vars:
         role_attr_flags: 'SUPERUSER'
     - name: drop database

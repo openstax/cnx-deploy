@@ -4,4 +4,4 @@
 - name: connect to nfs
   hosts: nfs_connected
   tasks:
-    - include: tasks/connect_nfs.yml
+    - import_tasks: tasks/connect_nfs.yml

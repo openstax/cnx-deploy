@@ -34,6 +34,6 @@
     - "postgresql-client-{{ postgres_version }}"
     - "libpq-dev"
 
-- include: configure_buildout.yml
-- include: install_cnx_buildout.yml
-- include: pdf_gen_dependencies.yml
+- import_tasks: configure_buildout.yml
+- import_tasks: install_cnx_buildout.yml
+- import_tasks: pdf_gen_dependencies.yml

@@ -1,7 +1,7 @@
 ---
 # Used to setup a deployment on localhost.
 
-- include: pretask.yml
+- import_playbook: pretask.yml
 
 - name: "notify #cnx-stream of the deployment (start)"
   hosts: all
@@ -11,29 +11,29 @@
       - "#cnx-stream"
       - "#deployments"
   tasks:
-    - include: tasks/notify_slack.yml
+    - import_tasks: tasks/notify_slack.yml
 
 # +++
 # Persistence services
 # +++
 
-- include: nfs.yml
-- include: nfs_connected.yml
+- import_playbook: nfs.yml
+- import_playbook: nfs_connected.yml
 
-- include: database.yml
-- include: broker.yml
+- import_playbook: database.yml
+- import_playbook: broker.yml
 
 # +++
 # Applications
 # +++
 
-- include: archive.yml
-- include: publishing.yml
-- include: channel_processing.yml
-- include: publishing_worker.yml
-- include: authoring.yml
+- import_playbook: archive.yml
+- import_playbook: publishing.yml
+- import_playbook: channel_processing.yml
+- import_playbook: publishing_worker.yml
+- import_playbook: authoring.yml
 
-- include: zope.yml
+- import_playbook: zope.yml
   tags:
     - zope
     - zeo
@@ -42,27 +42,27 @@
     - legacy_be
     - be
 
-- include: legacy_frontend.yml
+- import_playbook: legacy_frontend.yml
   tags:
     - haproxy
     - varnish
     - legacy_fe
     - fe
 
-- include: frontend.yml
+- import_playbook: frontend.yml
   tags:
     - nginx
     - varnish
     - webview
     - fe
 
-- include: lead_frontend.yml
+- import_playbook: lead_frontend.yml
   tags:
     - haproxy
     - lead_fe
     - fe
 
-- include: iptables.yml
+- import_playbook: iptables.yml
   tags:
     - iptables
     - firewall
@@ -75,4 +75,4 @@
       - "#cnx-stream"
       - "#deployments"
   tasks:
-    - include: tasks/notify_slack.yml
+    - import_tasks: tasks/notify_slack.yml

@@ -4,5 +4,5 @@
 - stat: path=/usr/local/bin/python2.4
   register: python24_binary
 
-- include: tasks/install_python24.yml
+- import_tasks: tasks/install_python24.yml
   when: not python24_binary.stat.exists
