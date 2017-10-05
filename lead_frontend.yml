@@ -26,7 +26,7 @@
         module: stat
         path: "{{ cert_pem_filepath }}"
       register: pem_file
-    - include: tasks/create_self_signed_cert.yml
+    - import_tasks: tasks/create_self_signed_cert.yml
       delegate_to: 127.0.0.1
       when: not pem_file.stat.exists
   run_once: yes
