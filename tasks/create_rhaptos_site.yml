@@ -14,7 +14,7 @@
     db_owner: "{{ archive_db_user }}"
     db_host: "{{ archive_db_host }}"
     db_port: "{{ archive_db_port }}"
-  include: tasks/create_db.yml
+  import_tasks: tasks/create_db.yml
 
 - name: create rhaptos site
   when: rhaptos_site|failed
@@ -38,7 +38,7 @@
 
 - name: assign pdf_gen settings
   when: rhaptos_site|failed
-  include: tasks/assign_pdf_gen_settings.yml
+  import_tasks: tasks/assign_pdf_gen_settings.yml
   tags:
     - zope
     - assign_pdf_gen_settings

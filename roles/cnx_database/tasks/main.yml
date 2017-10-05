@@ -14,9 +14,9 @@
     path: "{{ _pg_pkglibdir.stdout }}/session_exec.so"
   register: session_exec_so
 
-- include: install_plxslt.yml
+- import_tasks: install_plxslt.yml
   when: not plxslt_so.stat.exists
-- include: install_session_exec.yml
+- import_tasks: install_session_exec.yml
   when: not session_exec_so.stat.exists
 
-- include: plpython_imports.yml
+- import_tasks: plpython_imports.yml

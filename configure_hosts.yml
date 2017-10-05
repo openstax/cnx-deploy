@@ -1,7 +1,7 @@
 ---
 # Configure /etc/hosts file for development.
 
-- include: pretask.yml
+- import_playbook: pretask.yml
 
 - name: "configure /etc/hosts file"
   hosts:

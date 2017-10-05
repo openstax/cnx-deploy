@@ -13,7 +13,7 @@
   hosts: nfs
   become: yes
   tasks:
-    - include: tasks/connect_nfs.yml
+    - import_tasks: tasks/connect_nfs.yml
     - name: install nfs-kernel-server
       apt:
         name: nfs-kernel-server

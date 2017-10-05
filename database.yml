@@ -22,7 +22,7 @@
   hosts:
     - database
   tasks:
-    - include: tasks/create_db_user.yml
+    - import_tasks: tasks/create_db_user.yml
       vars:
         db_user: "{{ archive_db_user }}"
         db_password: "{{ archive_db_password }}"
@@ -34,25 +34,25 @@
         #       This is to be correct in cnx-db and db-migrator.
         #       In the mean time use xxx_archive_db_user_role_attr_flags.
         role_attr_flags: "{{ xxx_archive_db_user_role_attr_flags|default('CREATEDB,NOSUPERUSER') }}"
-    - include: tasks/create_db.yml
+    - import_tasks: tasks/create_db.yml
       vars:
         db_owner: "{{ archive_db_user }}"
         db_name: "{{ archive_db_name }}"
-    - include: tasks/create_db_user.yml
+    - import_tasks: tasks/create_db_user.yml
       when: authoring_db_user is defined
       vars:
         db_user: "{{ authoring_db_user }}"
         db_password: "{{ authoring_db_password }}"
-    - include: tasks/create_db_user.yml
+    - import_tasks: tasks/create_db_user.yml
       vars:
         db_user: "backups"
         role_attr_flags: ""
-    - include: tasks/create_db.yml
+    - import_tasks: tasks/create_db.yml
       when: authoring_db_user is defined
       vars:
         db_owner: "{{ authoring_db_user }}"
         db_name: "{{ authoring_db_name }}"
-    - include: tasks/create_db_user.yml
+    - import_tasks: tasks/create_db_user.yml
       vars:
         db_user: "{{ replicator_db_user|default(default_replicator_db_user) }}"
         role_attr_flags: "replication"

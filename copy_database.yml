@@ -42,7 +42,7 @@
     dbmigrate_context_args: "{{ migration_contexts|default('--context cnx-publishing --context cnx-archive') }}"
     db_connection_string: "dbname={{ db_name }} user=postgres host=localhost port=5432"
   tasks:
-    - include: tasks/create_db.yml
+    - import_tasks: tasks/create_db.yml
       vars:
         db_owner: "postgres"
     - name: pipe database in
