@@ -67,7 +67,7 @@
     - iptables
     - firewall
 
-- include: update_versions.yml
+- import_playbook: update_versions.yml
 
 - name: "notify #cnx-stream of the deployment (end)"
   hosts: all

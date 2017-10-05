@@ -20,4 +20,4 @@
     - be
 
 - when: not_standalone is undefined
-  include: update_versions.yml
+  import_playbook: update_versions.yml
