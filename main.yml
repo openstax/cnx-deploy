@@ -27,13 +27,13 @@
 # Applications
 # +++
 
-- import_playbook: archive.yml
-- import_playbook: publishing.yml
+- import_playbook: archive.yml not_standalone=yes
+- import_playbook: publishing.yml not_standalone=yes
 - import_playbook: channel_processing.yml
 - import_playbook: publishing_worker.yml
 - import_playbook: authoring.yml
 
-- import_playbook: zope.yml
+- import_playbook: zope.yml not_standalone=yes
   tags:
     - zope
     - zeo
@@ -49,7 +49,7 @@
     - legacy_fe
     - fe
 
-- import_playbook: frontend.yml
+- import_playbook: frontend.yml not_standalone=yes
   tags:
     - nginx
     - varnish
@@ -66,6 +66,8 @@
   tags:
     - iptables
     - firewall
+
+- include: update_versions.yml
 
 - name: "notify #cnx-stream of the deployment (end)"
   hosts: all

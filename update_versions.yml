@@ -1,0 +1,116 @@
+---
+
+- name: get webview version
+  hosts: frontend
+  tasks:
+    - shell: cat /var/www/webview/rev.txt
+      register: webview_version
+
+- name: get archive versions
+  hosts: frontend
+  tasks:
+    - shell: /var/cnx/venvs/archive/bin/pip freeze | grep 'cnx-archive'
+      register: archive_version
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.archive|first }}"
+    - shell: /var/cnx/venvs/archive/bin/pip freeze
+      register: archive_full_versions
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.archive|first }}"
+
+- name: get publishing versions
+  hosts: frontend
+  tasks:
+    - shell: /var/cnx/venvs/publishing/bin/pip freeze | grep 'cnx-publishing'
+      register: publishing_version
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.publishing|first }}"
+    - shell: /var/cnx/venvs/publishing/bin/pip freeze
+      register: publishing_full_versions
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.publishing|first }}"
+
+- name: get legacy versions
+  hosts: frontend
+  tasks:
+    - shell: echo 'import pip; pip.main(["freeze"])' | /var/lib/cnx/cnx-buildout/bin/instance debug
+      register: legacy_full_versions
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.zope|first }}"
+
+- name: get cnx-deploy version
+  hosts: frontend
+  tasks:
+    - shell: git describe --tags
+      register: cnx_deploy_version
+      delegate_to: 127.0.0.1
+
+- name: update version.txt
+  hosts: frontend
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell:
+        cmd: |
+          date +'{"date": "%Y-%m-%d %H:%M:%S %Z",'>/var/www/webview/version.txt
+          cat >>/var/www/webview/version.txt <<EOF
+           "webview": "{{ webview_version.stdout }}",
+           "cnx-archive": "{{ archive_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+           "cnx-publishing": "{{ publishing_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+           "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
+          }
+          EOF
+      args:
+        executable: /bin/sh
+    - name: purge cached version.txt
+      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/version.txt'"
+
+- name: update python-version.txt
+  hosts: frontend
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell:
+        cmd: |
+          date +'# %Y-%m-%d %H:%M:%S %Z'>/var/www/webview/python-version.txt
+          cat >>/var/www/webview/python-version.txt <<EOF
+          # Archive full versions from {{ archive_full_versions.results.0.item }}:
+          {{ archive_full_versions.results.0.stdout }}
+
+          # Publishing full versions from {{ publishing_full_versions.results.0.item }}:
+          {{ publishing_full_versions.results.0.stdout }}
+
+          # Legacy full versions from {{ legacy_full_versions.results.0.item }}:
+          {% for line in legacy_full_versions.results.0.stdout_lines[:-2] %}
+          {{ line }}
+          {% endfor %}
+          EOF
+      args:
+        executable: /bin/sh
+    - name: purge cached python-version.txt
+      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/python-version.txt'"
+
+- name: update history.txt
+  hosts: frontend
+  become: yes
+  become_user: www-data
+  tasks:
+    - shell:
+        cmd: |
+          cat /var/www/webview/version.txt >/var/tmp/history.txt.tmp
+          echo ------------------------------- >>/var/tmp/history.txt.tmp
+          cat /var/www/webview/python-version.txt >>/var/tmp/history.txt.tmp
+          echo =============================== >>/var/tmp/history.txt.tmp
+          echo >>/var/tmp/history.txt.tmp
+          cat /var/tmp/history.txt.tmp /var/tmp/history.txt >/var/tmp/history.txt.new
+          mv /var/tmp/history.txt.new /var/tmp/history.txt
+          cp /var/tmp/history.txt /var/www/webview/history.txt
+      args:
+        executable: /bin/sh
+    - name: purge cached history.txt
+      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/history.txt'"
