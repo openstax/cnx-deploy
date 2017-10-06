@@ -29,3 +29,6 @@
 #    - webview
 #    - static_files
 #    - fe
+
+- when: not_standalone is undefined
+  include: update_versions.yml

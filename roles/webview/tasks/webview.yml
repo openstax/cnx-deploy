@@ -29,8 +29,6 @@
         dest: "{{ _install_location }}"
         owner: www-data
         group: www-data
-    - name: write version.txt
-      command: "echo '{{ webview_version }}' > {{ _install_location }}/version.txt"
     - name: link to /var/www/webview
       become: yes
       file:
