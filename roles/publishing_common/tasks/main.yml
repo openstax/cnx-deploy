@@ -101,6 +101,7 @@
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
   notify:
+    - list supervisor applications
     - restart publishing
     - restart publishing workers
     - restart channel processing
@@ -150,6 +151,7 @@
     - "etc/cnx/publishing/logging.yaml"
     - "etc/cnx/publishing/vars.sh"
   notify:
+    - list supervisor applications
     - restart publishing
     - restart publishing workers
     - restart channel processing
