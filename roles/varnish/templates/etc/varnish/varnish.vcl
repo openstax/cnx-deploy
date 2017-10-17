@@ -167,7 +167,7 @@ sub vcl_recv {
 
 {% endif %}
     # cnx rewrite archive
-    if (req.url ~ "^/a/") {
+    if (req.url ~ "^/a/" || req.url ~ "^/static/") {
         set req.backend_hint = publishing_cluster.backend(req.http.cookie);
         return (pass);
     }
