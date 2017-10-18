@@ -29,7 +29,7 @@ exercises_domain: exercises-staging.openstax.org
 
 # See group_vars/all.yml for defaults
 graylog_server: "{{ default_graylog_server }}"
-graylog_port: "{{ default_graylog_port }}"
+graylog_port: 5143
 
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
