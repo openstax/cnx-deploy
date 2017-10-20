@@ -1,5 +1,16 @@
 ---
 
+- name: collect info on frontend hosts
+  hosts:
+    - lead_frontend
+    - frontend
+    - legacy_frontend
+  # NOOP only to acquire IP address information about connected hosts,
+  # needed for rsyslog config
+  tasks: []
+  tags:
+    - collect-info
+
 - name: install archive
   hosts: archive
   roles:
