@@ -1,7 +1,7 @@
--e git+https://github.com/Connexions/cnx-query-grammar.git#egg=cnx-query-grammar
--e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
--e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
--e git+https://github.com/Connexions/cnx-authoring.git#egg=cnx-authoring
+-e git+https://github.com/Connexions/cnx-query-grammar.git@{{ cnx_query_grammar_version|default('HEAD') }}#egg=cnx-query-grammar
+-e git+https://github.com/Connexions/cnx-epub.git@{{ cnx_epub_version|default('HEAD') }}#egg=cnx-epub
+-e git+https://github.com/Connexions/openstax-accounts.git@{{ openstax_accounts_version|default('HEAD') }}#egg=openstax-accounts
+-e git+https://github.com/Connexions/cnx-authoring.git@{{ cnx_authoring_version|default('HEAD') }}#egg=cnx-authoring
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.3

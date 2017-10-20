@@ -82,7 +82,7 @@
 
 - name: copy over requirements.txt
   become: yes
-  copy:
+  template:
     src: "{{ inventory_dir }}/files/authoring-requirements.txt"
     dest: "/var/lib/cnx/authoring-requirements.txt"
     owner: www-data
