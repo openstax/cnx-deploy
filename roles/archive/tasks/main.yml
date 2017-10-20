@@ -152,14 +152,14 @@
     dest: "/etc/cron.weekly/count_archive_hits"
     mode: 0755
 
-- name: install archive instance restart cron script as workaround for unclosed connections
+- name: make sure archive restart cron job (as workaround for unclosed connections) is removed
   become: yes
-  copy:
-    src: "etc/cron.daily/archive-restart"
-    dest: "/etc/cron.daily/archive-restart"
-    owner: root
-    group: root
-    mode: 0750
+  file:
+    path: "/etc/{{ item }}/archive-restart"
+    state: absent
+  with_items:
+    - cron.daily
+    - cron.weekly
 
 # +++
 # Rsyslog Configuration
