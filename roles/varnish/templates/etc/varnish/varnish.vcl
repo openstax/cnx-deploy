@@ -107,6 +107,7 @@ backend {{ backend_name }} {
 acl purge {
     "localhost";
     "127.0.0.1";
+    "{{ frontend_domain }}";
     # TODO Include IP addresses of other serving hosts.
 }
 
