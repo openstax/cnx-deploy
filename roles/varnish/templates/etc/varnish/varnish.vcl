@@ -174,7 +174,7 @@ sub vcl_recv {
     }
 
     # cnx rewrite archive  - specials served from nginx statically
-    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.xml" || req.url ~ "^/robots.txt") {
+    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml" || req.url ~ "^/robots.txt") {
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing_cluster.backend(req.http.cookie);
             return (pass);
