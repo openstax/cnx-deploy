@@ -4,7 +4,7 @@
   hosts: frontend
   tasks:
     - shell: cat /var/www/webview/rev.txt
-      register: webview_version
+      register: webview_rev
 
 - name: get archive versions
   hosts: frontend
@@ -59,7 +59,7 @@
         cmd: |
           date +'{"date": "%Y-%m-%d %H:%M:%S %Z",'>/var/www/webview/version.txt
           cat >>/var/www/webview/version.txt <<EOF
-           "webview": "{{ webview_version.stdout }}",
+           "webview": "{{ webview_rev.stdout }}",
            "cnx-archive": "{{ archive_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
            "cnx-publishing": "{{ publishing_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
