@@ -17,6 +17,8 @@
   roles:
     - role: webview
       tags: webview
+    - role: robots_txt
+      tags: robots-txt
     - role: static_files
       tags: static-files
     - role: varnish

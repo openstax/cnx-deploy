@@ -1,0 +1,9 @@
+---
+# Add cnx robots.txt
+
+- name: Add robots.txt
+  become: yes
+  become_user: www-data
+  template:
+    src: var/www/webview/robots.txt
+    dest: /var/www/webview/robots.txt

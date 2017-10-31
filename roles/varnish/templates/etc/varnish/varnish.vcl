@@ -174,7 +174,7 @@ sub vcl_recv {
     }
 
     # cnx rewrite archive  - specials served from nginx statically
-    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml" || req.url ~ "^/robots.txt") {
+    if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
         if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing_cluster.backend(req.http.cookie);
             return (pass);
@@ -272,7 +272,7 @@ sub vcl_recv {
             set req.backend_hint = legacy_frontend;
         }
         // all webview
-        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish)") {
+        elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish|robots.txt)") {
             set req.backend_hint = webview;
 
             if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/users" || req.url ~ "@draft"){
