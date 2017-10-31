@@ -1,0 +1,11 @@
+Sitemap: https://{{ frontend_domain }}/sitemap_index.xml
+{% for user_agent in robots_txt.user_agents %}
+User-agent: {{ user_agent.name }}
+{% if user_agent.crawl_delay|default(None) %}
+Crawl-delay: {{ user_agent.crawl_delay }}
+{% endif %}
+{% for disallow in robots_txt.disallow_list %}
+Disallow: {{ disallow }}
+{% endfor %}
+
+{% endfor %}
