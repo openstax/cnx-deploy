@@ -12,7 +12,7 @@ cssselect==1.0.1
 db-migrator==1.0.2
 funcsigs==1.0.2
 Jinja2==2.9.6
-lxml==4.1.0
+lxml==4.1.1
 MarkupSafe==1.0
 openstax-accounts==1.0.0
 parsimonious==0.8.0
