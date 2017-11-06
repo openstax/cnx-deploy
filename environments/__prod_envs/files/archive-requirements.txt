@@ -7,7 +7,7 @@ cnx-query-grammar==0.2.2
 db-migrator==1.0.2
 funcsigs==1.0.2
 Jinja2==2.9.6
-lxml==4.1.0
+lxml==4.1.1
 MarkupSafe==1.0
 parsimonious==0.8.0
 Paste==2.0.3
