@@ -98,3 +98,4 @@
   become: yes
   pip:
     name: readline
+    extra_args: --index-url=https://pypi.python.org/simple/

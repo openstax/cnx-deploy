@@ -93,6 +93,7 @@
     version: 1.9.2
     virtualenv: "/var/cnx/venvs/cnx-buildout"
     virtualenv_python: python2
+    extra_args: --index-url=https://pypi.python.org/simple/
 
 - name: run buildout
   become: yes
@@ -102,7 +103,7 @@
 
 - name: install lxml 3.2.1
   become: yes
-  shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install lxml==3.2.1"
+  shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install --index-url=https://pypi.python.org/simple/ lxml==3.2.1"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
@@ -112,6 +113,7 @@
     name: "{{ item.name }}"
     version: "{{ item.version }}"
     executable: pip-2.4
+    extra_args: --index-url=https://pypi.python.org/simple/
   with_items:
     - name: python-memcached
       version: 1.48
