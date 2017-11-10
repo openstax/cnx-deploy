@@ -50,9 +50,9 @@ def run_deprecated_init():
 # /BBB
 
 
-def call(cmd):
+def call(cmd, env=None):
     """Call a commnd and return the returncode, stdout and stderr."""
-    proc = Popen(shlex.split(cmd), stderr=PIPE, stdout=PIPE)
+    proc = Popen(shlex.split(cmd), stderr=PIPE, stdout=PIPE, env=env)
     out, err = proc.communicate()
     return (proc.returncode, out, err,)
 
@@ -78,8 +78,13 @@ def run_cnxdb_cmd(subcmd, args, extra_args=''):
     `extra_args` is a string of other commandline arguments.
     """
     executable = os.path.join(EXECUTABLE_ENV, 'bin/cnx-db')
-    cmd = "{0} {1} -h {2.host} -p {2.port} -d {2.name} -U {2.user} {3}".format(executable, subcmd, args, extra_args)
-    retcode, out, err = call(cmd)
+    db_url = 'postgres://{}@{}:{}/{}'.format(
+        args.user, args.host, args.port, args.name)
+    db_super_url = 'postgres://postgres@{}:{}/{}'.format(
+        args.host, args.port, args.name)
+    cmd = ' '.join([executable, subcmd, extra_args])
+    retcode, out, err = call(cmd, env={'DB_URL': db_url,
+                                       'DB_SUPER_URL': db_super_url})
     if retcode > 0:
         print_issue(subcmd, out, err)
         sys.exit(1)
