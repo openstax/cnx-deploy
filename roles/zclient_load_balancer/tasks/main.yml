@@ -34,7 +34,7 @@
       {% for host in groups.zclient %}
       {% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
       {% for i in range(0, hostvars[host].zclient_count|default(1), 1) %}
-        server {{ host }}{{ i }} {{ ip_addr }}:{{ base_port + i }} check maxconn 4 rise 1
+        server {{ host }}{{ i }} {{ ip_addr }}:{{ base_port + i }} check inter 30s maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
 
@@ -45,7 +45,7 @@
       {% set host = item.host %}
       {# Note, legacy zope client ports increment by one hundred #}
       {% for i in range(0, item.count+1, 1) %}
-        server {{ host }}{{ i }} {{ ip_addr }}:8{{ '{0:0>3}'.format(100*i+80) }} check maxconn 4 rise 1
+        server {{ host }}{{ i }} {{ ip_addr }}:8{{ '{0:0>3}'.format(100*i+80) }} check inter 30s maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
       {# /FIXME phased-deploy #}
