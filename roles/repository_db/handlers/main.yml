@@ -7,6 +7,13 @@
   command: "/usr/local/bin/initialize-repository-db {{ archive_db_host }} {{ archive_db_port }} {{ archive_db_name }} {{ archive_db_user }}"
 
 - name: migrate repository database
+  environment:
+    # If PGHOST is not set, psql tries to look for cluster "main" which doesn't
+    # work:
+    #     $ psql -U postgres -l
+    #     Error: Invalid data directory
+    # This appears to be a problem after a postgresql-common update
+    PGHOST: "{{ archive_db_host }}"
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"
 
 
