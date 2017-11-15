@@ -64,6 +64,7 @@
     dest: "/var/lib/cnx/cnx-buildout"
     owner: no
     group: no
+    use_ssh_args: yes
   tags: buildout-copy
 
 - name: ensure proper ownership of buildout
