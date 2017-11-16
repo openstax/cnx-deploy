@@ -3,8 +3,24 @@
 # Note, the setup current **assumes** that the publishing and archive database
 # is the same database. There has been no reason to split these yet, so we won't.
 
-- name: initialize repository database
-  command: "/usr/local/bin/initialize-repository-db {{ archive_db_host }} {{ archive_db_port }} {{ archive_db_name }} {{ archive_db_user }}"
+- name: initialize repository database (cnx-db init)
+  environment:
+    DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+    DB_SUPER_URL: "postgresql://postgres@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+  command: "/var/cnx/venvs/publishing/bin/cnx-db init"
+  listen: initialize repository database
+
+- name: initialize repository database (cnx-db venv)
+  environment:
+    DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+    DB_SUPER_URL: "postgresql://postgres@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+  command: "/var/cnx/venvs/publishing/bin/cnx-db venv"
+  listen: initialize repository database
+
+- name: initialize repository database (dbmigrator init)
+  environment:
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-db init"
+  listen: initialize repository database
 
 - name: migrate repository database
   environment:
