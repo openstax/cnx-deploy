@@ -3,22 +3,45 @@
 # Note, the setup current **assumes** that the publishing and archive database
 # is the same database. There has been no reason to split these yet, so we won't.
 
+- name: initialize repository database (create superuser)
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    db: postgres
+    login_host: "{{ archive_db_host }}"
+    port: "{{ archive_db_port }}"
+    login_user: postgres
+    name: "super_{{ archive_db_user }}"
+    password: "{{ archive_db_password }}"
+    role_attr_flags: "SUPERUSER"
+  listen: initialize repository database
+
 - name: initialize repository database (cnx-db init)
   environment:
     DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
-    DB_SUPER_URL: "postgresql://postgres@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+    DB_SUPER_URL: "postgresql://super_{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
   command: "/var/cnx/venvs/publishing/bin/cnx-db init"
   listen: initialize repository database
 
 - name: initialize repository database (cnx-db venv)
   environment:
     DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
-    DB_SUPER_URL: "postgresql://postgres@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
+    DB_SUPER_URL: "postgresql://super_{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
   command: "/var/cnx/venvs/publishing/bin/cnx-db venv"
   listen: initialize repository database
 
-- name: initialize repository database (dbmigrator init)
+- name: initialize repository database (reassign owner)
   environment:
+    # If PGHOST is not set, psql tries to look for cluster "main" which doesn't
+    # work:
+    #     $ psql -U postgres -l
+    #     Error: Invalid data directory
+    # This appears to be a problem after a postgresql-common update
+    PGHOST: "{{ archive_db_host }}"
+  command: "psql -U postgres {{ archive_db_name }} -c 'REASSIGN OWNED BY super_{{ archive_db_user }} TO {{ archive_db_user }}; DROP USER super_{{ archive_db_user }};'"
+  listen: initialize repository database
+
+- name: initialize repository database (dbmigrator init)
   command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-db init"
   listen: initialize repository database
 
