@@ -6,7 +6,6 @@ archive_db_user: cnxarchive
 archive_db_password: cnxarchive
 archive_db_host: localhost
 archive_db_port: 5432
-xxx_archive_db_user_role_attr_flags: 'SUPERUSER'
 
 publishing_broker_user: cnxpublishing
 publishing_broker_password: cnxpublishing

@@ -26,14 +26,6 @@
       vars:
         db_user: "{{ archive_db_user }}"
         db_password: "{{ archive_db_password }}"
-        # FIXME (8-Mar-12017) db-role-perms:
-        #       New databases and migrations currently
-        #       require the user to have superuser privileges.
-        #       This is only required for database
-        #       initialization and migrations.
-        #       This is to be correct in cnx-db and db-migrator.
-        #       In the mean time use xxx_archive_db_user_role_attr_flags.
-        role_attr_flags: "{{ xxx_archive_db_user_role_attr_flags|default('CREATEDB,NOSUPERUSER') }}"
     - import_tasks: tasks/create_db.yml
       vars:
         db_owner: "{{ archive_db_user }}"
