@@ -1,14 +1,6 @@
 ---
 # Playbook for installing the HAProxy service for initial request consumption.
 
-- name: collect info on connected hosts
-  hosts:
-    - frontend
-    - legacy_frontend
-    - zope
-  # NOOP only to acquire IP address information about hosts.
-  tasks: []
-
 - name: generate a self-signed certificate
   hosts:
     - lead_frontend

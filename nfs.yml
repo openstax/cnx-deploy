@@ -4,11 +4,6 @@
 # Note: Changes to the NFS server do not automatically cause the service
 # to restart or reload.
 
-- name: collect info on nfs connected hosts
-  hosts: nfs_connected
-  # NOOP only to acquire IP address information about connected hosts.
-  tasks: []
-
 - name: install nfs server
   hosts: nfs
   become: yes
@@ -18,6 +13,12 @@
       apt:
         name: nfs-kernel-server
         state: present
+    - name: gather facts from nfs connected
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: yes
+      with_items:
+        - "{{ groups.nfs_connected }}"
     - name: configure nfs server
       template:
         src: etc/exports

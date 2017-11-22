@@ -46,6 +46,15 @@
 # Rsyslog Configuration
 # +++
 
+- name: gather facts from frontend
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.lead_frontend }}"
+    - "{{ groups.frontend }}"
+    - "{{ groups.legacy_frontend }}"
+
 - name: connect publishing log to rsyslog
   become: yes
   template:

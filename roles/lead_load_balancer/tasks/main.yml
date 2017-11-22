@@ -1,6 +1,15 @@
 ---
 # Configure HAProxy
 
+- name: gather facts from zope and frontend servers
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.zope }}"
+    - "{{ groups.lead_frontend }}"
+    - "{{ groups.frontend }}"
+
 - name: configure lead load balancer
   become: yes
   blockinfile:
