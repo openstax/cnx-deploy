@@ -1,6 +1,13 @@
 ---
 # Configure HAProxy
 
+- name: gather facts from zclients
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.zclient }}"
+
 - name: configure haproxy zcluster
   become: yes
   blockinfile:

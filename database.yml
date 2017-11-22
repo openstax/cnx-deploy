@@ -1,13 +1,6 @@
 ---
 # Playbook for managing the database and replicant.
 
-- name: collect info on database connected hosts
-  hosts:
-    - db_connected
-    - replicant
-  # NOOP only to acquire IP address information about connected hosts.
-  tasks: []
-
 - name: install postgres database
   hosts:
     - database

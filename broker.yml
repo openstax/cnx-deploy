@@ -1,10 +1,5 @@
 ---
 
-- name: collect info on broker connected hosts
-  hosts: broker_connected
-  # NOOP only to acquire IP address information about connected hosts.
-  tasks: []
-
 - name: install rabbitmq
   hosts: broker
   roles:

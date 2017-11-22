@@ -29,6 +29,14 @@
 # Configure
 # +++
 
+- name: gather facts from db_connected
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.db_connected }}"
+    - "{{ groups.replicant }}"
+
 - name: configure postgres role connection trust
   become: yes
   template:

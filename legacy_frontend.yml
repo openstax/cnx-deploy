@@ -1,12 +1,6 @@
 ---
 # Playbook for installing the haproxy service tier
 
-- name: collect info on zclients hosts
-  hosts:
-    - zclient
-  # NOOP only to acquire IP address information about hosts.
-  tasks: []
-
 - name: zcluster
   hosts:
     - legacy_frontend

@@ -30,6 +30,15 @@
 # Configure
 # +++
 
+- name: gather facts from legacy frontend, archive and publishing
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.legacy_frontend }}"
+    - "{{ groups.archive }}"
+    - "{{ groups.publishing }}"
+
 - name: configure varnish logic
   become: yes
   template:
