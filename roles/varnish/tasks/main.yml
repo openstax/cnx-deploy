@@ -35,9 +35,7 @@
   delegate_to: "{{ item }}"
   delegate_facts: yes
   with_items:
-    - "{{ groups.legacy_frontend }}"
-    - "{{ groups.archive }}"
-    - "{{ groups.publishing }}"
+    - "{{ groups.all }}"
 
 - name: configure varnish logic
   become: yes

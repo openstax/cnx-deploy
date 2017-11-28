@@ -108,7 +108,14 @@ acl purge {
     "localhost";
     "127.0.0.1";
     "{{ frontend_domain }}";
-    # TODO Include IP addresses of other serving hosts.
+{% set frontend_ips = groups.frontend|map('extract', hostvars, ['ansible_default_ipv4', 'address'])|list %}
+{% for host in groups.all %}
+{% if hostvars[host].ansible_default_ipv4.address not in frontend_ips %}
+{# we have to exclude the frontend ip address because otherwise
+   "curl -X PURGE https://cnx.org/" would work from any hosts #}
+    "{{ hostvars[host].ansible_default_ipv4.address }}";
+{% endif %}
+{% endfor %}
 }
 
 acl nocache {
