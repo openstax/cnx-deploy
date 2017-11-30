@@ -10,3 +10,7 @@ accounts.local.openstax.org
 [accounts:vars]
 email_api_key=instant-ramen
 root_prefix=
+
+[varnish_purge_allowed:children]
+zope
+publishing

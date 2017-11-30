@@ -93,3 +93,7 @@ pdf_gen
 zeo
 zclient
 pdf_gen
+
+[varnish_purge_allowed:children]
+zope
+publishing

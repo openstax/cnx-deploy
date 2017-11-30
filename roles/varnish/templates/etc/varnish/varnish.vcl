@@ -107,14 +107,8 @@ backend {{ backend_name }} {
 acl purge {
     "localhost";
     "127.0.0.1";
-    "{{ frontend_domain }}";
-{% set frontend_ips = groups.frontend|map('extract', hostvars, ['ansible_default_ipv4', 'address'])|list %}
-{% for host in groups.all %}
-{% if hostvars[host].ansible_default_ipv4.address not in frontend_ips %}
-{# we have to exclude the frontend ip address because otherwise
-   "curl -X PURGE https://cnx.org/" would work from any hosts #}
+{% for host in groups.varnish_purge_allowed %}
     "{{ hostvars[host].ansible_default_ipv4.address }}";
-{% endif %}
 {% endfor %}
 }
 
@@ -318,14 +312,24 @@ sub vcl_recv {
     }
     
     if (req.method == "PURGE") {
-        if (!client.ip ~ purge) {
+        # Change varnish to use `req.http.x-forwarded-for` instead of `client.ip`
+        # because `client.ip` has the IP address of haproxy (I think).
+        # `req.http-x-forwarded-for` sometimes has multiple IP addresses because
+        # of redirects within our servers, the first IP is what we want, so remove
+        # everything after ",".
+        if (!std.ip(regsub(req.http.x-forwarded-for, ",.*$", ""), "0.0.0.0") ~ purge) {
             return (synth(405, client.ip));
         }
         ban("req.url ~ " + req.url + "$");
         return (synth(200, "Ban added"));
     }
    if (req.method == "PURGE_REGEXP") {
-        if (!client.ip ~ purge) {
+        # Change varnish to use `req.http.x-forwarded-for` instead of `client.ip`
+        # because `client.ip` has the IP address of haproxy (I think).
+        # `req.http-x-forwarded-for` sometimes has multiple IP addresses because
+        # of redirects within our servers, the first IP is what we want, so remove
+        # everything after ",".
+        if (!std.ip(regsub(req.http.x-forwarded-for, ",.*$", ""), "0.0.0.0") ~ purge) {
             return (synth(405, "Not allowed."));
         }
         ban("req.url ~ " + req.url);
