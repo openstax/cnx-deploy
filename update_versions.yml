@@ -68,7 +68,7 @@
       args:
         executable: /bin/sh
     - name: purge cached version.txt
-      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/version.txt'"
+      command: "curl -X PURGE 'http://{{ frontend_domain }}/version.txt'"
 
 - name: update python-version.txt
   hosts: frontend
@@ -93,7 +93,7 @@
       args:
         executable: /bin/sh
     - name: purge cached python-version.txt
-      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/python-version.txt'"
+      command: "curl -X PURGE 'http://{{ frontend_domain }}/python-version.txt'"
 
 - name: update history.txt
   hosts: frontend
@@ -113,4 +113,4 @@
       args:
         executable: /bin/sh
     - name: purge cached history.txt
-      command: "curl -X PURGE 'http://{{ frontend_domain }}:{{ varnish_port }}/history.txt'"
+      command: "curl -X PURGE 'http://{{ frontend_domain }}/history.txt'"

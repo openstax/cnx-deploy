@@ -44,3 +44,7 @@ archive
 publishing
 authoring
 zclient
+
+[varnish_purge_allowed:children]
+zope
+publishing
