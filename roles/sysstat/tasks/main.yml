@@ -1,0 +1,15 @@
+---
+- name: apt install sysstat
+  become: yes
+  apt:
+    name: sysstat
+    state: installed
+
+- name: enable sysstat
+  become: yes
+  copy:
+    src: etc/default/sysstat
+    dest: /etc/default/sysstat
+    mode: 0644
+  notify:
+    - restart sysstat

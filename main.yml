@@ -67,6 +67,10 @@
     - iptables
     - firewall
 
+- import_playbook: sysstat.yml
+  tags:
+    - sysstat
+
 - import_playbook: update_versions.yml
 
 - name: "notify #cnx-stream of the deployment (end)"
