@@ -45,6 +45,13 @@
 # Configure
 # +++
 
+- name: gather facts from authoring
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.authoring }}"
+
 - name: configure webview settings.js
   become: yes
   template:
