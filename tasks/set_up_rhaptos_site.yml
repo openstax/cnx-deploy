@@ -4,3 +4,8 @@
   shell: "./bin/instance run scripts/set_up_localfs_for_pdfs.py {% for item in archive_exports_directories|default(default_archive_exports_directories) %}pdfs{{ loop.index }}:/var/www/{{ item }} {% endfor %}"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
+
+- name: set up rhaptos print host
+  shell: "echo -c \"app.plone.rhaptos_print._host = 'http://{{ frontend_domain }}'; import transaction; transaction.commit()\" | ./bin/instance debug"
+  args:
+    chdir: "/var/lib/cnx/cnx-buildout"
