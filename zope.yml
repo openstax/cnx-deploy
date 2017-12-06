@@ -16,9 +16,7 @@
   tasks:
     - import_tasks: tasks/create_rhaptos_site.yml
       run_once: yes
-    - import_tasks: tasks/set_up_localfs_folders.yml
-      run_once: yes
-    - import_tasks: tasks/set_up_rhaptos_print_host.yml
+    - import_tasks: tasks/set_up_rhaptos_site.yml
       run_once: yes
   tags:
     - zope
