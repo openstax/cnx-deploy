@@ -1,0 +1,29 @@
+---
+
+- name: run deferred migrations (output in /tmp/)
+  hosts: publishing
+  tasks:
+    - name: check if deferred migrations are running
+      shell: "pgrep -f run-deferred"
+      register: deferred_migrations
+      ignore_errors: yes
+
+    - name: remove deferred migrations output files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /tmp/deferred-migrations.out
+        - /tmp/deferred-migrations.err
+      become: yes
+      become_user: "{{ venvs_owner|default('www-data') }}"
+      when: deferred_migrations.rc == 1
+
+    - name: run deferred migrations
+      shell: "nohup /var/cnx/venvs/publishing/bin/dbmigrator --context=cnx-db --config /etc/cnx/archive/app.ini migrate --run-deferred  > /tmp/deferred-migrations.out 2>/tmp/deferred-migrations.err &"
+      args:
+        executable: "/bin/bash"
+      become: yes
+      become_user: "{{ venvs_owner|default('www-data') }}"
+      run_once: yes
+      when: deferred_migrations.rc == 1

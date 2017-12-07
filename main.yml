@@ -69,6 +69,8 @@
 
 - import_playbook: update_versions.yml
 
+- import_playbook: run_deferred_migrations.yml
+
 - name: "notify #cnx-stream of the deployment (end)"
   hosts: all
   vars:
