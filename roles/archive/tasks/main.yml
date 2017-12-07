@@ -96,6 +96,9 @@
   pip:
     requirements: "/var/lib/cnx/archive-requirements.txt"
     virtualenv: "/var/cnx/venvs/archive"
+
+- name: restart archive
+  command: "/bin/true"
   notify:
     - restart archive
 
