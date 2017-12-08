@@ -17,13 +17,21 @@
     - name: "db_user"
       prompt: "What database user should we use?"
       default: postgres
+  vars:
+    keep_filenames:
+      - "index.cnxml"
+      - "index.cnxml.html"
+      - "index_auto_generated.cnxml"
+      - "ruleset.css"
+      - "featured-cover.png"
+    keep_filename_str: "{{ keep_filenames|map('tojson')|join(',')|regex_replace('\"', \"'\") }}"
   tasks:
     - name: dump database without files
       shell: "nice -n {{ nice_priority }} pg_dump -U {{ db_user }} --exclude-table-data=files --exclude-table-data=module_files {{ db_name }} | gzip > cnxarchive_dump_without_files.sql.gz"
     - name: dump database files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
-      shell: "nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c \"copy ( SELECT fileid, md5, sha1, file, media_type FROM files WHERE fileid IN (SELECT fileid FROM module_files WHERE filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') ) ) TO STDOUT\" | gzip > cnxarchive_index_files.txt.gz"
+      shell: "nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c \"copy ( SELECT fileid, md5, sha1, file, media_type FROM files WHERE fileid IN (SELECT fileid FROM module_files WHERE filename IN ({{ keep_filename_str }}) ) ) TO STDOUT\" | gzip > cnxarchive_index_files.txt.gz"
     - name: dump database files table for other files
-      shell: "nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c \"copy ( SELECT fileid, md5, sha1, 'dummy file', media_type FROM files WHERE fileid NOT IN (SELECT fileid FROM module_files WHERE filename IN ('index.cnxml', 'index.cnxml.html', 'index_auto_generated.cnxml') ) ) TO STDOUT\" | gzip > cnxarchive_other_files.txt.gz"
+      shell: "nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c \"copy ( SELECT fileid, md5, sha1, 'dummy file', media_type FROM files WHERE fileid NOT IN (SELECT fileid FROM module_files WHERE filename IN ({{ keep_filename_str }}) ) ) TO STDOUT\" | gzip > cnxarchive_other_files.txt.gz"
 
     - name: dump database module files table for index.cnxml, index.cnxml.html, index_auto_generated.cnxml
       shell: "nice -n {{ nice_priority }} psql -U {{ db_user }} {{ db_name }} -c \"copy ( SELECT module_ident, fileid, filename FROM module_files ) TO STDOUT\" | gzip > cnxarchive_index_module_files.txt.gz"
