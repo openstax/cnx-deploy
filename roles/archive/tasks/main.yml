@@ -160,6 +160,7 @@
   with_items:
     - cron.daily
     - cron.weekly
+    - cron.hourly
 
 # +++
 # Rsyslog Configuration
