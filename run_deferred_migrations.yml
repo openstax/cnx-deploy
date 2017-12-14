@@ -4,7 +4,7 @@
   hosts: publishing
   tasks:
     - name: check if deferred migrations are running
-      shell: "pgrep -f run-deferred"
+      command: "pgrep -f run-deferred"
       register: deferred_migrations
       ignore_errors: yes
 
