@@ -1,0 +1,12 @@
+/var/log/cnx.log
+{
+    rotate 4
+    weekly
+    missingok
+    notifempty
+    compress
+    delaycompress
+    postrotate
+        invoke-rc.d rsyslog rotate > /dev/null
+    endscript
+}

@@ -1,0 +1,9 @@
+---
+
+- name: logrotate cnx.log
+  become: yes
+  copy:
+    src: etc/logrotate.d/cnx
+    dest: /etc/logrotate.d/cnx
+    mode: 0644
+  tags: logrotate-conf
