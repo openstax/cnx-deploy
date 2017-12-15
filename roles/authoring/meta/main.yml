@@ -6,3 +6,4 @@ dependencies:
   - memcached
   - supervisord
   - rsyslog
+  - logrotate
