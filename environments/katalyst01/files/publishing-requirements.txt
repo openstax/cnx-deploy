@@ -7,7 +7,7 @@ db-migrator==1.0.2
 
 -e git+https://github.com/Connexions/openstax-accounts.git#egg=openstax-accounts
 -e git+https://github.com/Connexions/cnx-publishing.git#egg=cnx-publishing
--e git+https://github.com/Connexions/cnx-recipes.git#egg=cnx-recipes
+-e git+https://github.com/katalysteducation/cnx-recipes.git#egg=cnx-recipes
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.3
