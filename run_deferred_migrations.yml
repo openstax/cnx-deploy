@@ -23,6 +23,13 @@
       shell: "nohup /var/cnx/venvs/publishing/bin/dbmigrator --context=cnx-db --config /etc/cnx/archive/app.ini migrate --run-deferred  > /tmp/deferred-migrations.out 2>/tmp/deferred-migrations.err &"
       args:
         executable: "/bin/bash"
+      environment:
+        # If PGHOST is not set, psql tries to look for cluster "main" which doesn't
+        # work:
+        #     $ psql -U postgres -l
+        #     Error: Invalid data directory
+        # This appears to be a problem after a postgresql-common update
+        PGHOST: "{{ archive_db_host }}"
       become: yes
       become_user: "{{ venvs_owner|default('www-data') }}"
       run_once: yes
