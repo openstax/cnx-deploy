@@ -9,6 +9,10 @@
       prompt: "Where is the database hosted?"
       private: no
       default: prod09.cnx.org
+    - name: "source_db_port"
+      prompt: "What port is the database listening on?"
+      private: no
+      default: 5432
     - name: "db_name"
       prompt: "What database are we pull from to dump onto this machine?"
       private: no
@@ -16,6 +20,7 @@
   tasks:
     - set_fact:
         source_db_host: "{{ source_db_host }}"
+        source_db_port: "{{ source_db_port }}"
         source_db_name: "{{ db_name }}"
         db_name: "{{ db_name }}_new"
 
@@ -46,7 +51,7 @@
       vars:
         db_owner: "postgres"
     - name: pipe database in
-      shell: "set -o pipefail && pg_dump -U postgres -h {{ source_db_host }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
+      shell: "set -o pipefail && pg_dump -U postgres -h {{ source_db_host }} -p {{ source_db_port }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
       args:
         executable: "/bin/bash"
     - name: migrate database
