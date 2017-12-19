@@ -48,6 +48,22 @@
         name: "post_publication:"
         state: stopped
 
+- name: stop publishing celery workers
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "publishing_worker:"
+        state: stopped
+
+- name: stop channel processing
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "channel_processing"
+        state: stopped
+
 - name: stop zclients
   hosts:
     - zclient
@@ -126,6 +142,22 @@
       when: post_publication_bin.stat.exists
       supervisorctl:
         name: "post_publication:"
+        state: started
+
+- name: start publishing celery workers
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "publishing_worker:"
+        state: started
+
+- name: start channel processing
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "channel_processing"
         state: started
 
 - name: start zclients
