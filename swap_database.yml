@@ -88,6 +88,8 @@
   hosts: database
   tasks:
     - name: rename via pgsql
+      become: yes
+      become_user: postgres
       shell: |
         psql -v ON_ERROR_STOP=1 --username postgres <<-" EOSQL"
         DROP DATABASE IF EXISTS {{ dest_db_name }};

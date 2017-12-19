@@ -51,6 +51,8 @@
       vars:
         db_owner: "postgres"
     - name: pipe database in
+      become: yes
+      become_user: postgres
       shell: "set -o pipefail && pg_dump -U postgres -h {{ source_db_host }} -p {{ source_db_port }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
       args:
         executable: "/bin/bash"
