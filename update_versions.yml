@@ -11,11 +11,13 @@
   tasks:
     - shell: /var/cnx/venvs/archive/bin/pip freeze | grep 'cnx-archive'
       register: archive_version
+      when: groups.archive
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.archive|first }}"
     - shell: /var/cnx/venvs/archive/bin/pip freeze
       register: archive_full_versions
+      when: groups.archive
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.archive|first }}"
@@ -25,11 +27,13 @@
   tasks:
     - shell: /var/cnx/venvs/publishing/bin/pip freeze | grep 'cnx-publishing'
       register: publishing_version
+      when: groups.publishing
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.publishing|first }}"
     - shell: /var/cnx/venvs/publishing/bin/pip freeze
       register: publishing_full_versions
+      when: groups.publishing
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.publishing|first }}"
@@ -39,6 +43,7 @@
   tasks:
     - shell: echo 'import pip; pip.main(["freeze"])' | /var/lib/cnx/cnx-buildout/bin/instance debug
       register: legacy_full_versions
+      when: groups.zope
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.zope|first }}"
@@ -60,8 +65,12 @@
           date +'{"date": "%Y-%m-%d %H:%M:%S %Z",'>/var/www/webview/version.txt
           cat >>/var/www/webview/version.txt <<EOF
            "webview": "{{ webview_rev.stdout }}",
+          {% if archive_version.results|default(False) %}
            "cnx-archive": "{{ archive_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+          {% endif %}
+          {% if publishing_version.results|default(False) %}
            "cnx-publishing": "{{ publishing_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+          {% endif %}
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
           }
           EOF
@@ -79,16 +88,22 @@
         cmd: |
           date +'# %Y-%m-%d %H:%M:%S %Z'>/var/www/webview/python-version.txt
           cat >>/var/www/webview/python-version.txt <<EOF
+          {% if archive_full_versions.results|default(False) %}
           # Archive full versions from {{ archive_full_versions.results.0.item }}:
           {{ archive_full_versions.results.0.stdout }}
+          {% endif %}
 
+          {% if publishing_full_versions.results|default(False) %}
           # Publishing full versions from {{ publishing_full_versions.results.0.item }}:
           {{ publishing_full_versions.results.0.stdout }}
+          {% endif %}
 
+          {% if legacy_full_versions.results|default(False) %}
           # Legacy full versions from {{ legacy_full_versions.results.0.item }}:
           {% for line in legacy_full_versions.results.0.stdout_lines[:-2] %}
           {{ line }}
           {% endfor %}
+          {% endif %}
           EOF
       args:
         executable: /bin/sh
