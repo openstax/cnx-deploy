@@ -24,6 +24,7 @@
       - "index_auto_generated.cnxml"
       - "ruleset.css"
       - "featured-cover.png"
+      - "collection.xml"
     keep_filename_str: "{{ keep_filenames|map('tojson')|join(',')|regex_replace('\"', \"'\") }}"
   tasks:
     - name: dump database without files
