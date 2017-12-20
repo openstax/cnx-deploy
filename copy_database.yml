@@ -56,6 +56,38 @@
       shell: "set -o pipefail && pg_dump -U postgres -h {{ source_db_host }} -p {{ source_db_port }} {{ source_db_name }} | psql -U postgres {{ db_name }} -f -"
       args:
         executable: "/bin/bash"
+    - name: change ownership of database
+      become: yes
+      become_user: postgres
+      shell: "psql -U postgres -d {{ db_name }} -c 'ALTER DATABASE {{ db_name }} OWNER TO {{ archive_db_user }};'"
+    - name: remove venv schema
+      become: yes
+      become_user: postgres
+      shell: "psql -U postgres -d {{ db_name }} -c 'DROP SCHEMA IF EXISTS venv CASCADE;'"
+
+- name: set up venv and migrate database
+  hosts: publishing
+  tasks:
+    - name: rerun cnx-db venv
+      become: yes
+      become_user: www-data
+      environment:
+        DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}"
+        DB_SUPER_URL: "postgresql://postgres:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}"
+      command: "/var/cnx/venvs/publishing/bin/cnx-db venv"
+    - name: change ownership of venv schema
+      become: yes
+      become_user: postgres
+      delegate_to: "{{ groups.database|first }}"
+      command: "psql -U postgres -d {{ db_name }} -c 'ALTER SCHEMA venv OWNER TO {{ archive_db_user }};'"
     - name: migrate database
-      debug:
-        msg: "Now run the database migration if needed: /var/cnx/venvs/{{ venv_environment|default('publishing') }}/bin/dbmigrator --db-connection-string \"{{ db_connection_string }}\" ... migrate"
+      become: yes
+      become_user: www-data
+      environment:
+        # If PGHOST is not set, psql tries to look for cluster "main" which doesn't
+        # work:
+        #     $ psql -U postgres -l
+        #     Error: Invalid data directory
+        # This appears to be a problem after a postgresql-common update
+        PGHOST: "{{ archive_db_host }}"
+      command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"
