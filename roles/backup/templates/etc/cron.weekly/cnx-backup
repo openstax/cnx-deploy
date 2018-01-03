@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Create a cnx database dump for backup
+
+DB_DUMP_BASE_NAME="/var/backups/cnx_dump"
+DB_DUMP_FILENAME=$DB_DUMP_BASE_NAME.$(date +%Y-%m-%d).sql.gz
+
+ARCHIVE_DB_HOST={{ archive_db_host }}
+ARCHIVE_DB_PORT={{ archive_db_port }}
+ARCHIVE_DB_USER={{ archive_db_user }}
+ARCHIVE_DB_NAME={{ archive_db_name }}
+
+# Install clean up code
+function cleanup {
+    bname=$(basename $DB_DUMP_BASE_NAME)
+    ls -1 -r $(dirname $DB_DUMP_BASE_NAME)/${bname/.*/}* | sed -n '4,$ p' | xargs rm -f
+}
+trap cleanup EXIT
+
+pg_dump -h "$ARCHIVE_DB_HOST" -p "$ARCHIVE_DB_PORT" -U "$ARCHIVE_DB_USER" \
+    "$ARCHIVE_DB_NAME" | gzip >"$DB_DUMP_FILENAME"

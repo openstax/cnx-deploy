@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Create a slim dump of the cnx production database so developers can use it
+# for development and testing
+
+# 0. Make sure this server can access the production database (with pg_dump or
+#    ssh)
+
+# Target databases settings
+SLIM_DUMP_DB_NAME=cnx_slim_dump
+SLIM_DUMP_FILENAME="/var/backups/$SLIM_DUMP_DB_NAME.$(date +%Y-%m-%d).sql.gz"
+
+# Source databases settings
+ARCHIVE_DB_HOST={{ archive_db_host }}
+ARCHIVE_DB_PORT={{ archive_db_port }}
+ARCHIVE_DB_USER={{ archive_db_user }}
+ARCHIVE_DB_NAME={{ archive_db_name }}
+
+# Only set SSH_USER if pg_dump cannot access the production database
+SSH_USER=
+
+# Install clean up code
+function cleanup {
+    # Only keep 3 copies of slim dump
+    bname=$(basename $SLIM_DUMP_FILENAME)
+    ls -1 -r $(dirname $SLIM_DUMP_FILENAME)/${bname/.*/}* | sed -n '4,$ p' | xargs rm -f
+    psql -U postgres -c "DROP DATABASE IF EXISTS $SLIM_DUMP_DB_NAME;"
+}
+trap cleanup EXIT
+
+# 1. Create a temporary database for the slim dump
+psql -U postgres <<EOF
+DROP DATABASE IF EXISTS $SLIM_DUMP_DB_NAME;
+CREATE DATABASE $SLIM_DUMP_DB_NAME;
+EOF
+
+# 2. Copy the production database (or a backup of)
+if [[ -z "$SSH_USER" ]]
+then
+    pg_dump -h "$ARCHIVE_DB_HOST" -p "$ARCHIVE_DB_PORT" -U "$ARCHIVE_DB_USER" \
+        "$ARCHIVE_DB_NAME" | psql -U postgres $SLIM_DUMP_DB_NAME
+else
+    ssh -l $SSH_USER $ARCHIVE_DB_HOST pg_dump -U "$ARCHIVE_DB_USER" \
+        "$ARCHIVE_DB_NAME" | psql -U postgres $SLIM_DUMP_DB_NAME
+fi
+
+# 3. Replace the resource files in cnx_slim_dump with dummy files except
+#    index.cnxml, index.cnxml.html, index_auto_generated.cnxml, ruleset.css,
+#    featured-cover.png
+psql -U postgres $SLIM_DUMP_DB_NAME <<EOF
+ALTER TABLE files DISABLE TRIGGER USER;
+
+UPDATE files SET file = 'dummy'
+    WHERE NOT EXISTS (
+        SELECT 1 FROM module_files
+        WHERE filename IN ('index.cnxml', 'index.cnxml.html',
+                           'index_auto_generated.cnxml',
+                           'ruleset.css', 'featured-cover.png',
+                           'collection.xml')
+          AND files.fileid = module_files.fileid);
+
+-- dummy 1x1.png file from https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png
+UPDATE files SET file = '\\x89504e470d0a1a0a0000000d494844520000000100000001010300000025db56ca00000003504c5445000000a77a3dda0000000174524e530040e6d8660000000a4944415408d76360000000020001e221bc330000000049454e44ae426082'
+    WHERE EXISTS (
+        SELECT 1 FROM module_files
+        WHERE filename = 'featured-cover.png'
+          AND files.fileid = module_files.fileid);
+
+ALTER TABLE files ENABLE TRIGGER USER;
+EOF
+
+# 4. Create a database dump file for download
+pg_dump -U postgres $SLIM_DUMP_DB_NAME | gzip > $SLIM_DUMP_FILENAME
