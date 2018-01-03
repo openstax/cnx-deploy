@@ -54,3 +54,12 @@
     - database
     - replication
     - be
+
+- name: set up database backup
+  hosts:
+    - backup
+  roles:
+    - backup
+  tags:
+    - database
+    - backup

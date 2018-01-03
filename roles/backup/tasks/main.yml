@@ -1,0 +1,16 @@
+---
+
+- name: set up weekly backup
+  become: yes
+  template:
+    src: etc/cron.weekly/cnx-backup
+    dest: /etc/cron.weekly/cnx-backup
+    mode: 0755
+
+- name: set up slim dumps
+  become: yes
+  when: slim_dumps|default(False)
+  template:
+    src: etc/cron.weekly/cnx-slim-dump
+    dest: /etc/cron.weekly/cnx-slim-dump
+    mode: 0755
