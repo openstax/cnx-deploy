@@ -37,6 +37,8 @@ legacy_staging
 [pdf_gen:children]
 legacy_staging
 
+[backup:children]
+
 # Groups of groups
 
 [db_connected:children]
@@ -44,6 +46,7 @@ archive
 publishing
 authoring
 zclient
+backup
 
 [varnish_purge_allowed:children]
 zope

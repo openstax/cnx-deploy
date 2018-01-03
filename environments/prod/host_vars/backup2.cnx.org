@@ -1,0 +1,4 @@
+---
+slim_dumps: yes
+# Point at the replicant:
+archive_db_host: prod10.cnx.org

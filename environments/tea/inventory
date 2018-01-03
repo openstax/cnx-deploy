@@ -55,6 +55,8 @@ tea00
 [pdf_gen:children]
 tea01
 
+[backup:children]
+
 # Groups of groups
 
 [broker_connected:children]
@@ -70,6 +72,7 @@ publishing_worker
 authoring
 zclient
 pdf_gen
+backup
 
 [nfs_connected:children]
 legacy_frontend
