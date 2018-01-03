@@ -37,6 +37,9 @@ prod-files00.cnx.org
 [prod_files01]
 prod-files01.cnx.org
 
+[backup2]
+backup2.cnx.org
+
 # Grouped Hosts
 
 [nfs:children]
@@ -87,6 +90,9 @@ prod05
 [pdf_gen:children]
 prod06
 
+[backup:children]
+backup2
+
 # Groups of groups
 
 [broker_connected:children]
@@ -102,6 +108,7 @@ publishing_worker
 authoring
 zclient
 pdf_gen
+backup
 
 [nfs_connected:children]
 archive

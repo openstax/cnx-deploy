@@ -52,6 +52,8 @@ zope.local.cnx.org
 [pdf_gen:children]
 zope.local.cnx.org
 
+[backup:children]
+
 # Groups of groups
 
 [broker_connected:children]
@@ -67,6 +69,7 @@ publishing_worker
 authoring
 zclient
 pdf_gen
+backup
 
 [nfs_connected:children]
 archive

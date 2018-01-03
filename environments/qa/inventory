@@ -50,6 +50,8 @@ qa00
 [pdf_gen:children]
 qa00
 
+[backup:children]
+
 # Groups of groups
 
 [broker_connected:children]
@@ -65,6 +67,7 @@ publishing_worker
 authoring
 zclient
 pdf_gen
+backup
 
 [nfs_connected:children]
 archive
