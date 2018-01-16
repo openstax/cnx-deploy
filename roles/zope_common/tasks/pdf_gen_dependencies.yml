@@ -120,7 +120,7 @@
 - name: download urw fonts
   become: yes
   get_url:
-    url: "http://svn.ghostscript.com/ghostscript/trunk/ghostpdl/urwfonts/{{ item }}"
+    url: "https://packages.cnx.org/fonts/{{ item }}"
     dest: "/usr/share/fonts/urw"
   with_items:
     - URWPalladioL-Bold.ttf
