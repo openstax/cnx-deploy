@@ -60,6 +60,19 @@
     - backup
   roles:
     - backup
+  tasks:
+    - import_tasks: tasks/create_db_user.yml
+      vars:
+        db_user: "{{ archive_db_user }}"
+        db_password: "{{ archive_db_password }}"
+    - import_tasks: tasks/create_db_user.yml
+      vars:
+        db_user: "backups"
+        role_attr_flags: ""
+    - import_tasks: tasks/create_db_user.yml
+      vars:
+        db_user: "{{ replicator_db_user|default(default_replicator_db_user) }}"
+        role_attr_flags: "replication"
   tags:
     - database
     - backup
