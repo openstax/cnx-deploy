@@ -37,9 +37,6 @@ staging-files00.cnx.org
 [staging_files01]
 staging-files01.cnx.org
 
-[backup2]
-backup2.cnx.org
-
 # Grouped Hosts
 
 [nfs:children]
