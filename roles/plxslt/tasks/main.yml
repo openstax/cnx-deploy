@@ -1,0 +1,13 @@
+---
+
+- name: lookup extensions location
+  command: "pg_config --pkglibdir"
+  register: _pg_pkglibdir
+
+- name: check for plxslt.so
+  stat:
+    path: "{{ _pg_pkglibdir.stdout }}/plxslt.so"
+  register: plxslt_so
+
+- import_tasks: install_plxslt.yml
+  when: not plxslt_so.stat.exists
