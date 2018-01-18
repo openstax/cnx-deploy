@@ -4,18 +4,11 @@
   command: "pg_config --pkglibdir"
   register: _pg_pkglibdir
 
-- name: check for plxslt.so
-  stat:
-    path: "{{ _pg_pkglibdir.stdout }}/plxslt.so"
-  register: plxslt_so
-
 - name: check for session_exec.so
   stat:
     path: "{{ _pg_pkglibdir.stdout }}/session_exec.so"
   register: session_exec_so
 
-- import_tasks: install_plxslt.yml
-  when: not plxslt_so.stat.exists
 - import_tasks: install_session_exec.yml
   when: not session_exec_so.stat.exists
 
