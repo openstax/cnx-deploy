@@ -2,7 +2,8 @@
 
 # Create a cnx database dump for backup
 
-DB_DUMP_BASE_NAME="/var/backups/cnx_dump"
+backup_dir=/var/backups
+DB_DUMP_BASE_NAME=cnx_dump
 
 ARCHIVE_DB_HOST={{ archive_db_host }}
 ARCHIVE_DB_PORT={{ archive_db_port }}
@@ -11,11 +12,11 @@ ARCHIVE_DB_NAME={{ archive_db_name }}
 
 # default to provided values, accept positional parameters to override
 # null or omitted trailing arguments are set to the defaults
-# example: ./scriptname cnx-tea-backup tea00.cnx.org
+# example: ./scriptname cnx_tea_backup tea00.cnx.org
 
 if [[ $@ ]]
 then
-    DB_DUMP_BASE_NAME=${/var/backups/1:-$DB_DUMP_BASE_NAME}
+    DB_DUMP_BASE_NAME=${1:-$DB_DUMP_BASE_NAME}
 
     ARCHIVE_DB_HOST=${2:-$ARCHIVE_DB_HOST}
     ARCHIVE_DB_PORT=${3:-$ARCHIVE_DB_PORT}
@@ -23,12 +24,11 @@ then
     ARCHIVE_DB_NAME=${5:-$ARCHIVE_DB_NAME}
 fi
 
-DB_DUMP_FILENAME=$DB_DUMP_BASE_NAME.$(date +%Y-%m-%d).sql.gz
+DB_DUMP_FILENAME=$backup_dir/$DB_DUMP_BASE_NAME.$(date +%Y-%m-%d).sql.gz
 
 # Install clean up code
 function cleanup {
-    bname=$(basename $DB_DUMP_BASE_NAME)
-    ls -1 -r $(dirname $DB_DUMP_BASE_NAME)/${bname/.*/}* | sed -n '4,$ p' | xargs rm -f
+    ls -1 -r "$backup_dir/$DB_DUMP_BASE_NAME"* | sed -n '4,$ p' | xargs rm -f
 }
 trap cleanup EXIT
 
