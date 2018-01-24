@@ -25,6 +25,8 @@
         source_db_port: "{{ source_db_port }}"
         source_db_name: "{{ db_name }}"
         db_name: "{{ db_name }}_new"
+  tags:
+    - db-details
 
 - name: disable replicant
   hosts: replicant
@@ -39,6 +41,8 @@
       file:
         path: /var/lib/postgresql/{{ postgres_version }}/main/
         state: absent
+  tags:
+    - db-disable-repl
 
 - name: transfer database
   hosts: database
@@ -66,6 +70,8 @@
       become: yes
       become_user: postgres
       shell: "psql -U postgres -d {{ db_name }} -c 'DROP SCHEMA IF EXISTS venv CASCADE;'"
+  tags:
+    - db-transfer
 
 - name: set up venv and migrate database
   hosts: publishing
@@ -93,3 +99,5 @@
         # This appears to be a problem after a postgresql-common update
         PGHOST: "{{ archive_db_host }}"
       command: "/var/cnx/venvs/publishing/bin/dbmigrator --db-connection-string='postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}' --config /etc/cnx/publishing/app.ini --context cnx-db migrate"
+  tags:
+    - db-migrate
