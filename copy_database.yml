@@ -3,7 +3,9 @@
 # This will dump the data into a new database, initialize db-migrator and migrate the data/schema.
 
 - name: get database details
-  hosts: database
+  hosts:
+    - database
+    - publishing
   vars_prompt:
     - name: "source_db_host"
       prompt: "Where is the database hosted?"
