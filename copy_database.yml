@@ -92,4 +92,4 @@
         #     Error: Invalid data directory
         # This appears to be a problem after a postgresql-common update
         PGHOST: "{{ archive_db_host }}"
-      command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/archive/app.ini --context cnx-db migrate"
+      command: "/var/cnx/venvs/publishing/bin/dbmigrator --db-connection-string='postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}' --config /etc/cnx/publishing/app.ini --context cnx-db migrate"
