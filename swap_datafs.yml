@@ -55,8 +55,6 @@
         chdir: "/var/lib/cnx/cnx-buildout"
     - name: update pdf_gen settings
       import_tasks: tasks/assign_pdf_gen_settings.yml
-    - name: set up localFS PDF folders
-      import_tasks: tasks/set_up_localfs_folders.yml
 
 - name: start zclient applications
   hosts: zclient
