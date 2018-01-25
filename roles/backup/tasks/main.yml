@@ -1,16 +1,33 @@
 ---
 
-- name: set up weekly backup
+- name: install backup script
   become: yes
   template:
-    src: etc/cron.weekly/cnx-backup
-    dest: /etc/cron.weekly/cnx-backup
+    src: usr/local/bin/cnx-backup
+    dest: /usr/local/bin/cnx-backup
+    mode: 0755
+
+- name: set up weekly backup
+  become: yes
+  file:
+      src: /usr/local/bin/cnx-backup
+      dest: /etc/cron.weekly/cnx-backup
+      state: link
+      force: yes
+
+- name: install slim dump script
+  become: yes
+  when: slim_dumps|default(False)
+  template:
+    src: usr/local/bin/cnx-slim-dump
+    dest: /usr/local/bin/cnx-slim-dump
     mode: 0755
 
 - name: set up slim dumps
   become: yes
   when: slim_dumps|default(False)
-  template:
-    src: etc/cron.weekly/cnx-slim-dump
-    dest: /etc/cron.weekly/cnx-slim-dump
-    mode: 0755
+  file:
+      src: /usr/local/bin/cnx-slim-dump
+      dest: /etc/cron.weekly/cnx-slim-dump
+      state: link
+      force: yes
