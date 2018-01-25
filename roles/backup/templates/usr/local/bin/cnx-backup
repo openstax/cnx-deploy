@@ -5,6 +5,8 @@
 backup_dir=/var/backups
 DB_DUMP_BASE_NAME=cnx_dump
 
+# defaults are set by an ansible playbook in cnx-deploy
+
 ARCHIVE_DB_HOST={{ archive_db_host }}
 ARCHIVE_DB_PORT={{ archive_db_port }}
 ARCHIVE_DB_USER={{ archive_db_user }}
