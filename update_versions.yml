@@ -55,6 +55,16 @@
       register: cnx_deploy_version
       delegate_to: 127.0.0.1
 
+- name: get oer.exports version
+  hosts: frontend
+  tasks:
+    - shell: echo 'print open("%s/version.txt" % app.plone.rhaptos_print.getEpubDir()).read(),' | /var/lib/cnx/cnx-buildout/bin/instance debug | head -1
+      register: oer_exports_version
+      when: groups.zope
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.zope|first }}"
+
 - name: update version.txt
   hosts: frontend
   become: yes
@@ -70,6 +80,9 @@
           {% endif %}
           {% if publishing_version.results|default(False) %}
            "cnx-publishing": "{{ publishing_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+          {% endif %}
+          {% if oer_exports_version.results|default(False) %}
+           "oer.exports": "{{ oer_exports_version.results.0.stdout }}",
           {% endif %}
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
           }
