@@ -27,7 +27,7 @@
   environment:
     DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
     DB_SUPER_URL: "postgresql://super_{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"
-  command: "/var/cnx/venvs/publishing/bin/cnx-db venv"
+  command: "/var/cnx/venvs/archive/bin/cnx-db venv"
   listen: initialize repository database
 
 - name: initialize repository database (reassign owner)
