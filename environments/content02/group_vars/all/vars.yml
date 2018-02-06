@@ -11,16 +11,6 @@ archive_db_port: 5432
 publishing_broker_user: cnxpublishing
 publishing_broker_password: cnxpublishing
 
-authoring_db_name: "{{ vault_authoring_db_name }}"
-authoring_db_user: "{{ vault_authoring_db_user }}"
-authoring_db_password: "{{ vault_authoring_db_password }}"
-authoring_db_host: "{{ _host_prefix }}.cnx.org"
-authoring_db_port: 5432
-
-# FIXME Not really yaml'ish to use space separated values...
-# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
-# 'hosts' is a space separated value containing hostnames or ip addresses
-# where a memcached instance is running.
 memcached_hosts: localhost
 
 varnish_port: 8990
