@@ -1,0 +1,9 @@
+---
+zabbix_agent_config_server: 52.27.240.129
+zabbix_agent_config_listen_ip: 0.0.0.0
+zabbix_agent_config_server_active: 127.0.0.1, 52.27.240.129
+zabbix_agent_config_hostname: "{{ ansible_nodename }}"
+zabbix_agent_config_start_agents: 3
+zabbix_agent_config_host_meta_data: ''
+zabbix_agent_user: zabbix
+zabbix_agent_group: zabbix
