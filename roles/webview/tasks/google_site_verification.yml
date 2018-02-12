@@ -1,28 +1,17 @@
 ---
-# Installs a Google Site verification file.
-
-- name: stat google site verification file
-  when: "google_site_verification_filename is defined"
-  local_action:
-    module: stat
-    path: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
-  register: google_site_verification_stat
-  # Fail when the filename is defined but the file does not exist.
-  # failed_when: "not google_site_verification_stat.stat.exists"
-  tags:
-    - google-verification
+# Installs Google Site verification file(s).
 
 - name: install google site verification file
   when:
-    - "google_site_verification_filename is defined"
-    - "google_site_verification_stat.stat.exists"
+    - "vault_google_site_verification_filenames is defined"
   become: yes
   copy:
-    src: "{{ inventory_dir }}/secrets/google/{{ google_site_verification_filename }}"
-    dest: "/var/www/webview/{{ google_site_verification_filename }}"
+    content: "google-site-verification: {{ item }}"
+    dest: "/var/www/webview/{{ item }}"
     owner: www-data
     group: www-data
     mode: 0744
   #when:
   tags:
     - google-verification
+  with_items: "{{ vault_google_site_verification_filenames }}"
