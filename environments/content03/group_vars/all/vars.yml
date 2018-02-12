@@ -43,6 +43,6 @@ nfs_server_for_files1: "{{ _host_prefix }}.cnx.org"
 nfs_server_for_files2: "{{ _host_prefix }}.cnx.org"
 nfs_server_for_specials: "{{ _host_prefix }}.cnx.org"
 
-webview_version: master
+webview_version: v0.24.0
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
