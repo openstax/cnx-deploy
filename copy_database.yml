@@ -82,7 +82,9 @@
       environment:
         DB_URL: "postgresql://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}"
         DB_SUPER_URL: "postgresql://postgres:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ db_name }}"
+      delegate_to: "{{ groups.database|first }}"
       command: "/var/cnx/venvs/archive/bin/cnx-db venv"
+
     - name: change ownership of venv schema
       become: yes
       become_user: postgres
