@@ -7,3 +7,5 @@
     src: var/www/webview/robots.txt
     dest: /var/www/webview/robots.txt
     owner: www-data
+  tags:
+    - robots_txt
