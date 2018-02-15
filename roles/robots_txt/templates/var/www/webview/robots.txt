@@ -1,4 +1,6 @@
-Sitemap: https://{{ frontend_domain }}/sitemap_index.xml
+{% if robots_txt.sitemap_name is defined %}
+Sitemap: https://{{ frontend_domain }}/{{ robots_txt.sitemap_name }}
+{% endif %}
 {% for user_agent in robots_txt.user_agents %}
 User-agent: {{ user_agent.name }}
 {% if user_agent.crawl_delay|default(None) %}

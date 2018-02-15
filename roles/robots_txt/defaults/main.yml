@@ -1,0 +1,6 @@
+---
+robots_txt:
+  user_agents:
+    - {name: '*'}
+  disallow_list:
+    - '/'

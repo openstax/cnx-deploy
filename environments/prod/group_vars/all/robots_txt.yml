@@ -1,5 +1,6 @@
 ---
 robots_txt:
+  sitemap_name: 'sitemap_index.xml'
   user_agents:
     - {name: 'ScoutJet', crawl_delay: 10}
     - {name: '*'}
