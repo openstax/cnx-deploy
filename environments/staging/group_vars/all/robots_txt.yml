@@ -1,0 +1,10 @@
+---
+robots_txt:
+  user_agents:
+    - {name: '*'}
+    - {name: 'ScoutJet', crawl_delay: 10}
+    - {name: 'Baiduspider', crawl_delay: 10}
+    - {name: 'BecomeBot', crawl_delay: 20}
+    - {name: 'Slurp', crawl_delay: 10}
+  disallow_list:
+    - /
