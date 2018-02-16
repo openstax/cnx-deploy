@@ -1,6 +1,6 @@
 argparse==1.4.0
 Beaker==1.9.0
-cnx-archive==3.2.0
+cnx-archive==3.3.0
 cnx-db==1.5.1
 cnx-easybake==1.0.0
 cnx-recipes==1.4.0
