@@ -5,6 +5,44 @@
    ----------------------
 
    - feature message
+v2.10.0
+-------
+  - robots.txt enviromental overrides
+  - dependent libarary updates
+
+v2.9.2
+------
+  - content0X remove authoring deploy playbook
+
+v2.9.1
+------
+  - contentXX servers moved to production class
+  - add oer.exports version to version.txt
+
+v2.9.0
+------
+  - hefty.heffalump v0.48.0
+
+v2.8.1
+------
+  - Hotfix - new authors can now submit collections again
+  - deployment fixes - removed restart chron job.
+
+v2.8.0
+------
+  - backup roles/slim dump
+  - improve plone site initalization
+  - katalyst01 environment
+  - devb environment
+  - improved versions.txt
+
+v2.7.0
+------
+  - run deferred migrations at deploy
+
+v2.6.1
+------
+  - db access bugfix
 
 v2.6.0
 ------
