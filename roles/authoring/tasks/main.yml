@@ -15,8 +15,6 @@
     state: present
   with_items:
     - build-essential
-    - libxml2-dev
-    - libxslt-dev
     - zlib1g-dev
 
 - name: install postgres client

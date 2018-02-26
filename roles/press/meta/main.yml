@@ -3,5 +3,6 @@
 dependencies:
   - _pgdg_repo
   - jre8
+  - libxml
   - python3
   - supervisord

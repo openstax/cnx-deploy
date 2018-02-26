@@ -14,9 +14,6 @@
     - libjpeg-dev
     - libpng-dev
     - build-essential
-    # lxml dependencies
-    - libxml2-dev
-    - libxslt1-dev
   tags: buildout-apt
 
 # +++
