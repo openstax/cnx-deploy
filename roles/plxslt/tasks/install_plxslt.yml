@@ -8,8 +8,6 @@
     state: present
   with_items:
     - build-essential
-    - libxml2-dev
-    - libxslt-dev
     # pkg-config is required for plxslt builds
     - pkg-config
     # unzip is needed for the source acquisition step

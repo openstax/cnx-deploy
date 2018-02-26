@@ -1,6 +1,7 @@
 ---
 
 dependencies:
+  - libxml
   - postgres
   - plxslt
   - python2

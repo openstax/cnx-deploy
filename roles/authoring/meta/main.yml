@@ -2,6 +2,7 @@
 
 dependencies:
   - _pgdg_repo
+  - libxml
   - python2
   - memcached
   - supervisord

@@ -14,8 +14,6 @@
     - build-essential
     - git
     - libpq-dev
-    - libxml2-dev
-    - libxslt-dev
     - zlib1g-dev
 
 - name: install postgres client
