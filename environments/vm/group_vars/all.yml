@@ -16,6 +16,12 @@ authoring_db_password: cnxauthoring
 authoring_db_host: localhost
 authoring_db_port: 5432
 
+press_db_name: "{{ archive_db_name }}",
+press_db_user: "{{ archive_db_user }}",
+press_db_password: "{{ archive_db_password }}",
+press_db_host: "{{ archive_db_host }}",
+press_db_port: "{{ archive_db_port }}"
+
 # FIXME Not really yaml'ish to use space separated values...
 # Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
 # 'hosts' is a space separated value containing hostnames or ip addresses
