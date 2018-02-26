@@ -1,0 +1,6 @@
+---
+
+dependencies:
+  - _pgdg_repo
+  - python3
+  - supervisord

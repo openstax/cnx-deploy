@@ -32,6 +32,7 @@
 - import_playbook: channel_processing.yml
 - import_playbook: publishing_worker.yml
 - import_playbook: authoring.yml
+- import_playbook: press.yml
 
 - import_playbook: zope.yml not_standalone=yes
   tags:
