@@ -17,3 +17,18 @@
   supervisorctl:
     name: pdf_gen
     state: restarted
+
+- name: Create tempCleaner.py script
+  template: 
+    src: opt/tempCleaner.py
+    dest: /opt/tempCleaner.py
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: Create tempCleaner daily cronjob
+  template: 
+    src: etc/cron.daily/tempCleaner
+    dest: /etc/cron.daily/tempCleaner
+    mode: 0755
+
