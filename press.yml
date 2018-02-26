@@ -1,0 +1,9 @@
+---
+
+- name: install press
+  hosts: press
+  roles:
+    - press
+  tags:
+    - press
+    - be

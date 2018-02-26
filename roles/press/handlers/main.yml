@@ -1,0 +1,13 @@
+---
+
+- name: list supervisor applications
+  become: yes
+  command: supervisorctl avail
+  register: supervisorctl_avail
+
+- name: restart press
+  become: yes
+  supervisorctl:
+    name: "press"
+    state: restarted
+  when: supervisorctl_avail.stdout.find('press') != -1
