@@ -40,6 +40,6 @@ for g in os.listdir(base):
     s = re.compile('stderr|stdout')
     if r.search(g):
         if s.search(g):
-            if os.stat(g).st_mtime < now - 14: # *86400:
+            if os.stat(g).st_mtime < now - 14*86400:
                 os.remove(g)
                 # print "### Delete: " + g
