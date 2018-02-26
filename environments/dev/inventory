@@ -69,6 +69,9 @@ dev03
 
 [backup:children]
 
+[press:children]
+dev00
+
 # Groups of groups
 
 [broker_connected:children]
@@ -85,12 +88,14 @@ authoring
 zclient
 pdf_gen
 backup
+press
 
 [nfs_connected:children]
 legacy_frontend
 frontend
 zclient
 pdf_gen
+press
 
 [zope:children]
 zeo
@@ -100,3 +105,4 @@ pdf_gen
 [varnish_purge_allowed:children]
 zope
 publishing
+press

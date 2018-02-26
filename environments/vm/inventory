@@ -54,6 +54,9 @@ zope.local.cnx.org
 
 [backup:children]
 
+[press:children]
+local.cnx.org
+
 # Groups of groups
 
 [broker_connected:children]
@@ -70,6 +73,7 @@ authoring
 zclient
 pdf_gen
 backup
+press
 
 [nfs_connected:children]
 archive
@@ -79,6 +83,7 @@ publishing_worker
 frontend
 zclient
 pdf_gen
+press
 
 [zope:children]
 zeo
@@ -88,3 +93,4 @@ pdf_gen
 [varnish_purge_allowed:children]
 zope
 publishing
+press
