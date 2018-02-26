@@ -2,5 +2,6 @@
 
 dependencies:
   - _pgdg_repo
+  - jre8
   - python24
   - dtd_files
