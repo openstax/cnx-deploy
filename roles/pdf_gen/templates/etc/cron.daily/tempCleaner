@@ -1,1 +1,1 @@
-sudo -u www-data /opt/tempCleaner.py
+sudo -u www-data /usr/local/bin/tempCleaner.py
