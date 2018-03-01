@@ -69,7 +69,7 @@ nfs_mounts:
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.24.0
+webview_version: v0.25.0
 
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
