@@ -50,7 +50,7 @@
 - name: create the venv
   become: yes
   become_user: www-data
-  command: "python3 -m venv /var/cnx/venvs/press"
+  command: "python3.6 -m venv /var/cnx/venvs/press"
 
 # +++
 # Install
