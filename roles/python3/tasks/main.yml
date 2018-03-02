@@ -1,11 +1,15 @@
 ---
 # Install Python 3.x
 
-- name: install python 3.x
+- name: add deadsnakes ppa
+  apt_repository:
+    repo: 'ppa:deadsnakes/ppa'
+
+- name: install python 3.6
   become: yes
   apt:
     name: "{{ item }}"
     state: present
   with_items:
-    - "python3-dev"
-    - "python3-venv"
+    - "python3.6-dev"
+    - "python3.6-venv"
