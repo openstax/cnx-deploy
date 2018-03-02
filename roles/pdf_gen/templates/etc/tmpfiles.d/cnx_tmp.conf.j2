@@ -1,0 +1,6 @@
+#Ansible Managed
+# Clean up everything in the /tmp directory that is 7 days old
+D /tmp 1777 root root 7d
+
+# Except some files that may help in future debugging
+x /tmp/colprint*
