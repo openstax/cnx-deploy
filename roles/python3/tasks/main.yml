@@ -2,6 +2,7 @@
 # Install Python 3.x
 
 - name: add deadsnakes ppa
+  become: yes
   apt_repository:
     repo: 'ppa:deadsnakes/ppa'
 
