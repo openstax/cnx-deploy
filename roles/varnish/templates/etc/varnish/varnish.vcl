@@ -176,15 +176,17 @@ sub vcl_recv {
 
     # cnx rewrite archive  - specials served from nginx statically
     if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
-        if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
+        
+        if (req.url  == "/robots.txt" || req.url ~ "^/specials") {
+            set req.backend_hint = static_files;
+            return (hash);
+        }
+
+        elsif ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing_cluster.backend(req.http.cookie);
             return (pass);
         }
 
-        elsif (req.url ~ "^/specials") {
-            set req.backend_hint = static_files;
-            return (hash);
-        }
         else {
 
         set req.backend_hint = archive_cluster.backend();
