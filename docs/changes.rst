@@ -5,6 +5,31 @@
    ----------------------
 
    - feature message
+
+v2.11.0
+-------
+
+  - DRY out webview version pin
+  - Fix missing become statement in python3 role
+  - Modify python3 role to use python 3.6
+  - Remove trailing ',' (comma) because Ansible's yaml parse chokes
+  - Update cnx-archive from 3.4.0 to 3.5.0
+  - Update cnx-archive from 3.4.0 to 3.5.0
+  - Update cnx-easybake from 1.0.0 to 1.1.0
+  - update webview for release v0.24.0
+  - Update rhaptos.cnxmlutils from 1.3.0 to 1.3.1
+  - Update rhaptos.cnxmlutils from 1.3.0 to 1.3.1
+  - Add Sentry DSN to the dev environment settings
+  - Configured Sentry for Press
+  - Update cnx-recipes from 1.4.0 to 1.5.0
+  - Add press to the dev and vm environments
+  - Refactor libxml dependency to its own role
+  - Refactor jre8 into a dependency role
+  - Add the Press application
+  - added fake google verification files for testing on staging
+  - Update cnx-archive from 3.3.0 to 3.4.0
+  - Update cnx-archive from 3.3.0 to 3.4.0
+
 v2.10.0
 -------
   - robots.txt enviromental overrides
