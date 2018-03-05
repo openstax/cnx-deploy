@@ -23,3 +23,9 @@ robots_txt:
     - /lens_add
     - /*/lens_view/*$
     - /content/*view_mode=statistics$
+
+archive_robots_txt:
+  user_agents:
+    - {name: '*'}
+  allow_list:
+    - /

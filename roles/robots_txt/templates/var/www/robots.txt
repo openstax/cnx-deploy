@@ -1,0 +1,20 @@
+{% if archive_robots_txt.sitemap_name is defined %}
+Sitemap: https://{{ frontend_domain }}/{{ robots_txt.sitemap_name }}
+{% endif %}
+{% for user_agent in archive_robots_txt.user_agents %}
+User-agent: {{ user_agent.name }}
+{% if user_agent.crawl_delay|default(None) %}
+Crawl-delay: {{ user_agent.crawl_delay }}
+{% endif %}
+{% if archive_robots_txt.disallow_list is defined %}
+{% for disallow in archive_robots_txt.disallow_list %}
+Disallow: {{ disallow }}
+{% endfor %}
+{% endif %}
+{% if archive_robots_txt.allow_list is defined %}
+{% for allow in archive_robots_txt.allow_list %}
+Allow: {{ allow }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}

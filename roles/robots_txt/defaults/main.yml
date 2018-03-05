@@ -4,3 +4,8 @@ robots_txt:
     - {name: '*'}
   disallow_list:
     - '/'
+archive_robots_txt:
+  user_agents:
+    - {name: '*'}
+  disallow_list:
+    - '/'
