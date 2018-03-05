@@ -1,11 +1,20 @@
 ---
 # Add cnx robots.txt
 
-- name: Add robots.txt
+- name: Add top level robots.txt
   become: yes
   template:
     src: var/www/webview/robots.txt
     dest: /var/www/webview/robots.txt
+    owner: www-data
+  tags:
+    - robots_txt
+
+- name: Add archive robots.txt
+  become: yes
+  template:
+    src: var/www/robots.txt
+    dest: /var/www/robots.txt
     owner: www-data
   tags:
     - robots_txt

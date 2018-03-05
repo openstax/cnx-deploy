@@ -8,3 +8,9 @@ robots_txt:
     - {name: 'Slurp', crawl_delay: 10}
   disallow_list:
     - /
+archive_robots_txt:
+  user_agents:
+    - {name: '*'}
+    - {name: 'ARCHIVE TESTING', crawl_delay: 10}
+  disallow_list:
+    - /
