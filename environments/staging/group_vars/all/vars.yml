@@ -69,8 +69,6 @@ nfs_mounts:
 
 nfs_connections: "{{ vault_nfs_connections }}"
 
-webview_version: v0.25.0
-
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
