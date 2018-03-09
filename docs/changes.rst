@@ -6,6 +6,10 @@
 
    - feature message
 
+v2.11.1
+-------
+  - New webview v0.25.2 w/ corrected canonical tag for content pages
+
 v2.11.0
 -------
 
