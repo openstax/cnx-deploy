@@ -140,6 +140,16 @@ sub vcl_init {
 {% endfor %}
 {% endfor %}
 
+    # Define the Press cluster
+    new press_cluster = directors.hash();
+{% for host in groups.press %}
+{% for i in range(0, hostvars[host].press_count|default(1), 1) %}
+{% set name = host.split('.')[0]|replace('-','_') %}
+{% set backend_name = '{}_press{}'.format(name, i) %}
+    press_cluster.add_backend({{ backend_name }}, 1.0);
+{% endfor %}
+{% endfor %}
+
 }
 
 sub vcl_recv {
@@ -158,6 +168,11 @@ sub vcl_recv {
     if (req.url ~ "^/ping") {
         set req.backend_hint = webview;
         return (pass);
+    }
+
+    if (req.url ~ "^/api/") {
+       set req.backend_hint = press_cluster.backend(req.http.cookie);
+       return (pass);
     }
 
 {% if accounts_stub|default(False) %}
