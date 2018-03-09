@@ -8,6 +8,7 @@ postgres_version: 9.4
 default_archive_base_port: 6500
 default_publishing_base_port: 6600
 default_authoring_base_port: 6400
+default_press_base_port: 6700
 default_zclient_base_port: 8280
 
 # See http://docs.ansible.com/ansible/postgresql_user_module.html
