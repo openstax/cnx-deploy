@@ -47,6 +47,7 @@
 {{ instance_ports(groups.zclient, zclient_base_port, default_zclient_base_port, hv.zclient_count) }}
 {{ instance_ports(groups.archive, archive_base_port, default_archive_base_port, hv.archive_count) }}
 {{ instance_ports(groups.publishing, publishing_base_port, default_publishing_base_port, hv.publishing_count) }}
+{{ instance_ports(groups.press, press_base_port, default_press_base_port, hv.press_count) }}
 
 {% if (inventory_hostname in groups.database or inventory_hostname in groups.replicant) -%}
     -A INPUT -p tcp --dport 5432 -m comment --comment "allowed Postgres client ports" -j  ACCEPT
