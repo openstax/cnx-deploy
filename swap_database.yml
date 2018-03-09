@@ -56,6 +56,14 @@
         name: "publishing_worker:"
         state: stopped
 
+- name: stop press
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "press:"
+        state: stopped
+
 - name: stop channel processing
   hosts: publishing
   tasks:
@@ -152,6 +160,14 @@
     - become: yes
       supervisorctl:
         name: "publishing_worker:"
+        state: started
+
+- name: start press
+  hosts: publishing
+  tasks:
+    - become: yes
+      supervisorctl:
+        name: "press:"
         state: started
 
 - name: start channel processing
