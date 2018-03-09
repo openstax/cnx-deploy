@@ -6,10 +6,23 @@
 
    - feature message
 
-v2.11.1
+v2.11.4
 -------
   - New webview v0.25.2 w/ corrected canonical tag for content pages
 
+v2.11.3
+-------
+  - RhaptosPrint 0.113
+
+v2.11.2
+-------
+  - archive robots.txt - allow
+
+v2.11.1
+-------
+  - RhaptosPrint 0.112
+
+>>>>>>> 208e8e9... webview-0.25.2
 v2.11.0
 -------
 
