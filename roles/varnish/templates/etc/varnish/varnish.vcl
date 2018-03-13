@@ -104,6 +104,28 @@ backend {{ backend_name }} {
 {% endfor %}
 {% endfor %}
 
+probe press_probe {
+    .url = "/ping";
+    .expected_response = 200;
+}
+
+{% set base_port = press_base_port|default(default_press_base_port) %}
+{% for host in groups.press %}
+{% for i in range(0, hostvars[host].press_count|default(1), 1) %}
+{% set ip_addr = hostvars[host].ansible_default_ipv4.address %}
+{% set name = host.split('.')[0]|replace('-','_') %}
+{% set backend_name = '{}_press{}'.format(name, i) %}
+backend {{ backend_name }} {
+.host = "{{ ip_addr }}";
+.port = "{{ base_port + i }}";
+.probe = press_probe;
+.first_byte_timeout = 600s;
+.between_bytes_timeout = 60s;
+}
+
+{% endfor %}
+{% endfor %}
+
 acl purge {
     "localhost";
     "127.0.0.1";
