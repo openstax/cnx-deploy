@@ -104,6 +104,8 @@ backend {{ backend_name }} {
 {% endfor %}
 {% endfor %}
 
+{# FIXME within an if condition because it's not production worthy yet #}
+{% if 'press' in groups and groups['press'] %}
 probe press_probe {
     .url = "/ping";
     .expected_response = 200;
@@ -125,6 +127,7 @@ backend {{ backend_name }} {
 
 {% endfor %}
 {% endfor %}
+{% endif %}
 
 acl purge {
     "localhost";
@@ -192,10 +195,12 @@ sub vcl_recv {
         return (pass);
     }
 
+{% if 'press' in groups and groups['press'] %}
     if (req.url ~ "^/api/") {
        set req.backend_hint = press_cluster.backend(req.http.cookie);
        return (pass);
     }
+{% endif %}
 
 {% if accounts_stub|default(False) %}
     # cnx rewrite stub login form
