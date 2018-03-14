@@ -57,6 +57,8 @@ tea01
 
 [backup:children]
 
+[press:children]
+
 # Groups of groups
 
 [broker_connected:children]

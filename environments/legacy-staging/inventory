@@ -39,6 +39,8 @@ legacy_staging
 
 [backup:children]
 
+[press:children]
+
 # Groups of groups
 
 [db_connected:children]

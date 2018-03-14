@@ -93,6 +93,8 @@ prod06
 [backup:children]
 backup2
 
+[press:children]
+
 # Groups of groups
 
 [broker_connected:children]
