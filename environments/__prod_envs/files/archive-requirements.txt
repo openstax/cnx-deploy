@@ -1,7 +1,7 @@
 argparse==1.4.0
 Beaker==1.9.0
 cnx-archive==3.5.0
-cnx-db==1.5.1
+cnx-db==1.6.0
 cnx-epub==0.13.0
 cnx-query-grammar==0.2.2
 db-migrator==1.1.0
