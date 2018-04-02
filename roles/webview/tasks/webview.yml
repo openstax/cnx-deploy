@@ -29,15 +29,18 @@
         dest: "{{ _install_location }}"
         owner: www-data
         group: www-data
-    - name: link to /var/www/webview
-      become: yes
-      file:
-        src: "{{ _install_location }}"
-        dest: "/var/www/webview"
-        state: link
-        owner: www-data
-      notify:
-        - restart nginx
+
+# To allow for webview version downgrades, the link creation is broken out of
+# the above block.
+- name: link to /var/www/webview
+  become: yes
+  file:
+    src: "{{ _install_location }}"
+    dest: "/var/www/webview"
+    state: link
+    owner: www-data
+  notify:
+    - restart nginx
 
 # TODO Cleanup old webview versions
 
