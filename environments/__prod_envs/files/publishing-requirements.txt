@@ -37,7 +37,7 @@ tzlocal==1.5.1
 venusian==1.1.0
 waitress==1.1.0
 webencodings==0.5.1
-WebOb==1.7.4
+WebOb==1.8.0
 wsgiref==0.1.2
 zope.deprecation==4.3.0
 zope.interface==4.4.3
