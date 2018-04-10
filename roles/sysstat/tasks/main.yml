@@ -3,7 +3,7 @@
   become: yes
   apt:
     name: sysstat
-    state: installed
+    state: present
 
 - name: enable sysstat
   become: yes

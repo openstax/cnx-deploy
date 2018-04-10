@@ -3,7 +3,7 @@
   become: yes
   apt:
     name: iptables
-    state: installed
+    state: present
 
 - name: iptables chain setup
   become: yes

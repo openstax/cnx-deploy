@@ -8,7 +8,7 @@
   ignore_errors: True
 
 - name: create empty temporary rhaptos database
-  when: rhaptos_site|failed
+  when: rhaptos_site is failed
   vars:
     db_name: rhaptos
     db_owner: "{{ archive_db_user }}"
@@ -17,19 +17,19 @@
   import_tasks: tasks/create_db.yml
 
 - name: create rhaptos site
-  when: rhaptos_site|failed
+  when: rhaptos_site is failed
   shell: "./bin/instance run scripts/create_rhaptos_site.py plone Portal postgres {{ archive_db_user }} rhaptos {{ archive_db_host }} {{ archive_db_port }}"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: update database connection string in rhaptos site
-  when: rhaptos_site|failed
+  when: rhaptos_site is failed
   shell: echo 'import transaction; app.plone.rhaptosDA.connection_string = "postgres://{{ archive_db_user }}:{{ archive_db_password }}@{{ archive_db_host }}:{{ archive_db_port }}/{{ archive_db_name }}"; transaction.commit()' | ./bin/instance debug
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: remove temporary rhaptos database
-  when: rhaptos_site|failed
+  when: rhaptos_site is failed
   postgresql_db:
     name: rhaptos
     login_host: "{{ archive_db_host }}"
@@ -37,7 +37,7 @@
     state: absent
 
 - name: assign pdf_gen settings
-  when: rhaptos_site|failed
+  when: rhaptos_site is failed
   import_tasks: tasks/assign_pdf_gen_settings.yml
   tags:
     - zope

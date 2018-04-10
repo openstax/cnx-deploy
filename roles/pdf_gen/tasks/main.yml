@@ -12,7 +12,7 @@
     - reload supervisord
 
 - name: restart pdf_gen
-  when: not supervisor_conf_for_pdf_gen|changed
+  when: not supervisor_conf_for_pdf_gen is changed
   become: yes
   supervisorctl:
     name: pdf_gen
