@@ -28,7 +28,7 @@
         mode: 0644
       register: nfs_configuration
     - name: reload nfs
-      when: nfs_configuration|changed
+      when: nfs_configuration is changed
       service:
         name: nfs-kernel-server
         state: reloaded

@@ -26,7 +26,7 @@
 # Because the default site uses port 80, we need to free it before the
 # handlers otherwise varnish won't be able to bind to port 80 on provisioning.
 - name: restart nginx
-  when: disabled_default_site|changed
+  when: disabled_default_site is changed
   become: yes
   service:
     name: nginx

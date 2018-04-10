@@ -16,7 +16,7 @@
     - reload supervisord
 
 - name: restart zeo
-  when: not supervisor_conf_for_zeo|changed
+  when: not supervisor_conf_for_zeo is changed
   become: yes
   supervisorctl:
     name: zeo
