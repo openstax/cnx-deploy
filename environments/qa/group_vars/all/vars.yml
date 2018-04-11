@@ -43,9 +43,11 @@ exercises_domain: exercises-qa.openstax.org
 graylog_server: "{{ default_graylog_server }}"
 graylog_port: 5142
 
+accounts_disable_verify_ssl: yes
+accounts_stub: yes
+
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
-accounts_disable_verify_ssl: no
 
 exercises_token: "{{ vault_exercises_token }}"
 

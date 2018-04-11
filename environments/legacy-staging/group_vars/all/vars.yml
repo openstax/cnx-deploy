@@ -47,3 +47,7 @@ zope_domain: legacy.cnx.org
 arclishing_domain: archive.cnx.org
 frontend_domain: cnx.org
 accounts_domain: accounts-qa1.openstax.org
+
+accounts_disable_verify_ssl: yes
+accounts_stub: yes
+
