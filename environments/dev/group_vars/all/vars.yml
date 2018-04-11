@@ -48,9 +48,11 @@ accounts_domain: accounts-qa1.openstax.org
 tutor_domain: tutor-dev.openstax.org
 exercises_domain: exercises-dev.openstax.org
 
+accounts_disable_verify_ssl: yes
+accounts_stub: yes
+
 accounts_consumer_token: "{{ vault_accounts_consumer_token }}"
 accounts_consumer_secret: "{{ vault_accounts_consumer_secret }}"
-accounts_disable_verify_ssl: no
 
 exercises_token: "{{ vault_exercises_token }}"
 
