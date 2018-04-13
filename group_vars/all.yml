@@ -69,3 +69,7 @@ default_nfs_mounts:
   - name: /var/www/varnish_logs
     src: /var/www/varnish_logs
     server: "{{ nfs_server_for_varnish_logs|default('') }}"
+
+# Used in combination with ``accounts_stub=true`` to provide a set of user
+# names and passwords
+accounts_stub_users: "{{ vault_accounts_stub_users }}"
