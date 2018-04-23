@@ -17,7 +17,8 @@
 
 - name: install slim dump script
   become: yes
-  when: slim_dumps is default(False)
+  when:
+    - slim_dumps | default(False)
   template:
     src: usr/local/bin/cnx-slim-dump
     dest: /usr/local/bin/cnx-slim-dump
@@ -25,7 +26,8 @@
 
 - name: set up slim dumps
   become: yes
-  when: slim_dumps is default(False)
+  when:
+    - slim_dumps | default(False)
   file:
       src: /usr/local/bin/cnx-slim-dump
       dest: /etc/cron.weekly/cnx-slim-dump
