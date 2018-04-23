@@ -20,7 +20,7 @@
 - name: add cnx apt repo
   become: yes
   apt_repository:
-    repo: "deb http://packages.cnx.org/ deb/"
+    repo: "deb [ trusted=yes ] http://packages.cnx.org/ deb/"
     state: present
   tags:
     - install-cnxml-dtd-pkgs
