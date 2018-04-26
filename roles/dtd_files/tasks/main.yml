@@ -39,7 +39,8 @@
     state: present
     force: yes
   with_items:
-    - connexions-cnxml-any
+    - connexions-cnxml-0.8
+    - connexions-cnxml-0.7
     - connexions-mdml-0.5
     - connexions-memcases-xml
     - connexions-qml-1.0
