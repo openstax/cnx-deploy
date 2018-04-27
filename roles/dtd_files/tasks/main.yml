@@ -17,6 +17,14 @@
   tags:
     - install-cnxml-dtd-pkgs
 
+- name: remove old untrusted cnx apt repo
+  become: yes
+  apt_repository: 
+    repo: "deb http://packages.cnx.org/ deb/"
+    state: absent
+  tags: 
+    - install-cnxml-dtd-pkgs 
+
 - name: add cnx apt repo
   become: yes
   apt_repository:
