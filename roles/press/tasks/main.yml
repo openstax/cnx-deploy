@@ -95,6 +95,14 @@
     - "main.txt"
     - "deploy.txt"
 
+# This is currently only a cnx-deploy deployment dependency.
+- name: install deployment dependencies
+  become: yes
+  become_user: www-data
+  pip:
+    virtualenv: "/var/cnx/venvs/press"
+    name: "waitress"
+
 # +++
 # Configure
 # +++
