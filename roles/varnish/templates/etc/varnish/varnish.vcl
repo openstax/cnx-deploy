@@ -198,7 +198,9 @@ sub vcl_recv {
 {% if 'press' in groups and groups['press'] %}
     if (req.url ~ "^/api/") {
        set req.backend_hint = press_cluster.backend(req.http.cookie);
-       return (pass);
+       # let the client talk directly to Press,
+       # because litezip publishing payloads are huge.
+       return (pipe);
     }
 {% endif %}
 
