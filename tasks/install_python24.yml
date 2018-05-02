@@ -57,9 +57,9 @@
     path: Python-2.4.6
     state: absent
 
-- name: download setuptools
-  get_url:
-    url: https://raw.githubusercontent.com/pypa/setuptools/archive/bootstrap-py24/ez_setup.py
+- name: copy setuptools
+  file:
+    src: homes/administrator/ez_setup.py
     dest: .
 
 - name: install setuptools
