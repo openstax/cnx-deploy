@@ -16,7 +16,7 @@ cssselect==1.0.3
 -e git+https://github.com/Connexions/cssselect2.git@129462767fe0161a2441f4aa341521c636e1a9e1#egg=cssselect2
 db-migrator==1.1.0
 funcsigs==1.0.2
-hupper==1.1
+hupper==1.2
 idna==2.6
 Jinja2==2.10
 kombu==4.1.0
