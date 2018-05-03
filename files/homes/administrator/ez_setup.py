@@ -258,7 +258,6 @@ def get_best_downloader():
     downloaders = [
         download_file_powershell,
         download_file_wget,  # Favor wget, to get "follow redirects" by default
-        download_file_curl,
         download_file_insecure,
     ]
 
