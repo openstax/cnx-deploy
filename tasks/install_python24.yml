@@ -58,7 +58,7 @@
     state: absent
 
 - name: copy setuptools
-  file:
+  copy:
     # original downloaded from https://raw.githubusercontent.com/pypa/setuptools/archive/bootstrap-py24/ez_setup.py
     src: homes/administrator/ez_setup.py
     dest: .
