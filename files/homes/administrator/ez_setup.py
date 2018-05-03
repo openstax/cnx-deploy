@@ -1,4 +1,5 @@
 #!python
+# Original downloaded from https://raw.githubusercontent.com/pypa/setuptools/archive/bootstrap-py24/ez_setup.py
 """Bootstrap setuptools installation
 
 If you want to use setuptools in your package's setup.py, just include this
@@ -256,7 +257,7 @@ download_file_insecure.viable = lambda: True
 def get_best_downloader():
     downloaders = [
         download_file_powershell,
-        download_file_wget,
+        download_file_wget,  # Favor wget, to get "follow redirects" by default
         download_file_curl,
         download_file_insecure,
     ]
