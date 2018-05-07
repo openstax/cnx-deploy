@@ -53,6 +53,7 @@ qa00
 [backup:children]
 
 [press:children]
+qa00
 
 # Groups of groups
 
@@ -70,6 +71,7 @@ authoring
 zclient
 pdf_gen
 backup
+press
 
 [nfs_connected:children]
 archive
@@ -78,6 +80,7 @@ legacy_frontend
 frontend
 zclient
 pdf_gen
+press
 
 [zope:children]
 zeo
@@ -87,3 +90,5 @@ pdf_gen
 [varnish_purge_allowed:children]
 zope
 publishing
+press
+
