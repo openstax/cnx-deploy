@@ -17,6 +17,8 @@ press_db_password: "{{ archive_db_password }}"
 press_db_host: "{{ archive_db_host }}"
 press_db_port: "{{ archive_db_port }}"
 
+sentry_dsn: "{{ vault_sentry_dsn }}"
+
 memcached_hosts: localhost
 
 varnish_port: 8990
