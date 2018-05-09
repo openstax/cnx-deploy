@@ -11,6 +11,12 @@ archive_db_port: 5432
 publishing_broker_user: cnxpublishing
 publishing_broker_password: cnxpublishing
 
+press_db_name: "{{ archive_db_name }}"
+press_db_user: "{{ archive_db_user }}"
+press_db_password: "{{ archive_db_password }}"
+press_db_host: "{{ archive_db_host }}"
+press_db_port: "{{ archive_db_port }}"
+
 memcached_hosts: localhost
 
 varnish_port: 8990
