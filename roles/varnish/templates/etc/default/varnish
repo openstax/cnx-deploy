@@ -7,4 +7,5 @@ DAEMON_OPTS="-j unix,user=vcache -F \
              -f /etc/varnish/varnish.vcl \
              -S /etc/varnish/secret \
              -s malloc,{{ varnish.malloc }} \
+             -p pipe_timeout=1200 \
              -p vcc_allow_inline_c=on"
