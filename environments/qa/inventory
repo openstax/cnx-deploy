@@ -30,7 +30,6 @@ qa00
 qa00
 
 [authoring:children]
-qa00
 
 [lead_frontend:children]
 qa00
@@ -67,7 +66,6 @@ archive
 publishing
 channel_processing
 publishing_worker
-authoring
 zclient
 pdf_gen
 backup

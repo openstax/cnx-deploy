@@ -30,7 +30,6 @@ devb
 devb
 
 [authoring:children]
-devb
 
 [lead_frontend:children]
 devb
@@ -67,7 +66,6 @@ archive
 publishing
 channel_processing
 publishing_worker
-authoring
 zclient
 pdf_gen
 backup
