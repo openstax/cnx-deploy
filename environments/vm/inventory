@@ -32,7 +32,6 @@ local.cnx.org
 local.cnx.org
 
 [authoring:children]
-local.cnx.org
 
 [lead_frontend:children]
 local.cnx.org
@@ -69,7 +68,6 @@ archive
 publishing
 channel_processing
 publishing_worker
-authoring
 zclient
 pdf_gen
 backup
