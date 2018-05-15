@@ -22,7 +22,7 @@
     version: "HEAD"
     force: yes
   register: git_result
-  until: git_result|success
+  until: git_result is success
   retries: 5
   delay: 30
 

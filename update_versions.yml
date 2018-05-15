@@ -91,6 +91,8 @@
         executable: /bin/sh
     - name: purge cached version.txt
       command: "curl -X PURGE 'http://{{ frontend_domain }}/version.txt'"
+      args:
+        warn: no
 
 - name: update python-version.txt
   hosts: frontend
