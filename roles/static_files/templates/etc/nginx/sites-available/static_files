@@ -5,7 +5,7 @@ map $http_origin $cors_header {
 
 server {
     root /var/www;
-    listen   8080; 
+    listen   8080;
     listen   [::]:8080 default ipv6only=on;  ## listen for ipv6
     port_in_redirect off;
 
@@ -18,6 +18,6 @@ server {
         set $fname $1;
         add_header Content-Disposition "attachment; filename=$fname";
         try_files  {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} $uri  =404;
-    }   
+    }
 
 }

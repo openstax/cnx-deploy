@@ -66,7 +66,7 @@ In this example the template file is put in `./templates/etc/postgresql/_/main/p
 
 ### Global Playbooks
 
-The ansible best practice this project follows is to use the main/site playbook with supporting playbooks organized by host group (e.g. database and nfs). 
+The ansible best practice this project follows is to use the main/site playbook with supporting playbooks organized by host group (e.g. database and nfs).
 
 The exception to this rule is for specific operations or usecases that support the main playbook or have specific environmental needs. Where possible it is recommended that the environment's inventory or tags be used to limit and narrow the scope of an existing playbook to fill the usecase.
 

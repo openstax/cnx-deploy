@@ -124,7 +124,7 @@
     - archive
   tasks:
     - include: tasks/install_supervisor.yml
-      
+
 - name: install archive
   hosts: archive
   vars:

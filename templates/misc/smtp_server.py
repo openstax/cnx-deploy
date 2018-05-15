@@ -16,22 +16,22 @@ EMAIL_API_KEY = '{{ email_api_key }}'
 
 def _get_content(mail):
     text = ''
-    html = ''              
-    if mail.is_multipart():            
-        for part in mail.get_payload():                           
+    html = ''
+    if mail.is_multipart():
+        for part in mail.get_payload():
             if part.get_content_type() == 'multipart/alternative':
                 return self._get_content(part)
-                                                  
+
             if part.get_content_charset() is None:
-                continue                        
+                continue
             charset = part.get_content_charset()
-                                                                      
+
             _text = part.get_payload(decode=True).decode(str(charset))
             if part.get_content_type() == 'text/plain':
-                text = _text                            
+                text = _text
             elif part.get_content_type() == 'text/html':
                 html = _text
-    else:                                           
+    else:
         text = mail.get_payload(decode=True).decode(
             str(mail.get_content_charset()))
     return text, html
