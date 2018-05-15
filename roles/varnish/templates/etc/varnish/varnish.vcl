@@ -220,7 +220,7 @@ sub vcl_recv {
 
     # cnx rewrite archive  - specials served from nginx statically
     if (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
-        
+
         if (req.url  == "/robots.txt" || req.url ~ "^/specials") {
             set req.backend_hint = static_files;
             return (hash);
@@ -246,7 +246,7 @@ sub vcl_recv {
 
 
     if (req.url ~ "^/lenses") {
-        if (req.http.user-agent ~ "Baiduspider" 
+        if (req.http.user-agent ~ "Baiduspider"
             || req.http.user-agent ~ "ScoutJet"
             || req.http.user-agent ~ "bingbot") {
             return (synth(403, "Access denied"));
@@ -356,7 +356,7 @@ sub vcl_recv {
     else {
         return (synth(750, "Moved Permanently"));
     }
-    
+
     if (req.method == "PURGE") {
         # Change varnish to use `req.http.x-forwarded-for` instead of `client.ip`
         # because `client.ip` has the IP address of haproxy (I think).
@@ -434,7 +434,7 @@ sub vcl_hit {
             # return (restart);
 
             return(pass);
-        } 
+        }
     }
 }
 
@@ -521,7 +521,7 @@ sub vcl_backend_response {
         #     double age = 0;
         #     char *lastmod = 0;
         #     time_t lmod;
-            
+
         #     lastmod = VRT_GetHdr(sp, HDR_BERESP, "\016Last-Modified:");
         #     if (lastmod) {
         #         lmod =  TIM_parse(lastmod);
@@ -537,7 +537,7 @@ sub vcl_backend_response {
     }
 
     if (bereq.url ~ "content/OAI\?verb=List(Identifier|Record)s&metadataPrefix=[^&]*$") {
-        set beresp.ttl = 7d; 
+        set beresp.ttl = 7d;
         set beresp.http.X-My-Header = "OAI";
     }
     if (bereq.url ~ "content/randomContent") {
@@ -545,7 +545,7 @@ sub vcl_backend_response {
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/(\?format=)?pdf$") {
-        set beresp.ttl = 7d; 
+        set beresp.ttl = 7d;
         set beresp.http.X-My-Header = "VersionedPDF";
     }
     if (bereq.url ~ "content/[^/]*/latest/(\?format=)?pdf$") {
@@ -554,11 +554,11 @@ sub vcl_backend_response {
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/offline$") {
-        set beresp.ttl = 90d; 
+        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedOfflineZip";
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
-        set beresp.ttl = 90d; 
+        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedCompleteZip";
     }
     call rewrite_s_maxage;

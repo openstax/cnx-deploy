@@ -51,7 +51,7 @@
     name: varnish
     state: restarted
   register: restart_varnish_handler
-    
+
 - name: reload varnish
   when: restart_varnish_handler is undefined
   become: yes

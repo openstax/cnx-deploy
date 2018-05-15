@@ -20,7 +20,7 @@
 
 - name: Add /etc/tmpfiles.d/cnx_tmp.conf to clean up /tmp
   become: yes
-  template: 
+  template:
     src: etc/tmpfiles.d/cnx_tmp.conf.j2
     dest: /etc/tmpfiles.d/cnx_tmp.conf
     owner: root
