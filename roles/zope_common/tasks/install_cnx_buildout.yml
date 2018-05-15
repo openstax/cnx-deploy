@@ -108,7 +108,7 @@
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version }}"
-    executable: pip-2.4
+    executable: /var/cnx/venvs/cnx-buildout/bin/pip-2.4
     extra_args: --index-url=https://pypi.python.org/simple/
   with_items:
     - name: python-memcached
