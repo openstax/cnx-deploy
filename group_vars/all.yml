@@ -10,6 +10,7 @@ default_publishing_base_port: 6600
 default_authoring_base_port: 6400
 default_press_base_port: 6700
 default_zclient_base_port: 8280
+default_zeo_base_port: 8100
 
 # See http://docs.ansible.com/ansible/postgresql_user_module.html
 # Change in group_vars or host_vars for environment specific settings
