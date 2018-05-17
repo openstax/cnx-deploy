@@ -5,7 +5,7 @@
   roles:
     - role: iptables
       when:
-        - install_iptables is defined
+        - install_iptables|bool == true
       tags:
         - iptables
   tags:

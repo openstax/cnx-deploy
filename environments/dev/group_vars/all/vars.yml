@@ -26,7 +26,7 @@ press_db_port: "{{ archive_db_port }}"
 
 sentry_dsn: "{{ vault_sentry_dsn }}"
 
-install_iptables: True
+install_iptables: true
 
 # FIXME Not really yaml'ish to use space separated values...
 # Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
@@ -40,6 +40,7 @@ archive_host: dev00.cnx.org
 publishing_host: dev00.cnx.org
 authoring_host: dev00.cnx.org
 zclient_base_port: 8280
+zeo_base_port: 8100
 
 zope_domain: legacy-dev.cnx.org
 arclishing_domain: archive-dev.cnx.org

@@ -44,6 +44,7 @@
     {% endif %}
 {%- endmacro %}
 {% set hv = hostvars[inventory_hostname] %}
+{{ instance_ports(groups.zeo, zeo_base_port, default_zeo_base_port, hv.zeo_count) }}
 {{ instance_ports(groups.zclient, zclient_base_port, default_zclient_base_port, hv.zclient_count) }}
 {{ instance_ports(groups.archive, archive_base_port, default_archive_base_port, hv.archive_count) }}
 {{ instance_ports(groups.publishing, publishing_base_port, default_publishing_base_port, hv.publishing_count) }}
