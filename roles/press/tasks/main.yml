@@ -84,6 +84,8 @@
     repo: "https://github.com/Connexions/cnx-press.git"
     dest: "/var/cnx/apps/press"
     version: "{{ press_version|default('HEAD') }}"
+  notify:
+    - restart press
 
 - name: install dependencies
   become: yes
@@ -94,6 +96,8 @@
   with_items:
     - "main.txt"
     - "deploy.txt"
+  notify:
+    - restart press
 
 # This is currently only a cnx-deploy deployment dependency.
 - name: install deployment dependencies
