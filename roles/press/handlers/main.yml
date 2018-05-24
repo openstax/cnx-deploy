@@ -8,6 +8,6 @@
 - name: restart press
   become: yes
   supervisorctl:
-    name: "press"
+    name: "press:"
     state: restarted
   when: supervisorctl_avail.stdout.find('press') != -1
