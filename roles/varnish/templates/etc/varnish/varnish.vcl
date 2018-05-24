@@ -269,7 +269,7 @@ sub vcl_recv {
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
             set req.backend_hint = legacy_frontend;
-            return(hash);
+            return(pipe);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/col.*/?\?format=rdf") {
             set req.backend_hint = legacy_frontend;
@@ -282,26 +282,35 @@ sub vcl_recv {
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
+            return(pipe);
         }
         elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
             set req.backend_hint = legacy_frontend;
             set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/getVersion$") {
+            set req.backend_hint = legacy_frontend;
+            return(pipe);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
             set req.backend_hint = legacy_frontend;
-            return(hash);
+            return(pipe);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/.*(pdf|epub)", "/files/\1-\3.\4");
+            return(pipe);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)", "/files/\1-\3.\4.zip");
+            return(pipe);
         }
         elsif (req.url ~ "^/content/(col[0-9]+)/([0-9.]+)/source$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
+            return(pipe);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)") {
             set req.backend_hint = archive_cluster.backend();
@@ -342,6 +351,56 @@ sub vcl_recv {
         }
     }
     elsif (req.http.host ~ "^{{ zope_domain }}") {
+        /* doing the static file dance */
+        if (req.url ~ "^/pdfs") {
+            set req.backend_hint = static_files;
+            set req.url = regsub(req.url, "^/pdfs", "/files");
+        }
+        elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
+            set req.backend_hint = legacy_frontend;
+            return(pipe);
+        }
+        elsif (req.restarts == 0  && req.url ~ "^/content/col.*/?\?format=rdf") {
+            set req.backend_hint = legacy_frontend;
+            return(hash);
+        }
+        elsif (req.restarts == 0  && req.url ~ "^/content/.*/module_export_template") {
+            set req.backend_hint = legacy_frontend;
+            return(hash);
+        }
+        elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
+            set req.backend_hint = static_files;
+            set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
+            return(pipe);
+        }
+        elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
+            set req.backend_hint = legacy_frontend;
+            set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/getVersion$") {
+            set req.backend_hint = legacy_frontend;
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
+            set req.backend_hint = legacy_frontend;
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
+            set req.backend_hint = static_files;
+            set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/.*(pdf|epub)", "/files/\1-\3.\4");
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)$") {
+            set req.backend_hint = static_files;
+            set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)", "/files/\1-\3.\4.zip");
+            return(pipe);
+        }
+        elsif (req.url ~ "^/content/(col[0-9]+)/([0-9.]+)/source$") {
+            set req.backend_hint = static_files;
+            set req.url = regsub(req.url, "^/content/(col[0-9]+)/([0-9.]+)/source", "/files/\1-\2.xml");
+            return(pipe);
+        }
         /*  avoid multiple rewrites on restart */
         if (req.url !~ "VirtualHostBase" ) {
             if  ( req.http.X-Secure ) {
@@ -650,3 +709,4 @@ sub rewrite_s_maxage {
         set beresp.http.Cache-Control = regsub(beresp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
     }
 }
+
