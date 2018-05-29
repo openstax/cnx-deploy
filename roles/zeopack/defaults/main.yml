@@ -1,0 +1,6 @@
+---
+cnx_buildout_dir: /var/lib/cnx/cnx-buildout
+zeopack_dir: "{{ cnx_buildout_dir }}/bin"
+zeopack_filepath: "{{ zeopack_dir }}/zeopack"
+zeopack_old_data_filepath: "{{ cnx_buildout_dir }}/var/filestorage/Data.fs.old"
+zeopack_wrapper_filepath: "{{ zeopack_dir }}/zeopack-wrapper.sh"
