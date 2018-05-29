@@ -26,6 +26,8 @@ press_db_port: "{{ archive_db_port }}"
 
 sentry_dsn: "{{ vault_sentry_dsn }}"
 
+install_iptables: true
+
 # FIXME Not really yaml'ish to use space separated values...
 # Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
 # 'hosts' is a space separated value containing hostnames or ip addresses
