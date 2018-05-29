@@ -1,4 +1,11 @@
 ---
+- name: create zeopack wrapper script
+  become: yes
+  template:
+    src: zeopack-wrapper.sh
+    dest: "{{ zeopack_wrapper_filepath }}"
+    owner: www-data
+    group: www-data
 
 - name: create zeopack cronjob
   become: yes
@@ -6,5 +13,5 @@
     name: zeopack
     state: present
     special_time: weekly
-    job: "/var/lib/cnx/cnx-buildout/bin/zeopack"
-    user: "www-data"
+    job: "{{ zeopack_wrapper_filepath }}"
+    user: www-data
