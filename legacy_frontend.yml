@@ -6,4 +6,5 @@
     - legacy_frontend
   roles:
     - zclient_load_balancer
-    - varnish
+    - legacy_varnish
+    - nginx
