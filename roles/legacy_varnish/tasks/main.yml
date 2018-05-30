@@ -1,0 +1,75 @@
+---
+
+# +++
+# Install
+# +++
+
+- name: install varnish
+  become: yes
+  apt:
+    name: varnish
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  notify:
+    - start varnishlog
+    - start varnishncsa
+
+# +++
+# Fix reload-vcl script
+# See https://bugs.launchpad.net/ubuntu/+source/varnish/+bug/1676242
+# +++
+- name: fix reload-vcl script
+  become: yes
+  replace:
+    dest: "/usr/share/varnish/reload-vcl"
+    regexp: 'while getopts a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag \$DAEMON_OPTS'
+    replace: 'while getopts a:b:CdFf:g:h:i:j:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS'
+
+# +++
+# Configure
+# +++
+
+- name: gather facts from hosts allowed to purge varnish cache
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.varnish_purge_allowed }}"
+
+- name: configure varnish logic
+  become: yes
+  template:
+    src: etc/varnish/legacy-varnish.vcl
+    dest: "/etc/varnish/legacy-varnish.vcl"
+  notify:
+    - reload varnish
+
+- name: configure varnish runtime (init config)
+  become: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    owner: "{{ item.user|default('root') }}"
+    group: "{{ item.group|default('root') }}"
+  with_items: "{{ varnish['templates'] }}"
+  notify:
+    - restart daemon tools
+    - enable varnish
+    - enable varnishlog
+    - enable varnishncsa
+    - restart varnish
+  tags:
+    - varnish-configure
+
+# +++
+# Cron Configuration
+# +++
+
+- name: configure cron job to copy varnish logs
+  become: yes
+  template:
+    src: "etc/cron.daily/copy_varnish_logs"
+    dest: "/etc/cron.daily/copy_varnish_logs"
+    mode: 0755
