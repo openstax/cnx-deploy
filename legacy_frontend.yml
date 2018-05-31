@@ -8,3 +8,4 @@
     - zclient_load_balancer
     - legacy_varnish
     - nginx
+    - static_files
