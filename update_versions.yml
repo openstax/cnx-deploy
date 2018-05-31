@@ -65,6 +65,16 @@
       with_items:
         - "{{ groups.zope|first }}"
 
+- name: get press version
+  hosts: frontend
+  tasks:
+    - shell: grep '^[0-9]' /var/cnx/apps/press/docs/source/changes.rst  | head -n 1
+      register: press_version
+      when: groups.press
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.press|first }}"
+
 - name: update version.txt
   hosts: frontend
   become: yes
@@ -83,6 +93,9 @@
           {% endif %}
           {% if oer_exports_version.results|default(False) %}
            "oer.exports": "{{ oer_exports_version.results.0.stdout }}",
+          {% endif %}
+          {% if press_version.results|default(False) %}
+           "press": "{{ press_version.results.0.stdout }}",
           {% endif %}
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
           }
