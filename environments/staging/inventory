@@ -90,7 +90,6 @@ staging06
 [backup:children]
 
 [press:children]
-staging08
 
 # Groups of groups
 
