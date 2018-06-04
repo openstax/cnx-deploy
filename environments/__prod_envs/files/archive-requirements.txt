@@ -1,5 +1,5 @@
 appdirs==1.4.3
-Beaker==1.9.1
+Beaker==1.10.0
 certifi==2018.4.16
 chardet==3.0.4
 cnx-archive==3.8.0
