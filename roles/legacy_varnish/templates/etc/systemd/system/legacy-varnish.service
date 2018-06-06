@@ -4,7 +4,7 @@ Documentation=https://www.varnish-cache.org/docs/ man:varnishd
 
 [Service]
 Type=simple
-EnvironmentFile=-/etc/default/varnish
+EnvironmentFile=-/etc/default/legacy-varnish
 LimitNOFILE=$NFILES
 LimitMEMLOCK=$MEMLOCK
 ExecStart=/usr/sbin/varnishd $DAEMON_OPTS
