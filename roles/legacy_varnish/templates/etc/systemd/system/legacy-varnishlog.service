@@ -4,8 +4,8 @@ After=varnish.service
 
 [Service]
 EnvironmentFile=-/etc/default/legacy-varnishlog
-User={{ varnish.user|default('varnishlog') }}
-Group={{ varnish.group|default('varnish') }}
+User={{  legacy_varnish.user|default('varnishlog') }}
+Group={{  legacy_varnish.group|default('varnish') }}
 ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/legacy-varnish.log
 ExecReload=/bin/kill -HUP $MAINPID
 PrivateDevices=true

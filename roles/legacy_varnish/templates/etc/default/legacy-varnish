@@ -1,11 +1,11 @@
 START=yes
-NFILES={{ varnish.nfiles|default(131072) }}
-MEMLOCK={{ varnish.memlock|default(82000) }}
+NFILES={{  legacy_varnish.nfiles|default(131072) }}
+MEMLOCK={{  legacy_varnish.memlock|default(82000) }}
 DAEMON_OPTS="-j unix,user=vcache -F \
              -a :{{ legacy_varnish.port }} \
              -T 127.0.0.1:6083 \
              -f /etc/varnish/legacy-varnish.vcl \
              -S /etc/varnish/secret \
-             -s malloc,{{ varnish.malloc }} \
+             -s malloc,{{  legacy_varnish.malloc }} \
              -p pipe_timeout=1200 \
              -p vcc_allow_inline_c=on"
