@@ -53,7 +53,7 @@
     mode: 0644
     owner: "{{ item.user|default('root') }}"
     group: "{{ item.group|default('root') }}"
-  with_items: "{{ varnish['templates'] }}"
+  with_items: "{{ legacy_varnish['templates'] }}"
   notify:
     - restart daemon tools
     - enable legacy-varnish
