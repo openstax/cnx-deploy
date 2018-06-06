@@ -307,12 +307,14 @@ sub vcl_backend_response {
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/offline$") {
-        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedOfflineZip";
+        set beresp.uncacheable = true;
+        return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
-        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedCompleteZip";
+        set beresp.uncacheable = true;
+        return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/latest/offline$") {
         set beresp.http.X-My-Header = "LatestOffline";
