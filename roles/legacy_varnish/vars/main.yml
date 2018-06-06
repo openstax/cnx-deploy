@@ -2,7 +2,7 @@
 varnish:
   user: varnishlog
   group: varnish
-  port: "{{ varnish_port|default(80) }}"
+  port: "{{ legacy_varnish_port|default(80) }}"
   # would be set in environment's host_vars if exists
   malloc: "{{ varnish_memory_allocation|default('256m') }}"
   templates:

@@ -35,6 +35,7 @@ install_iptables: true
 memcached_hosts: localhost
 
 varnish_port: 8990
+legacy_varnish_port: 8991
 
 archive_host: dev00.cnx.org
 publishing_host: dev00.cnx.org

@@ -23,6 +23,7 @@ publishing_broker_password: "{{ vault_publishing_broker_password }}"
 memcached_hosts: localhost
 
 varnish_port: 8990
+legacy_varnish_port: 8991
 
 archive_host: tea00.cnx.org
 publishing_host: tea00.cnx.org

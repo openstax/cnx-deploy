@@ -35,6 +35,7 @@ install_iptables: true
 memcached_hosts: localhost
 
 varnish_port: 8990
+legacy_varnish_port: 8991
 haproxy_zcluster_port: 8998
 
 archive_host: "{{ _host_prefix }}.cnx.org"
