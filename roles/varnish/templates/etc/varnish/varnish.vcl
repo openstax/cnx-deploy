@@ -24,26 +24,6 @@ acl block {
 {% endfor %}
 }
 
-# haproxy load balancing for zope
-{% if groups.legacy_frontend %}
-backend legacy_frontend {
-.host = "{{ hostvars[groups.legacy_frontend[0]].ansible_default_ipv4.address }}";
-.port = "{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}";
-.connect_timeout = 0.4s;
-.first_byte_timeout = 1200s;
-.between_bytes_timeout = 600s;
-}
-{% else %}
-{# Not implemented for some environments (e.g. beta) #}
-backend legacy_frontend {
-.host = "localhost";
-.port = "{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}";
-.connect_timeout = 0.4s;
-.first_byte_timeout = 1200s;
-.between_bytes_timeout = 600s;
-}
-{% endif %}
-
 # static files
 backend static_files {
 .host = "127.0.0.1";
@@ -177,15 +157,6 @@ sub vcl_init {
 
 }
 
-sub vcl_recv {
-    if (req.url == "/join_form") {
-        return (synth(403, "Access denied"));
-    }
-
-    if (req.method == "POST" && req.url ~ "^/content/[mc]" && req.url !~ "(reuse_edit|(favorites|lens)_add)_inner" && req.url !~ "@@reuse-edit-view" && req.url !~ "lensAdd" && req.url !~ "setPrintedFile" && req.url !~ "updateParameters" && req.url !~ "manage_addProperty" && req.http.referer !~ "manage_propertiesForm") {
-        return (synth(403, "Access denied (POST)"));
-    }
-
     if (client.ip ~ block) {
         return (synth(403, "Access denied"));
     }
@@ -245,18 +216,6 @@ sub vcl_recv {
     }
 
 
-    if (req.url ~ "^/lenses") {
-        if (req.http.user-agent ~ "Baiduspider"
-            || req.http.user-agent ~ "ScoutJet"
-            || req.http.user-agent ~ "bingbot") {
-            return (synth(403, "Access denied"));
-        }
-    }
-
-    if (req.http.user-agent ~ "equella|360Spider") {
-        return (synth(403, "Access denied"));
-    }
-
     # FIXME req.grace cannot be used here, see also
     #       https://www.varnish-cache.org/docs/4.0/users-guide/vcl-grace.html
     # set req.grace = 120s;
@@ -267,29 +226,9 @@ sub vcl_recv {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/pdfs", "/files");
         }
-        elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
-            set req.backend_hint = legacy_frontend;
-            return(hash);
-        }
-        elsif (req.restarts == 0  && req.url ~ "^/content/col.*/?\?format=rdf") {
-            set req.backend_hint = legacy_frontend;
-            return(hash);
-        }
-        elsif (req.restarts == 0  && req.url ~ "^/content/.*/module_export_template") {
-            set req.backend_hint = legacy_frontend;
-            return(hash);
-        }
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
-        }
-        elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
-            set req.backend_hint = legacy_frontend;
-            set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
-        }
-        elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
-            set req.backend_hint = legacy_frontend;
-            return(hash);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
             set req.backend_hint = static_files;
@@ -306,52 +245,11 @@ sub vcl_recv {
         elsif (req.url ~ "^/content/((col|m)[0-9]+)") {
             set req.backend_hint = archive_cluster.backend();
         }
-        // special cases for legacy
-        elsif (req.url ~ "^/images/(advice\.png|example\.png|missing\.eps\.metadata|thick-left-arrow\.png|annot\.png|explanation\.png|question\.png|change\.png|magnify-glass-cnx\.png|rhaptos_powered\.png|comment\.png|missing\.eps|seealso\.png)"
-               || req.url ~ "^/scripts/(fileSizeUnits|getUser|selectAllNoneInverse)") {
-            set req.backend_hint = legacy_frontend;
-        }
-        elseif ( req.url ~ "^/aboutus/" ) {
-            /*  avoid multiple rewrites on restart */
-            if (req.url !~ "VirtualHostBase" ) {
-                set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
-            }
-            set req.backend_hint = legacy_frontend;
-        }
         // all webview
         elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish|robots.txt)") {
             set req.backend_hint = webview;
 
-            if ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/users" || req.url ~ "@draft"){
-                return (pass);
-            }
         }
-        // everything else (including 404)
-        else {
-            set req.http.X-My-Header = "Fallthrough";
-            set req.backend_hint = legacy_frontend;
-            /*  avoid multiple rewrites on restart */
-            if (req.url !~ "VirtualHostBase" ) {
-                if  ( req.http.X-Secure ) {
-                    set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
-                }
-                else {
-                    set req.url = "/VirtualHostBase/http/{{ zope_domain }}:80/plone/VirtualHostRoot" + req.url;
-                }
-            }
-        }
-    }
-    elsif (req.http.host ~ "^{{ zope_domain }}") {
-        /*  avoid multiple rewrites on restart */
-        if (req.url !~ "VirtualHostBase" ) {
-            if  ( req.http.X-Secure ) {
-                set req.url = "/VirtualHostBase/https/{{ zope_domain }}:443/plone/VirtualHostRoot" + req.url;
-                }
-            else {
-                set req.url = "/VirtualHostBase/http/{{ zope_domain }}:80/plone/VirtualHostRoot" + req.url;
-            }
-        }
-        set req.backend_hint = legacy_frontend;
     }
     else {
         return (synth(750, "Moved Permanently"));
@@ -536,17 +434,10 @@ sub vcl_backend_response {
         set beresp.http.X-FACTOR-TTL = "ttl: " + beresp.ttl;
     }
 
-    if (bereq.url ~ "content/OAI\?verb=List(Identifier|Record)s&metadataPrefix=[^&]*$") {
-        set beresp.ttl = 7d;
-        set beresp.http.X-My-Header = "OAI";
-    }
-    if (bereq.url ~ "content/randomContent") {
+    if (bereq.url ~ "content/[^/]*/[0-9.]*/(\?format=)?pdf$") {
+        set beresp.http.X-My-Header = "VersionedPDF";
         set beresp.uncacheable = true;
         return(deliver);
-    }
-    if (bereq.url ~ "content/[^/]*/[0-9.]*/(\?format=)?pdf$") {
-        set beresp.ttl = 7d;
-        set beresp.http.X-My-Header = "VersionedPDF";
     }
     if (bereq.url ~ "content/[^/]*/latest/(\?format=)?pdf$") {
         set beresp.http.X-My-Header = "LatestPDF";
@@ -554,12 +445,14 @@ sub vcl_backend_response {
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/offline$") {
-        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedOfflineZip";
+        set beresp.uncacheable = true;
+        return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
-        set beresp.ttl = 90d;
         set beresp.http.X-My-Header = "VersionedCompleteZip";
+        set beresp.uncacheable = true;
+        return(deliver);
     }
     call rewrite_s_maxage;
     set beresp.http.X-FACTOR-TTL = "ttl: " + beresp.ttl;
