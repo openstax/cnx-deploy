@@ -5,56 +5,56 @@
   # This makes our service file changes available for use.
   shell: systemctl daemon-reload
 
-- name: enable varnishlog
+- name: enable legacy-varnishlog
   become: yes
   # Usually we would do "systemctl enable varnishlog", but it is failing:
   # Synchronizing state of varnishlog.service with SysV init with /lib/systemd/systemd-sysv-install...
   # Executing /lib/systemd/systemd-sysv-install enable varnishlog
   # Failed to execute operation: Invalid argument
   file:
-    src: "/etc/systemd/system/varnishlog.service"
-    dest: "/etc/systemd/system/multi-user.target.wants/varnishlog.service"
+    src: "/etc/systemd/system/legacy-varnishlog.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/legacy-varnishlog.service"
     state: link
     force: yes
 
-- name: enable varnishncsa
+- name: enable legacy-varnishncsa
   become: yes
   file:
-    src: "/etc/systemd/system/varnishncsa.service"
-    dest: "/etc/systemd/system/multi-user.target.wants/varnishncsa.service"
+    src: "/etc/systemd/system/legacy-varnishncsa.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/legacy-varnishncsa.service"
     state: link
     force: yes
 
-- name: enable varnish
+- name: enable legacy-varnish
   become: yes
   file:
-    src: "/etc/systemd/system/varnish.service"
-    dest: "/etc/systemd/system/multi-user.target.wants/varnish.service"
+    src: "/etc/systemd/system/legacy-varnish.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/legacy-varnish.service"
     state: link
     force: yes
 
-- name: start varnishlog
+- name: start legacy-varnishlog
   become: yes
   service:
-    name: varnishlog
+    name: legacy-varnishlog
     state: started
 
-- name: start varnishncsa
+- name: start legacy-varnishncsa
   become: yes
   service:
-    name: varnishncsa
+    name: legacy-varnishncsa
     state: started
 
-- name: restart varnish
+- name: restart legacy-varnish
   become: yes
   service:
-    name: varnish
+    name: legacy-varnish
     state: restarted
-  register: restart_varnish_handler
+  register: restart_legacy_varnish_handler
 
-- name: reload varnish
-  when: restart_varnish_handler is undefined
+- name: reload legacy-varnish
+  when: restart_legacy_varnish_handler is undefined
   become: yes
   service:
-    name: varnish
+    name: legacy-varnish
     state: reloaded

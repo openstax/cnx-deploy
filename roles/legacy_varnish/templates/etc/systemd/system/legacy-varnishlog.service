@@ -3,10 +3,10 @@ Description=Varnish HTTP accelerator log daemon
 After=varnish.service
 
 [Service]
-EnvironmentFile=-/etc/default/varnishlog
+EnvironmentFile=-/etc/default/legacy-varnishlog
 User={{ varnish.user|default('varnishlog') }}
 Group={{ varnish.group|default('varnish') }}
-ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/varnish.log
+ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/legacy-varnish.log
 ExecReload=/bin/kill -HUP $MAINPID
 PrivateDevices=true
 PrivateNetwork=true

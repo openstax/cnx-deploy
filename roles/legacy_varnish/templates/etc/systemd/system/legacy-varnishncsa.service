@@ -7,10 +7,10 @@ Description=Varnish HTTP accelerator log daemon
 After=varnish.service
 
 [Service]
-EnvironmentFile=-/etc/default/varnishncsa
+EnvironmentFile=-/etc/default/legacy-varnishncsa
 User=varnishlog
 Group=varnish
-ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -f /var/log/varnish/varnishncsa.format
+ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/legacy-varnishncsa.log -f /var/log/varnish/varnishncsa.format
 ExecReload=/bin/kill -HUP $MAINPID
 PrivateDevices=true
 PrivateNetwork=true

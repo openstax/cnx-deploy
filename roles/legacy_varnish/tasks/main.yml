@@ -4,7 +4,7 @@
 # Install
 # +++
 
-- name: install varnish
+- name: install legacy-varnish
   become: yes
   apt:
     name: varnish
@@ -12,8 +12,8 @@
     update_cache: yes
     cache_valid_time: 3600
   notify:
-    - start varnishlog
-    - start varnishncsa
+    - start legacy-varnishlog
+    - start legacy-varnishncsa
 
 # +++
 # Fix reload-vcl script
@@ -43,9 +43,9 @@
     src: etc/varnish/legacy-varnish.vcl
     dest: "/etc/varnish/legacy-varnish.vcl"
   notify:
-    - reload varnish
+    - reload legacy-varnish
 
-- name: configure varnish runtime (init config)
+- name: configure legacy-varnish runtime (init config)
   become: yes
   template:
     src: "{{ item.src }}"
@@ -56,12 +56,12 @@
   with_items: "{{ varnish['templates'] }}"
   notify:
     - restart daemon tools
-    - enable varnish
-    - enable varnishlog
-    - enable varnishncsa
-    - restart varnish
+    - enable legacy-varnish
+    - enable legacy-varnishlog
+    - enable legacy-varnishncsa
+    - restart legacy-varnish
   tags:
-    - varnish-configure
+    - legacy-varnish-configure
 
 # +++
 # Cron Configuration
