@@ -1,5 +1,5 @@
 ---
-varnish:
+legacy_varnish:
   user: varnishlog
   group: varnish
   port: "{{ legacy_varnish_port|default(80) }}"
