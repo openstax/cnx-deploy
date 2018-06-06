@@ -19,6 +19,7 @@ authoring_db_port: 5432
 memcached_hosts: localhost
 
 varnish_port: 8990
+legacy_varnish_port: 8991
 haproxy_zcluster_port: 8998
 
 zope_domain: legacy-des.cnx.org
