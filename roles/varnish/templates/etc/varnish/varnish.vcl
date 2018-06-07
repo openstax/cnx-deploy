@@ -157,6 +157,8 @@ sub vcl_init {
 
 }
 
+sub vcl_recv {
+
     if (client.ip ~ block) {
         return (synth(403, "Access denied"));
     }
