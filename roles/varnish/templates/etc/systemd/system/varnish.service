@@ -5,8 +5,8 @@ Documentation=https://www.varnish-cache.org/docs/ man:varnishd
 [Service]
 Type=simple
 EnvironmentFile=-/etc/default/varnish
-LimitNOFILE=$NFILES
-LimitMEMLOCK=$MEMLOCK
+LimitNOFILE={{ varnish.nfiles|default(131072) }}
+LimitMEMLOCK={{ varnish.memlock|default(82000) }}
 ExecStart=/usr/sbin/varnishd $DAEMON_OPTS
 ExecReload=/usr/share/varnish/reload-vcl
 ProtectSystem=full
