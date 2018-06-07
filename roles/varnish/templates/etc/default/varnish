@@ -3,6 +3,7 @@ NFILES={{ varnish.nfiles|default(131072) }}
 MEMLOCK={{ varnish.memlock|default(82000) }}
 DAEMON_OPTS="-j unix,user=vcache -F \
              -a :{{ varnish.port }} \
+             -n varnish \
              -T 127.0.0.1:6082 \
              -f /etc/varnish/varnish.vcl \
              -S /etc/varnish/secret \
