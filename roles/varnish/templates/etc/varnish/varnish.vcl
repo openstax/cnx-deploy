@@ -24,6 +24,15 @@ acl block {
 {% endfor %}
 }
 
+# Needed for cnx.org/.*/enqueue for PDFgen
+backend legacy_frontend {
+.host = "localhost";
+.port = "{{ haproxy_zcluster_port|default(default_haproxy_zcluster_port) }}";
+.connect_timeout = 0.4s;
+.first_byte_timeout = 1200s;
+.between_bytes_timeout = 600s;
+}
+
 # static files
 backend static_files {
 .host = "127.0.0.1";
@@ -227,6 +236,10 @@ sub vcl_recv {
         if (req.url ~ "^/pdfs") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/pdfs", "/files");
+        }
+        elsif (req.restarts == 0  && req.url ~ "^/content/.*/enqueue") {
+            set req.backend_hint = legacy_frontend;
+            return(pass);
         }
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
             set req.backend_hint = static_files;
