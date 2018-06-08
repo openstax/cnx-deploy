@@ -21,6 +21,7 @@ sentry_dsn: "{{ vault_sentry_dsn }}"
 memcached_hosts: localhost
 
 varnish_port: 80
+legacy_varnish_port: 8991
 
 archive_base_port: "{{ default_archive_base_port }}"
 publishing_base_port: "{{ default_publishing_base_port }}"

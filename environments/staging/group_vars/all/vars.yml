@@ -21,6 +21,8 @@ sentry_dsn: "{{ vault_sentry_dsn }}"
 memcached_hosts: localhost
 
 varnish_port: 80
+legacy_varnish_port: 8991
+
 
 # Points to the haproxy running on tundra
 archive_base_port: "{{ default_archive_base_port }}"
