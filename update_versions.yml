@@ -69,7 +69,7 @@
   hosts: frontend
   tasks:
     - shell: grep '^[0-9]' /var/cnx/apps/press/docs/source/changes.rst  | head -n 1
-      register: press_version
+      register: press_ver
       when: groups.press
       delegate_to: "{{ item }}"
       with_items:
@@ -94,8 +94,8 @@
           {% if oer_exports_version.results|default(False) %}
            "oer.exports": "{{ oer_exports_version.results.0.stdout }}",
           {% endif %}
-          {% if press_version.results|default(False) %}
-           "press": "{{ press_version.results.0.stdout }}",
+          {% if press_ver.results|default(False) %}
+           "press": "{{ press_ver.results.0.stdout }}",
           {% endif %}
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
           }
