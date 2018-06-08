@@ -94,7 +94,7 @@
           {% if oer_exports_version.results|default(False) %}
            "oer.exports": "{{ oer_exports_version.results.0.stdout }}",
           {% endif %}
-          {% if press_ver.results|default(False) %}
+          {% if press_ver.results.0.stdout|default(False) %}
            "press": "{{ press_ver.results.0.stdout }}",
           {% endif %}
            "cnx-deploy": "{{ cnx_deploy_version.stdout }}"
