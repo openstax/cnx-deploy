@@ -213,10 +213,19 @@ sub vcl_recv {
             return (pass);
         }
 
-        else {
+        elsif ( req.url ~ "^/exports/") {
+            set req.backend_hint = archive_cluster.backend();
+            return (pass);
+        }
 
-        set req.backend_hint = archive_cluster.backend();
-        return (hash);
+        elsif (req.url ~ "^/resources/") {
+            set req.backend_hint = resource_cluster.backend();
+            return (hash);
+        }
+
+        else {
+            set req.backend_hint = archive_cluster.backend();
+            return (hash);
         }
     }
 
@@ -224,6 +233,11 @@ sub vcl_recv {
     if (req.url ~ "^/resources/") {
         set req.backend_hint = resource_cluster.backend();
         return (hash);
+    }
+
+    elsif ( req.url ~ "^/exports/") {
+        set req.backend_hint = archive_cluster.backend();
+        return (pass);
     }
 
 
@@ -476,7 +490,7 @@ sub vcl_backend_response {
 
 sub vcl_backend_error {
     if (beresp.status == 750) {
-        set beresp.http.Location = "http://" + regsub(bereq.http.host, "^[^:]*", "cnx.org") + bereq.url;
+        set beresp.http.Location = "http://" + regsub(bereq.http.host, "^[^:]*", "{{ frontend_domain }}") + bereq.url;
         set beresp.status = 301;
         return(deliver);
     } elsif (beresp.status == 700) {
