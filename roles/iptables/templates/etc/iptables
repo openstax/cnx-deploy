@@ -22,12 +22,12 @@
 {# default -#}
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
+{% for ipaddr in groups.nfs -%} 
+    -A INPUT -s {{ ipaddr }} -p tcp -m tcp -m comment --comment "Accept connection from NFS File Servers" -j ACCEPT
 {# end default -#}
 {% if ldap_enabled -%}
     -A INPUT -s 128.42.169.11/32 -p tcp -m tcp -m comment --comment "homedirs1.cnx.org" -j ACCEPT
 {% endif -%}
-{# Newer versions allow this #}
-{# -A INPUT -p tcp -m tcp -s 52.27.240.129,128.42.169.16,128.42.169.79 --dport 10050:10051 -j ACCEPT #}
 {% for ipaddr in zabbix_allowed -%}
     -A INPUT -s {{ ipaddr }} -p tcp -m tcp --dport 10050:10051 -m comment --comment "Zabbix allowed host" -j ACCEPT
 {% endfor -%}
