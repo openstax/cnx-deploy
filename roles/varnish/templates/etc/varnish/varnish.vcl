@@ -43,6 +43,7 @@ backend legacy_frontend {
 .first_byte_timeout = 1200s;
 .between_bytes_timeout = 600s;
 }
+{% endif %}
 
 # static files
 backend static_files {
