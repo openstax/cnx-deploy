@@ -144,7 +144,7 @@ sub vcl_recv {
     if (req.url ~ "/content/[^/]+/enqueue") {
         return(pass);
     }
-    elsif (req.url ~ "/content/((col|m)[0-9]+)/latest/(getVersion|pdf|epub|complete|offline)$") {
+    elsif (req.url ~ "/content/((col|m)[0-9]+)/latest/(getVersion|pdf|epub|complete|offline|module_export_template)$") {
         return(pass);
     }
 
@@ -327,6 +327,10 @@ sub vcl_backend_response {
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/latest/getVersion$") {
+        set beresp.uncacheable = true;
+        return(deliver);
+    }
+    if (bereq.url ~ "content/[^/]*/latest/module_export_template$") {
         set beresp.uncacheable = true;
         return(deliver);
     }
