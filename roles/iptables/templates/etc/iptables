@@ -24,6 +24,7 @@
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
 {% for ipaddr in groups.nfs -%} 
     -A INPUT -s {{ ipaddr }} -p tcp -m tcp -m comment --comment "Accept connection from NFS File Servers" -j ACCEPT
+{% endfor -%}
 {# end default -#}
 {% if ldap_enabled -%}
     -A INPUT -s 128.42.169.11/32 -p tcp -m tcp -m comment --comment "homedirs1.cnx.org" -j ACCEPT
