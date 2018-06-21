@@ -14,7 +14,7 @@ Jinja2==2.10
 lxml==4.2.1
 MarkupSafe==1.0
 packaging==17.1
-parsimonious==0.8.0
+parsimonious==0.8.1
 Paste==2.0.3
 PasteDeploy==1.5.2
 PasteScript==2.0.2
