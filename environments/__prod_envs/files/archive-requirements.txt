@@ -11,7 +11,7 @@ funcsigs==1.0.2
 hupper==1.2
 idna==2.7
 Jinja2==2.10
-lxml==4.2.1
+lxml==4.2.2
 MarkupSafe==1.0
 packaging==17.1
 parsimonious==0.8.1
