@@ -18,7 +18,7 @@ press_db_port: "{{ archive_db_port }}"
 
 sentry_dsn: "{{ vault_sentry_dsn }}"
 
-install_iptables: true
+#install_iptables: true
 
 memcached_hosts: localhost
 
