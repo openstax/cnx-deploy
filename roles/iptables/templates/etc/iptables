@@ -29,7 +29,7 @@
 {% for ipaddr in groups.legacy_frontend -%}
 -A INPUT -p tcp -m tcp -m multiport --dports 8080,8888,8991 -m comment --comment "allowed TCP ports for Legacy" -j ACCEPT
 {% endfor -%}
-{% for ipaddr in groups.legacy_frontend or groups.frontend or groups.archive or groups.pdf_gen -%}
+{% for ipaddr in [groups.legacy_frontend, groups.frontend, groups.archive, groups.pdf_gen] -%}
 -A INPUT -p tcp -m tcp -m multiport --dports 2049 -m comment --comment "allow TCP port 2049 for NFS connections" -j ACCEPT
 {% endfor -%}
 {% if ldap_enabled -%}
