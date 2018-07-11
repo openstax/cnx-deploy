@@ -24,11 +24,13 @@
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
 {% for ipaddr in groups.nfs -%} 
     -A INPUT -s {{ ipaddr }} -p tcp -m tcp -m comment --comment "Accept connection from NFS File Servers" -j ACCEPT
+    -A INPUT -s {{ groups.nfs_connected | join(',') }} -p tcp -m multiport --dports 2049 -m comment --comment "Accept connection from NFS CLinets" -j ACCEPT
 {% endfor -%}
 {# end default -#}
 {% for ipaddr in groups.legacy_frontend -%}
 -A INPUT -p tcp -m tcp -m multiport --dports 8080,8888,8991 -m comment --comment "allowed TCP ports for Legacy" -j ACCEPT
 {% endfor -%}
+
 {% for ipaddr in groups.nfs_connected -%}
 -A INPUT -p tcp -m tcp -m multiport --dports 2049 -m comment --comment "allow TCP port 2049 for NFS connections" -j ACCEPT
 {% endfor -%}
