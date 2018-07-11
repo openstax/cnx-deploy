@@ -20,7 +20,7 @@ PasteDeploy==1.5.2
 PasteScript==2.0.2
 pkg-resources==0.0.0
 plaster==1.0
-plaster-pastedeploy==0.5
+plaster-pastedeploy==0.6
 psycopg2==2.7.5
 pyparsing==2.2.0
 pyramid==1.9.2
