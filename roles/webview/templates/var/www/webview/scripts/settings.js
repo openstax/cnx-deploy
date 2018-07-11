@@ -18,6 +18,12 @@
         host: location.hostname
       },
 
+      // Hostname and port for the OpenStax CMS server
+      openstaxcms: {
+        host: '{{ cms_domain }}',
+        port: 443
+      },
+
       // Prefix to prepend to page titles
       titleSuffix: ' - OpenStax CNX',
 
