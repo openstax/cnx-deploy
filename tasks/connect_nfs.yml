@@ -25,7 +25,7 @@
     src: "{{ item.server }}:{{ item.src }}"
     name: "{{ item.name }}"
     fstype: nfs
-    opts: rw,soft,intr,timeo=1,retrans=3,actimeo=1,retry=0
+    opts: rw
     dump: 0
     passno: 2
     state: mounted
