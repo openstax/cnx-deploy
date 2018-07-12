@@ -24,7 +24,7 @@
 -A INPUT -m state --state RELATED,ESTABLISHED -m comment --comment "Accept established connections" -j ACCEPT
 {# end default -#}
 
--A INPUT -s {{ groups.nfs | join(',') ipaddr }} -p tcp -m tcp -m comment --comment "Accept connection from NFS File Servers" -j ACCEPT
+-A INPUT -s {{ groups.nfs | join(',') }} -p tcp -m tcp -m comment --comment "Accept connection from NFS File Servers" -j ACCEPT
 -A INPUT -s {{ groups.nfs_connected | join(',') }} -p tcp -m multiport --dports 2049 -m comment --comment "Accept connection from NFS Clients" -j ACCEPT
 
 {% for ipaddr in groups.legacy_frontend -%}
