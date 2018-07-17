@@ -74,6 +74,12 @@
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.press|first }}"
+    - shell: /var/cnx/venvs/press/bin/pip freeze
+      register: press_full_versions
+      when: groups.press
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ groups.press|first }}"
 
 - name: update version.txt
   hosts: frontend
@@ -124,6 +130,11 @@
           {% if publishing_full_versions.results|default(False) %}
           # Publishing full versions from {{ publishing_full_versions.results.0.item }}:
           {{ publishing_full_versions.results.0.stdout }}
+          {% endif %}
+
+          {% if press_full_versions.results|default(False) %}
+          # Press full versions from {{ press_full_versions.results.0.item }}:
+          {{ press_full_versions.results.0.stdout }}
           {% endif %}
 
           {% if legacy_full_versions.results|default(False) %}
