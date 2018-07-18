@@ -49,6 +49,7 @@ frontend_domain: dev.cnx.org
 accounts_domain: accounts-qa1.openstax.org
 tutor_domain: tutor-dev.openstax.org
 exercises_domain: exercises-dev.openstax.org
+cms_domain: oscms-dev.openstax.org
 
 accounts_disable_verify_ssl: yes
 accounts_stub: yes

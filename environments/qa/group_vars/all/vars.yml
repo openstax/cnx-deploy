@@ -50,6 +50,7 @@ frontend_domain: "{{ _host_prefix }}.cnx.org"
 accounts_domain: accounts-qa1.openstax.org
 tutor_domain: tutor-qa.openstax.org
 exercises_domain: exercises-qa.openstax.org
+cms_domain: oscms-qa.openstax.org
 
 # See group_vars/all.yml for defaults
 graylog_server: "{{ default_graylog_server }}"
