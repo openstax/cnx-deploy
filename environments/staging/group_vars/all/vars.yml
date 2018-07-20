@@ -37,6 +37,7 @@ frontend_domain: staging.cnx.org
 accounts_domain: accounts-stage1.openstax.org
 tutor_domain: tutor-staging.openstax.org
 exercises_domain: exercises-staging.openstax.org
+cms_domain: oscms-qa.openstax.org
 
 # See group_vars/all.yml for defaults
 graylog_server: "{{ default_graylog_server }}"
