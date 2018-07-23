@@ -87,12 +87,46 @@
   notify:
     - restart press
 
-- name: install dependencies
+- name: Do we have pinned requirements?
   become: yes
   become_user: www-data
+  register: pinned
+  ignore_errors: True
+  stat:
+    path:  "{{ inventory_dir }}/files/press-requirements.txt"
+
+- name: copy over pinned requirements.txt
+  become: yes
+  become_user: www-data
+  when: pinned is succeeded
+  copy:
+    src: "{{ inventory_dir }}/files/press-requirements.txt"
+    dest: "/var/lib/cnx/press-requirements.txt"
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: install pinned dependencies
+  become: yes
+  become_user: www-data
+  when: pinned is succeeded
+  pip:
+    virtualenv: "/var/cnx/venvs/press"
+    requirements: "/var/lib/cnx/press-requirements.txt"
+  with_items:
+    - "main.txt"
+    - "deploy.txt"
+  notify:
+    - restart press
+
+- name: install latest dependencies
+  become: yes
+  become_user: www-data
+  when: pinned is failed
   pip:
     virtualenv: "/var/cnx/venvs/press"
     requirements: "/var/cnx/apps/press/requirements/{{ item }}"
+    state: latest
   with_items:
     - "main.txt"
     - "deploy.txt"
