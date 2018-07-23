@@ -88,8 +88,9 @@
     - restart press
 
 - name: Do we have pinned requirements?
-  stat:
-    path:  "{{ inventory_dir }}/files/press-requirements.txt"
+  local_action:
+    module: stat
+    path: "{{ inventory_dir }}/files/press-requirements.txt"
   register: pinned_reqs
 
 - name: copy over pinned requirements.txt
