@@ -4,6 +4,7 @@
   become: yes
   command: supervisorctl avail
   register: supervisorctl_avail
+  listen: restart press
 
 - name: restart press
   become: yes
