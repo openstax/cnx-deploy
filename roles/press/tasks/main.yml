@@ -95,7 +95,6 @@
 
 - name: copy over pinned requirements.txt
   become: yes
-  become_user: www-data
   when: pinned_reqs.stat.exists
   copy:
     src: "{{ inventory_dir }}/files/press-requirements.txt"
