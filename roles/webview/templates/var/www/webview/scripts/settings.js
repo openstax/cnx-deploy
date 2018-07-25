@@ -24,6 +24,12 @@
         port: 443
       },
 
+      // Hostname and port for the OpenStax Exercises server
+      exercises: {
+        host: '{{ exercises_domain }}',
+        port: 443
+      },
+
       // Prefix to prepend to page titles
       titleSuffix: ' - OpenStax CNX',
 
@@ -51,13 +57,6 @@
 
       accountProfile: 'https://{{ accounts_domain }}/profile',
       cnxSupport: 'http://openstax.force.com/support?l=en_US&c=Products%3ACNX',
-      terpUrl: function (itemCode) {
-        return 'https://openstaxtutor.org/terp/' + itemCode + '/quiz_start';
-      },
-
-      exerciseUrl: function (itemCode) {
-        return 'https://{{ exercises_domain|default("exercises-qa.openstax.org") }}/api/exercises?q=tag:' + itemCode;
-      },
 
       defaultLicense: {
         code: 'by'
