@@ -1,0 +1,6 @@
+---
+
+dependencies:
+  - press_common
+  - rsyslog
+  - logrotate

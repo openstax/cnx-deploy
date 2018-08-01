@@ -86,6 +86,7 @@
     version: "{{ press_version|default('HEAD') }}"
   notify:
     - restart press
+    - restart press workers
 
 - name: Do we have pinned requirements?
   local_action:
@@ -112,6 +113,7 @@
     requirements: "/var/lib/cnx/press-requirements.txt"
   notify:
     - restart press
+    - restart press workers
 
 - name: install latest dependencies
   become: yes
@@ -126,6 +128,7 @@
     - "deploy.txt"
   notify:
     - restart press
+    - restart press workers
 
 # This is currently only a cnx-deploy deployment dependency.
 - name: install deployment dependencies
@@ -162,3 +165,4 @@
   notify:
     - list supervisor applications
     - restart press
+    - restart press workers

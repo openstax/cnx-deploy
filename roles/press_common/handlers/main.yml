@@ -4,8 +4,6 @@
   become: yes
   command: supervisorctl avail
   register: supervisorctl_avail
-  listen:
-    - restart press
 
 - name: restart press
   become: yes
@@ -13,3 +11,10 @@
     name: "press:"
     state: restarted
   when: supervisorctl_avail.stdout.find('press') != -1
+
+- name: restart press workers
+  become: yes
+  supervisorctl:
+    name: "press_worker:"
+    state: restarted
+  when: supervisorctl_avail.stdout.find('press_worker:') != -1

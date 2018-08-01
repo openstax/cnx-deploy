@@ -1,0 +1,31 @@
+---
+# Installs press with all the dependencies.
+
+# +++
+# Init service
+# +++
+
+- name: configure press celery workers under supervisor
+  become: yes
+  template:
+    src: etc/supervisor/conf.d/press_celery_workers.conf
+    dest: "/etc/supervisor/conf.d/press_celery_workers.conf"
+    mode: 0644
+  notify:
+    - reload supervisord
+
+# +++
+# Rsyslog Configuration
+# +++
+
+- name: connect press worker log to rsyslog
+  become: yes
+  template:
+    src: "etc/rsyslog.d/10-press-worker.conf"
+    dest: "/etc/rsyslog.d/10-press-worker.conf"
+    mode: 0644
+  notify:
+    - set up supervisor logs
+    - restart rsyslog
+  tags:
+    - press-worker-rsyslog
