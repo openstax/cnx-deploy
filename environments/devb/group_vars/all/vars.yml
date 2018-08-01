@@ -22,6 +22,8 @@ press_db_user: "{{ archive_db_user }}"
 press_db_password: "{{ archive_db_password }}"
 press_db_host: "{{ archive_db_host }}"
 press_db_port: "{{ archive_db_port }}"
+press_broker_user: "{{ vault_press_broker_user }}"
+press_broker_password: "{{ vault_press_broker_password }}"
 
 sentry_dsn: "{{ vault_sentry_dsn }}"
 
