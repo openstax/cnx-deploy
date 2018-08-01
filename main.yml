@@ -33,6 +33,7 @@
 - import_playbook: publishing_worker.yml
 - import_playbook: authoring.yml
 - import_playbook: press.yml
+- import_playbook: press_worker.yml
 
 - import_playbook: zope.yml not_standalone=yes
   tags:

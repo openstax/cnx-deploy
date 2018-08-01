@@ -1,0 +1,34 @@
+---
+
+- name: install press celery worker
+  hosts: press_worker
+  roles:
+    - press_worker
+  tags:
+    - press_worker
+    - be
+
+- name: configure broker vhost and users
+  hosts: broker
+  vars:
+    vhost: "{{ press_broker_vhost|default(default_press_broker_vhost) }}"
+  tasks:
+    - name: create press vhost
+      become: yes
+      rabbitmq_vhost:
+        name: "{{ vhost }}"
+        state: present
+    - name: create user
+      become: yes
+      rabbitmq_user:
+        user: "{{ press_broker_user }}"
+        password: "{{ press_broker_password }}"
+        permissions:
+          - vhost: "{{ vhost }}"
+            configure_priv: ".*"
+            read_priv: ".*"
+            write_priv: ".*"
+        state: present
+  tags:
+    - rabbitmq
+    - be
