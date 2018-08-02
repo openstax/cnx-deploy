@@ -3,7 +3,7 @@ certifi==2018.4.16
 chardet==3.0.4
 cnx-db==2.2.1
 cnx-litezip==1.3.1
-cnxml==2.1.1
+cnxml==2.2.0
 gunicorn==19.8.1
 hupper==1.3
 idna==2.7
