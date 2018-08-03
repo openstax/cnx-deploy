@@ -104,6 +104,14 @@
     group: www-data
     mode: 0755
 
+- name: upgrade pip
+  become: yes
+  become_user: www-data
+  pip:
+    name: pip
+    virtualenv: "/var/cnx/venvs/press"
+    state: latest
+
 - name: install pinned dependencies
   become: yes
   become_user: www-data
