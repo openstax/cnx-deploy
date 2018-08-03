@@ -65,22 +65,27 @@ tea01
 publishing
 channel_processing
 publishing_worker
+press
+press_worker
 
 [db_connected:children]
 archive
 publishing
 channel_processing
 publishing_worker
-authoring
 zclient
 pdf_gen
 backup
+press
+press_worker
 
 [nfs_connected:children]
 legacy_frontend
 frontend
 zclient
 pdf_gen
+press
+press_worker
 
 [zope:children]
 zeo
@@ -90,3 +95,5 @@ pdf_gen
 [varnish_purge_allowed:children]
 zope
 publishing
+press
+press_worker

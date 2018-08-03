@@ -92,32 +92,36 @@ staging06
 [press:children]
 staging08
 
+[press_worker:children]
+staging08
+
 # Groups of groups
 
 [broker_connected:children]
 publishing
 channel_processing
 publishing_worker
+press
+press_worker
 
 [db_connected:children]
 archive
 publishing
 channel_processing
 publishing_worker
-authoring
 zclient
 pdf_gen
 backup
 press
+press_worker
 
 [nfs_connected:children]
-archive
-publishing
 legacy_frontend
 frontend
 zclient
 pdf_gen
 press
+press_worker
 
 [zope:children]
 zeo
@@ -128,3 +132,4 @@ pdf_gen
 zope
 publishing
 press
+press_worker
