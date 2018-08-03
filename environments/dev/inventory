@@ -71,12 +71,17 @@ dev03
 [press:children]
 dev00
 
+[press_worker:children]
+dev00
+
 # Groups of groups
 
 [broker_connected:children]
 publishing
 channel_processing
 publishing_worker
+press
+press_worker
 
 [db_connected:children]
 archive
@@ -87,6 +92,7 @@ zclient
 pdf_gen
 backup
 press
+press_worker
 
 [nfs_connected:children]
 legacy_frontend
@@ -94,6 +100,7 @@ frontend
 zclient
 pdf_gen
 press
+press_worker
 
 [zope:children]
 zeo
@@ -104,3 +111,4 @@ pdf_gen
 zope
 publishing
 press
+press_worker
