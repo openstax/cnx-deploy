@@ -78,6 +78,8 @@ press
 press_worker
 
 [nfs_connected:children]
+archive
+publishing
 legacy_frontend
 frontend
 zclient
