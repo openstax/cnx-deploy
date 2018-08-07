@@ -19,7 +19,9 @@
     insertafter: "^\\s+errorfile 504 /etc/haproxy/errors/504.http"
     block: |
       {# Comment to let yml know where the indentation starts #}
-        option httpclose
+        # Enable keep-alive connections towards the client,
+        # but disable them towards the backend server
+        option http-server-close
         # Remove requests from the queue if people press stop button
         option abortonclose
         # Try to connect this many times on failure

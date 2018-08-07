@@ -44,18 +44,6 @@
         server {{ host }}{{ i }} {{ ip_addr }}:{{ base_port + i }} check inter 30s maxconn 4 rise 1
       {% endfor %}
       {% endfor %}
-
-      {# FIXME (10-Oct-2016) phased-deploy #}
-      {#       This has been added to allow for the front-end to be deployed without configuring the backend bits of the system. Please remove on next phase of deployment. #}
-      {% for item in xxx_hardcoded_zclients|default([]) %}
-      {% set ip_addr = item.ip_addr %}
-      {% set host = item.host %}
-      {# Note, legacy zope client ports increment by one hundred #}
-      {% for i in range(0, item.count+1, 1) %}
-        server {{ host }}{{ i }} {{ ip_addr }}:8{{ '{0:0>3}'.format(100*i+80) }} check inter 30s maxconn 4 rise 1
-      {% endfor %}
-      {% endfor %}
-      {# /FIXME phased-deploy #}
     owner: root
     group: root
     mode: 0644
