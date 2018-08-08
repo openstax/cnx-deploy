@@ -32,6 +32,17 @@
     name: nginx
     state: restarted
 
+- name: copy main nginx config
+  become: yes
+  copy:
+    src: etc/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload nginx
+
 # BBB (1-Feb-2016) ubuntu 14.04
 - name: make var/www available (on Ubuntu 14.04)
   when: ansible_distribution == "Ubuntu" and ansible_distribution_release == "trusty"
