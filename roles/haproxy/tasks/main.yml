@@ -10,7 +10,7 @@
     # rsyslog only picks up the newly added haproxy logging config after restart.
     - restart rsyslog
 
-- name: configure haproxy ping monitoring
+- name: configure haproxy
   become: yes
   blockinfile:
     dest: /etc/haproxy/haproxy.cfg
@@ -27,6 +27,10 @@
         # If a client is bound to a particular backend but it goes down,
         # send them to a different one
         option redispatch
+        # Enable gzip compression
+        compression algo gzip
+        compression type text/plain text/css text/html application/json application/javascript text/xml application/xml application/xml+rss text/javascript
+
         monitor-uri /haproxy-ping
 
         timeout connect 7s
