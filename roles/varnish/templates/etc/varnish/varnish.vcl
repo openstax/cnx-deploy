@@ -383,11 +383,6 @@ sub vcl_hit {
     if (req.http.Cache-Control ~ "no-cache") {
         # like msnbot that send no-cache with every request.
         if (client.ip ~ nocache) {
-            # FIXME https://www.varnish-cache.org/docs/4.0/whats-new/upgrading.html#obj-is-now-read-only
-            # set obj.ttl = 0s;
-            # FIXME https://www.varnish-cache.org/docs/4.0/whats-new/upgrading.html#backend-restarts-are-now-retry
-            # return (restart);
-
             return(pass);
         }
     }
@@ -400,15 +395,21 @@ sub vcl_miss {
 
 }
 
+# Varnish TTL should be equal to or greater than the max-age
+# we send to the browser because it is easy for us to clear
+# the varnish cache but impossible to clear the browser cache
 sub vcl_backend_response {
-    if (bereq.url ~ "^/scripts/(?:main|settings)[.]js$") {
+    if (bereq.url ~ "^/scripts/(?:main|require|settings)[.]js$") {
+        set beresp.ttl = 1h;
         set beresp.http.Cache-Control = "max-age=3600";
     }
     elsif (bereq.url ~ "^/locale") {
+        set beresp.ttl = 1h;
         set beresp.http.Cache-Control = "max-age=3600";
     }
     if (beresp.status >= 500) {
         set beresp.ttl = 0s;
+        set beresp.http.Cache-Control = "no-cache";
     }
     if (bereq.http.X-My-Header ) {
         set beresp.http.X-My-Header = bereq.http.X-My-Header;
@@ -421,6 +422,7 @@ sub vcl_backend_response {
         if (bereq.url !~ "/content/") {
             set beresp.http.X-Varnish-Action = "FETCH (pass - status > 300, not content)";
             set beresp.uncacheable = true;
+            set beresp.http.Cache-Control = "no-cache";
             return(deliver);
         }
     }
@@ -428,7 +430,7 @@ sub vcl_backend_response {
     set beresp.grace = 120s;
     if (beresp.ttl <= 0s) {
         set beresp.http.X-Varnish-Action = "FETCH (pass - not cacheable)";
-        set beresp.uncacheable = true;
+        set beresp.http.Cache-Control = "no-cache";
         return(deliver);
     }
 
@@ -444,71 +446,53 @@ sub vcl_backend_response {
     }
     if (bereq.http.X-Anonymous && !beresp.http.Cache-Control) {
         set beresp.ttl = 600s;
+        set beresp.http.Cache-Control = "max-age=600";
         set beresp.http.X-Varnish-Action = "FETCH (override - backend not setting cache control)";
     }
 
     if (bereq.http.host  ~ "^{{ arclishing_domain }}") {
-        if (bereq.url ~ "^/contents/") {
-            set beresp.ttl = 3600s;
-            set beresp.http.X-Varnish-Action = "FETCH (override - archive contents)";
-        }
         if (bereq.url ~ "^/extras") {
+            # BE: Cache-Control: no-cache
             set beresp.ttl = 600s;
+            set beresp.http.Cache-Control = "max-age=600";
             set beresp.http.X-Varnish-Action = "FETCH (override - archive extras)";
         }
     }
     if (bereq.url ~ "^/contents/") {
-        set beresp.ttl = 7d;
+        # BE: Cache-Control: max-age=3600000
+        set beresp.ttl = 42d;
         set beresp.http.X-Varnish-Action = "FETCH (override - archive contents)";
     }
 
     if (bereq.url ~ "^/resources") {
+        # BE: No Cache-Control
         set beresp.ttl = 30d;
+        set beresp.http.Cache-Control = "max-age=2592000";
         set beresp.http.X-Varnish-Action = "FETCH (override - resources)";
-    }
-
-    # Default based on %age of Last-Modified, like squid
-    if (!beresp.http.Cache-Control && !beresp.http.Expires && !beresp.http.X-Varnish-Action) {
-        # FIXME Is the following a valid replacement for this inline C?
-        #       Probably not...
-        # C{
-        #     double factor = 0.2;
-        #     double age = 0;
-        #     char *lastmod = 0;
-        #     time_t lmod;
-
-        #     lastmod = VRT_GetHdr(sp, HDR_BERESP, "\016Last-Modified:");
-        #     if (lastmod) {
-        #         lmod =  TIM_parse(lastmod);
-        #         age = TIM_real() - lmod;
-        #         VRT_l_beresp_ttl(sp, age*factor);
-        #     }
-        #  }C
-
-        # This is the attempted replacement, but it fails to compile.
-        # set beresp.ttl = std.time(beresp.http.last-modified, now);
-        # /FIXME
-        set beresp.http.X-FACTOR-TTL = "ttl: " + beresp.ttl;
     }
 
     if (bereq.url ~ "content/[^/]*/[0-9.]*/(\?format=)?pdf$") {
         set beresp.http.X-My-Header = "VersionedPDF";
         set beresp.uncacheable = true;
+        set beresp.http.Cache-Control = "no-cache";
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/latest/(\?format=)?pdf$") {
         set beresp.http.X-My-Header = "LatestPDF";
         set beresp.uncacheable = true;
+        set beresp.http.Cache-Control = "no-cache";
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/offline$") {
         set beresp.http.X-My-Header = "VersionedOfflineZip";
         set beresp.uncacheable = true;
+        set beresp.http.Cache-Control = "no-cache";
         return(deliver);
     }
     if (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
         set beresp.http.X-My-Header = "VersionedCompleteZip";
         set beresp.uncacheable = true;
+        set beresp.http.Cache-Control = "no-cache";
         return(deliver);
     }
     call rewrite_s_maxage;
