@@ -34,7 +34,7 @@
 
         http-request redirect scheme https code 301 if ! from_zope ! { ssl_fc }
         http-request redirect prefix http://{{ frontend_domain }}%[capture.req.uri] code 301 if has_www ! { ssl_fc }
-        http-request redirect prefix https://{{ frontend_domain }}%[capture.req.uri] code 301 if has_www { ssl_fc }
+        http-request redirect prefix https://{{ frontend_domain }}%[req.uri] code 301 if has_www { ssl_fc }
 
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
