@@ -5,6 +5,7 @@ server {
     root            /var/www/webview;
     index           index.html;
     try_files       $uri $uri/ /index.html;
+    expires         -1;
 
     location /ping {
         add_header Content-Length 0;
@@ -68,6 +69,7 @@ server {
     # and if they do not exist, fall back to cnx-authoring
     # from http://linuxplayer.org/2013/06/nginx-try-files-on-multiple-named-location-or-server
     location ~ ^/resources/.+ {
+        expires          1y;
         proxy_set_header Host {{ arclishing_domain }};
         proxy_pass http://localhost:{{ varnish_port }};
         proxy_intercept_errors on;
@@ -76,21 +78,25 @@ server {
     }
 
     location /resources/ {
+        expires          1y;
         proxy_set_header Host {{ arclishing_domain }};
         proxy_pass http://localhost:{{ varnish_port }};
     }
 
     location ~ ^.*/(data|scripts|styles|images|fonts)/(.*) {
+        expires     1m;
         try_files   $uri $uri/ /$1/$2 =404;
     }
 
     location ~ /exports/(.+?)/(.+)$ {
+        expires     1y;
         root        /var/www/;
         add_header  Content-Disposition "attachment; filename=$2";
         try_files   {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} =404;
     }
 
     location ~ /exports/(.+)$ {
+        expires     1y;
         root        /var/www/;
         add_header  Content-Disposition "attachment; filename=$1";
         try_files   {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1 {% endfor %} =404;

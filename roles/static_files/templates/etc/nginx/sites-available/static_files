@@ -8,12 +8,15 @@ server {
     listen   8080;
     listen   [::]:8080 default ipv6only=on;  ## listen for ipv6
     port_in_redirect off;
+    expires          -1;
 
     location /specials {
+        expires    1m;
         add_header Access-Control-Allow-Origin $cors_header;
     }
 
     location ~ ^/files/(.+)$ {
+        expires   1y;
         autoindex off;
         set $fname $1;
         add_header Content-Disposition "attachment; filename=$fname";
