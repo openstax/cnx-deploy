@@ -31,10 +31,12 @@
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
         acl has_www hdr_beg(host) -i www
         acl from_zope src 127.0.0.1 {% for host in groups.zope %}{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %}
+        acl double_slash url //
 
         http-request redirect scheme https code 301 if ! from_zope ! { ssl_fc }
         http-request redirect prefix http://{{ frontend_domain }}%[capture.req.uri] code 301 if has_www ! { ssl_fc }
-        http-request redirect prefix https://{{ frontend_domain }}%[req.uri] code 301 if has_www { ssl_fc }
+        http-request redirect prefix https://{{ frontend_domain }}%[capture.req.uri] code 301 if has_www { ssl_fc }
+        http-request redirect location / code 301 if double_slash
 
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
