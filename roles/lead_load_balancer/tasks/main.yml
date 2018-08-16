@@ -30,7 +30,7 @@
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
         acl has_www hdr_beg(host) -i www
-        acl from_zope src 127.0.0.1 {% for host in groups.zope %}{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %}
+        acl from_zope src 127.0.0.1 {% for host in groups.zope %}{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %} # This comment is necessary because otherwise Ansible eats the newline and the config becomes invalid
         acl double_slash url //
 
         http-request redirect scheme https code 301 if ! from_zope ! { ssl_fc }
