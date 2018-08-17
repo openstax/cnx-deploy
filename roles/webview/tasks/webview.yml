@@ -64,6 +64,11 @@
   notify:
     - reload nginx
 
+- name: compress settings.js into settings.js.gz
+  become: yes
+  archive:
+    path: /var/www/webview/scripts/settings.js
+
 - name: configure the webview nginx site
   become: yes
   template:
