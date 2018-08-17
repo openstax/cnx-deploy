@@ -68,6 +68,9 @@
   become: yes
   archive:
     path: /var/www/webview/scripts/settings.js
+    owner: www-data
+  notify:
+    - reload nginx
 
 - name: configure the webview nginx site
   become: yes
