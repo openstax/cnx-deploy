@@ -67,5 +67,4 @@
 {% endif %}
 -A INPUT -j LOGREJECT
 -A LOGREJECT -m comment --comment "Rejection log" -j LOG --log-prefix "FIREWALL-REJECTED: "
--A LOGREJECT -j REJECT --reject-with icmp-port-unreachable
 COMMIT
