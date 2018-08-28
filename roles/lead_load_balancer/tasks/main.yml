@@ -21,6 +21,7 @@
       frontend http-proxy
         bind *:80
         bind *:443 ssl crt /etc/ssl/certs/{{ frontend_domain }}.pem
+        maxconn 5000
 
         http-response set-header Strict-Transport-Security "max-age=16000000"
         http-request set-header X-Secure true if { ssl_fc }
