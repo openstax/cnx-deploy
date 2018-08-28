@@ -10,6 +10,23 @@
     # rsyslog only picks up the newly added haproxy logging config after restart.
     - restart rsyslog
 
+- name: configure haproxy global
+  become: yes
+  blockinfile:
+    dest: /etc/haproxy/haproxy.cfg
+    state: present
+    marker: "# {mark} maxconn block ANSIBLE MANAGED BLOCK"
+    insertafter: "^\\s+daemon$"
+    block: |
+      {# Comment to let yml know where the indentation starts #}
+        # Need more connections on production, since keep-alive uses more
+        maxconn 5000
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload haproxy
+
 - name: configure haproxy
   become: yes
   blockinfile:
