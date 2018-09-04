@@ -222,13 +222,15 @@ sub vcl_recv {
     }
     elsif (req.url ~ "^/resources/") {
         # Note: Medium-sized static files served directly from waitress
+        # We could pipe, but varnish is probably
+        # more suitable for serving these files than waitress
         set req.backend_hint = resource_cluster.backend();
     }
     elsif ( req.url ~ "^/exports/") {
-        set req.backend_hint = archive_cluster.backend();
         # Note: Large static files served directly from waitress
         # We could pipe, but varnish is probably
         # more suitable for serving these files than waitress
+        set req.backend_hint = archive_cluster.backend();
     }
     # cnx rewrite archive - specials served from nginx statically
     elsif (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
@@ -266,12 +268,16 @@ sub vcl_recv {
         }
         elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
             # Note: Large static files served directly from zope
+            # Old code used to set uncacheable = true and
+            # return (deliver) but here we return (pipe)
             set req.backend_hint = legacy_frontend;
             set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
             return (pipe);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
             # Note: Large static files served directly from zope
+            # Old code used to set uncacheable = true and
+            # return (deliver) but here we return (pipe)
             set req.backend_hint = legacy_frontend;
             return (pipe);
         }
