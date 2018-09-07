@@ -212,13 +212,11 @@ sub vcl_recv {
     # cnx rewrite stub login form
     elsif (req.url ~ "^/stub-login-form") {
         set req.backend_hint = publishing_cluster.backend(req.http.cookie);
-        return (pass);
     }
 {% endif %}
     # cnx rewrite archive
     elsif (req.url ~ "^/a/") {
         set req.backend_hint = publishing_cluster.backend(req.http.cookie);
-        return (pass);
     }
     elsif (req.url ~ "^/resources/") {
         # Note: Medium-sized static files served directly from waitress
@@ -239,7 +237,6 @@ sub vcl_recv {
         }
         elsif ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing_cluster.backend(req.http.cookie);
-            return (pass);
         }
         else {
             set req.backend_hint = archive_cluster.backend();
