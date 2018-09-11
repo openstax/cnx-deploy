@@ -244,6 +244,7 @@ sub vcl_recv {
     }
     elsif (req.http.host ~ "^{{ frontend_domain }}(:[0-9]+)?$") {
         # Doing the static file dance
+        # Note: Cannot pipe here because we want to be able to handle restarts
         if (req.url ~ "^/pdfs") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/pdfs", "/files");
@@ -261,32 +262,28 @@ sub vcl_recv {
         elsif (req.restarts == 0  && req.url ~ "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/(m[0-9]+)/([0-9.]+)/.*format=pdf", "/files/\1-\2.pdf");
-            return (pipe);
+            return (pass);
         }
         elsif (req.restarts == 1  && req.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
             # Note: Large static files served directly from zope
-            # Old code used to set uncacheable = true and
-            # return (deliver) but here we return (pipe)
             set req.backend_hint = legacy_frontend;
             set req.url = regsub(req.url, "^/files/(m[0-9]+)-([0-9.]+)\.pdf", "/content/\1/\2/?format=pdf");
-            return (pipe);
+            return (pass);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/latest/(pdf|epub)$") {
             # Note: Large static files served directly from zope
-            # Old code used to set uncacheable = true and
-            # return (deliver) but here we return (pipe)
             set req.backend_hint = legacy_frontend;
-            return (pipe);
+            return (pass);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(pdf|epub)$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/.*(pdf|epub)", "/files/\1-\3.\4");
-            return (pipe);
+            return (pass);
         }
         elsif (req.url ~ "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)$") {
             set req.backend_hint = static_files;
             set req.url = regsub(req.url, "^/content/((col|m)[0-9]+)/([0-9.]+)/(complete|offline)", "/files/\1-\3.\4.zip");
-            return (pipe);
+            return (pass);
         }
         elsif (req.url ~ "^/content/(col[0-9]+)/([0-9.]+)/source$") {
             set req.backend_hint = static_files;
@@ -321,7 +318,7 @@ sub vcl_recv {
 }
 
 sub vcl_backend_response {
-    if (beresp.status == 404 && bereq.url ~ "^/files/(m[0-9]+)-([0-9.])+\.pdf") {
+    if (beresp.status == 404 && bereq.url ~ "^/files/(m[0-9]+)-([0-9.]+)\.pdf") {
         return(retry);
     }
     # This is separate because we do not want to mark 500 errors as "Hit-For-Pass" for a minute
