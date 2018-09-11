@@ -16,7 +16,7 @@ server {
     }
 
     location ~ ^/files/(.+)$ {
-        expires   1y;
+        expires   1m;
         autoindex off;
         set $fname $1;
         add_header Content-Disposition "attachment; filename=$fname";
