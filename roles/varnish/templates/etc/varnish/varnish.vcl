@@ -176,7 +176,7 @@ sub vcl_recv {
 
     # Remove multiple trailing /
     if (req.url ~ "/{2,}$") {
-        return (synth(301, bereq.http.host + regsub(bereq.url, "/{2,}$", "/")));
+        return (synth(301, req.http.host + regsub(req.url, "/{2,}$", "/")));
     }
 
     # Check purge ACL based on `req.http.x-forwarded-for` instead of `client.ip`
@@ -306,11 +306,11 @@ sub vcl_recv {
     if (req.http.Accept-Encoding) {
         if (req.url ~ "\.(jpe?g|png|gif|swf|pdf|gz|tgz|bz2|tbz|zip|mp3|ogg|mp4|flv)$" ||
             req.url ~ "/image_[^/]*$") {
-            remove req.http.Accept-Encoding;
+            unset req.http.Accept-Encoding;
         } elsif (req.http.Accept-Encoding ~ "gzip") {
             set req.http.Accept-Encoding = "gzip";
         } else {
-            remove req.http.Accept-Encoding;
+            unset req.http.Accept-Encoding;
         }
     }
 
