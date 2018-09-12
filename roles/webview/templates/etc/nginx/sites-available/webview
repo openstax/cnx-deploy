@@ -83,7 +83,15 @@ server {
         proxy_pass http://localhost:{{ varnish_port }};
     }
 
-    location ~ ^.*/(data|scripts|styles|images|fonts)/(.*) {
+    # Hashed files: cache forever
+    # Regex must match the cacheBust config in webview's Gruntfile
+    location ~ /(scripts|styles|images|fonts)/(.+\.cache\..+) {
+        expires     1y;
+        try_files   $uri $uri/ /$1/$2 =404;
+    }
+
+    # Unhashed files: revalidate often
+    location ~ /(data|scripts|styles|images|fonts)/(.*) {
         expires     1m;
         try_files   $uri $uri/ /$1/$2 =404;
     }
