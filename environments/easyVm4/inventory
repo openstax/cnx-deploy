@@ -1,61 +1,61 @@
-[variable]
+[easyVm4]
 # all-in-one host
-{{ variable_hostname }}
+easyVm4.cnx.org
 
 # Grouped Hosts
 
 [nfs:children]
 # placed on the same machine as the frontend
-variable
+easyVm4
 
 [database:children]
-variable
+easyVm4
 
 [replicant:children]
 # None, because single-machine install
 
 [archive:children]
-variable
+easyVm4
 
 [broker:children]
-variable
+easyVm4
 
 [publishing:children]
-variable
+easyVm4
 
 [channel_processing:children]
-variable
+easyVm4
 
 [publishing_worker:children]
-variable
+easyVm4
 
 [authoring:children]
 
 [lead_frontend:children]
-variable
+easyVm4
 
 [legacy_frontend:children]
-variable
+easyVm4
 
 [frontend:children]
-variable
+easyVm4
 
 [zeo:children]
-variable
+easyVm4
 
 [zclient:children]
-variable
+easyVm4
 
 [pdf_gen:children]
-variable
+easyVm4
 
 [backup:children]
 
 [press:children]
-variable
+easyVm4
 
 [press_worker:children]
-variable
+easyVm4
 
 # Groups of groups
 

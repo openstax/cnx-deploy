@@ -1,6 +1,6 @@
 ---
 root_prefix: ""
-_host_prefix: "{{ variable_hostname_prefix }}" 
+_host_prefix: easyVm4
 
 archive_db_name: "{{ vault_archive_db_name }}"
 archive_db_user: "{{ vault_archive_db_user }}"
