@@ -91,7 +91,7 @@ server {
     }
 
     # Unhashed files: revalidate often
-    location ~ /(data|scripts|styles|images|fonts)/(.*) {
+    location ~ /(data|locale|scripts|styles|images|fonts)/(.*) {
         expires     1m;
         try_files   $uri $uri/ /$1/$2 =404;
     }
