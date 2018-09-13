@@ -400,11 +400,6 @@ sub vcl_backend_response {
             elsif (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
                 set beresp.http.X-Varnish-Status = "uncacheable - legacy VersionedCompleteZip";
             }
-            if (beresp.http.X-Varnish-Status ~ "uncacheable") {
-                # Mark as "Hit-For-Pass" (remember the uncacheable status) for a minute
-                set beresp.ttl = 60s;
-                set beresp.uncacheable = true;
-            }
 
             # Serve stale requests for up to 1 minute longer than the ttl
             # Contact the backend to obtain a fresh response during this time
@@ -414,7 +409,19 @@ sub vcl_backend_response {
             # Used to save some bandwidth communicating with the backend by using ETags
             set beresp.keep = 1d;
 
-            if (beresp.http.Cache-Control) {
+            if (beresp.http.X-Varnish-Status ~ "uncacheable") {
+                # Mark as "Hit-For-Pass" (remember the uncacheable status) for a minute
+                set beresp.ttl = 60s;
+                set beresp.uncacheable = true;
+
+                # The following 2 lines are a workaround for
+                # https://github.com/varnishcache/varnish-cache/issues/1956
+                # Fixed in https://github.com/varnishcache/varnish-cache/pull/1966
+                # Remove when upgrading to 4.1.3+ for improved performance on uncacheable requests
+                set beresp.grace = 0s;
+                set beresp.keep = 0s;
+            }
+            elsif (beresp.http.Cache-Control) {
                 set beresp.http.X-Varnish-Status = "cacheable - Cache-Control in backend response";
             }
             else {
