@@ -5,6 +5,25 @@
   apt:
     name: s3cmd
 
+- name: create temporary file for S3 configuration
+  become: yes
+  template:
+    src: tmp/s3configresponse.txt
+    dest: /tmp/s3configresponse.txt
+    mode: 0600
+
+- name: configure S3
+  become: yes
+  shell: /usr/bin/s3cmd --configure --config=/root/.s3config < /tmp/s3configresponse.txt
+  args:
+    creates: /root/.s3cfg
+
+- name: remove temporary file for S3 configuration
+  become: yes
+  file:
+    path: /tmp/s3configresponse.txt
+    state: absent
+
 - name: install archive backup script
   become: yes
   file:
@@ -46,17 +65,17 @@
 - name: remove old weekly backup
   become: yes
   file:
-      path: /etc/cron.weekly/cnx-backup
-      state: absent
+    path: /etc/cron.weekly/cnx-backup
+    state: absent
 
 - name: set up weekly backup
   become: yes
   template:
-      # The filename begins with tilde so these long running processes run after most other jobs, the number sets up the potential
-      # for further ordering. The jobs in cron.weekly, etc., are run in lexical order for the C locale.
-      src: etc/cron.weekly/~90~backup-cnx-ENVIRONMENT
-      dest: /etc/cron.weekly/~90~backup-cnx-{{ inventory_dir | basename }}
-      mode: 0755
+    # The filename begins with tilde so these long running processes run after most other jobs, the number sets up the potential
+    # for further ordering. The jobs in cron.weekly, etc., are run in lexical order for the C locale.
+    src: etc/cron.weekly/~90~backup-cnx-ENVIRONMENT
+    dest: /etc/cron.weekly/~90~backup-cnx-{{ inventory_dir | basename }}
+    mode: 0755
 
 - name: install slim dump script
   become: yes
@@ -72,7 +91,7 @@
   when:
     - slim_dumps | default(False)
   file:
-      src: /usr/local/bin/cnx-slim-dump
-      dest: /etc/cron.weekly/cnx-slim-dump
-      state: link
-      force: yes
+    src: /usr/local/bin/cnx-slim-dump
+    dest: /etc/cron.weekly/cnx-slim-dump
+    state: link
+    force: yes
