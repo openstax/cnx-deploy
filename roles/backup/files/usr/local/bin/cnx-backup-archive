@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Create a cnx database dump for backup
+
+archive_db_host=$1
+archive_db_port=$2
+archive_db_user=$3
+archive_db_name=$4
+
+backup_dir=/var/backups/cnx-backups
+db_dump_base_name=cnx_dump.$archive_db_host.$(date +%y-%m-%d).sql.gz
+db_dump_filename=$backup_dir/$db_dump_base_name
+
+# Install clean up code
+function cleanup {
+    ls -1 -r "$backup_dir/$db_dump_base_name"* | sed -n '4,$ p' | xargs rm -f
+}
+trap cleanup EXIT
+
+pg_dump -h "$archive_db_host" -p "$archive_db_port" -u "$archive_db_user" \
+    "$archive_db_name" | gzip > "$db_dump_filename"
+
+# save a copy on Amazon AWS S3
+/usr/bin/s3cmd put "$db_dump_filename" "s3://connexions/backups/$archive_db_host/repository/$db_dump_base_name"

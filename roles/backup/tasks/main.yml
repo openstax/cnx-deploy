@@ -1,19 +1,62 @@
 ---
 
-- name: install backup script
+- name: install S3 command line utils
   become: yes
-  template:
-    src: usr/local/bin/cnx-backup
-    dest: /usr/local/bin/cnx-backup
+  apt:
+    name: s3cmd
+
+- name: install archive backup script
+  become: yes
+  file:
+    src: usr/local/bin/cnx-backup-archive
+    dest: /usr/local/bin/cnx-backup-archive
     mode: 0755
+
+- name: install zodb backup script
+  become: yes
+  file:
+    src: usr/local/bin/cnx-backup-zodb
+    dest: /usr/local/bin/cnx-backup-zodb
+    mode: 0755
+
+- name: create backup user's ssh key for zodb server for this environment
+  become: yes
+  user:
+    name: backup
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/{{ hostvars[groups.zeo[0]].inventory_hostname }}_id_rsa
+  register: key_result
+
+- name: ensure backup user is present on the zodb server and get the home directory
+  user:
+    name: backup
+    state: present
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+  register: remote_backup_user
+
+- name: add authorized key to zodb server
+  become: yes
+  authorized_key:
+    user: backup
+    key: "{{ lookup('file', '{{ remote_backup_user.home }}/.ssh/{{ key_result.ssh_key_file }}_id_rsa.pub') }}"
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+
+# TODO: dtw - 2018-09-13 - remove this block after production deploy
+- name: remove old weekly backup
+  become: yes
+  file:
+      path: /etc/cron.weekly/cnx-backup
+      state: absent
 
 - name: set up weekly backup
   become: yes
-  file:
-      src: /usr/local/bin/cnx-backup
-      dest: /etc/cron.weekly/cnx-backup
-      state: link
-      force: yes
+  template:
+      # The filename begins with tilde so these long running processes run after most other jobs, the number sets up the potential
+      # for further ordering. The jobs in cron.weekly, etc., are run in lexical order for the C locale.
+      src: etc/cron.weekly/~90~backup-cnx-ENVIRONMENT
+      dest: /etc/cron.weekly/~90~backup-cnx-{{ inventory_dir | basename }}
+      mode: 0755
 
 - name: install slim dump script
   become: yes
