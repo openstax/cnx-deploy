@@ -28,6 +28,10 @@ press_broker_password: press
 
 sentry_dsn: "{{ vault_sentry_dsn }}"
 
+s3_access_key: "{{ vault_s3_access_key }}"
+s3_secret_key: "{{ vault_s3_secret_key }}"
+s3_encryption_pw: "{{ vault_s3_encryption_pw }}"
+
 install_iptables: true
 
 # FIXME Not really yaml'ish to use space separated values...
