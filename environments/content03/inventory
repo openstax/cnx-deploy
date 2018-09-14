@@ -2,6 +2,9 @@
 # all-in-one host
 content03.cnx.org
 
+[backup3]
+backup3.cnx.org
+
 # Grouped Hosts
 
 [nfs:children]
@@ -50,6 +53,7 @@ content03
 content03
 
 [backup:children]
+backup3
 
 [press:children]
 content03

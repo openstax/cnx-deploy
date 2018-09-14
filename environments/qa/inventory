@@ -2,6 +2,9 @@
 # all-in-one host
 qa00.cnx.org
 
+[backup3]
+backup3.cnx.org
+
 # Grouped Hosts
 
 [nfs:children]
@@ -50,6 +53,7 @@ qa00
 qa00
 
 [backup:children]
+backup3
 
 [press:children]
 qa00

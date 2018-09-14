@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# The filename begins with tilde so these long running processes run after most other jobs, the number sets up the potential
+# for further ordering. The jobs in cron.weekly, etc., are run in lexical order for the C locale.
+
+/usr/local/bin/cnx-backup-archive '{{ archive_db_host }}' '{{ archive_db_port }}' '{{ archive_db_user }}' '{{ archive_db_name }}'
+
+# args are zodb host and environment name
+/usr/local/bin/cnx-backup-zodb '{{ hostvars[groups.zeo[0]].inventory_hostname }}' '{{ inventory_dir | basename }}'
