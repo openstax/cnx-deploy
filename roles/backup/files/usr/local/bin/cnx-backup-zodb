@@ -14,4 +14,4 @@ zodb_dump_filename=$backup_dir/$zodb_dump_base_name
 rsync -e "sudo -u backup ssh -i $backup_ssh_key" -a "backup@$zodb_host:$source" "$zodb_dump_filename"
 
 # save a copy on Amazon AWS S3
-/usr/bin/s3cmd put "$zodb_dump_filename" "s3://connexions/backups/$zodb_host/zodb/$db_dump_base_name"
+/usr/bin/s3cmd put "$zodb_dump_filename" "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name"
