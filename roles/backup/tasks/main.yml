@@ -27,14 +27,14 @@
 
 - name: install archive backup script
   become: yes
-  file:
+  copy:
     src: usr/local/bin/cnx-backup-archive
     dest: /usr/local/bin/cnx-backup-archive
     mode: 0755
 
 - name: install zodb backup script
   become: yes
-  file:
+  copy:
     src: usr/local/bin/cnx-backup-zodb
     dest: /usr/local/bin/cnx-backup-zodb
     mode: 0755
