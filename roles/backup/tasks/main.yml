@@ -63,6 +63,7 @@
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
 
 - name: create backup destination directory
+  become: yes
   file:
     path: "{{ remote_backup_user.home }}/cnx-backups"
     state: directory
