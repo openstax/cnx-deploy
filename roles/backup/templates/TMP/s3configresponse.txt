@@ -1,0 +1,9 @@
+{{ s3_access_key }}
+{{ s3_secret_key }}
+US
+{{ s3_encryption_pw }}
+/usr/bin/gpg
+Yes
+
+
+y

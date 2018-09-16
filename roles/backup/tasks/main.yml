@@ -8,7 +8,8 @@
 - name: create temporary file for S3 configuration
   become: yes
   template:
-    src: tmp/s3configresponse.txt
+    # using all-caps TMP here to get past .gitignore
+    src: TMP/s3configresponse.txt
     dest: /tmp/s3configresponse.txt
     mode: 0600
 
