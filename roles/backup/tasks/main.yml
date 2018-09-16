@@ -59,7 +59,7 @@
   become: yes
   authorized_key:
     user: backup
-    key: "{{ lookup('file', '{{ remote_backup_user.home }}/.ssh/{{ key_result.ssh_key_file }}_id_rsa.pub') }}"
+    key: "{{ lookup('file', '{{ key_result.ssh_key_file }}.pub') }}"
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
 
 - name: create backup destination directory
