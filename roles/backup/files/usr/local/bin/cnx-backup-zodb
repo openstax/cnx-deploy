@@ -1,9 +1,8 @@
 #!/bin/bash
 
 zodb_host=$1
-env=$2
 
-backup_ssh_key=~backup/.ssh/$env-id_rsa
+backup_ssh_key=~backup/.ssh/${zodb_host}_id_rsa
 
 source=/var/lib/cnx/cnx-buildout/var/filestorage/Data.fs
 
