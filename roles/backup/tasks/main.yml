@@ -61,6 +61,14 @@
     key: "{{ lookup('file', '{{ remote_backup_user.home }}/.ssh/{{ key_result.ssh_key_file }}_id_rsa.pub') }}"
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
 
+- name: create backup destination directory
+  file:
+    path: "{{ remote_backup_user.home }}/cnx-backups"
+    state: directory
+    owner: backup
+    group: backup
+    mode: 0775
+
 # TODO: dtw - 2018-09-13 - remove this block after production deploy
 - name: remove old weekly backup
   become: yes
