@@ -5,5 +5,4 @@
 
 /usr/local/bin/cnx-backup-archive '{{ archive_db_host }}' '{{ archive_db_port }}' '{{ archive_db_user }}' '{{ archive_db_name }}'
 
-# args are zodb host and environment name
 /usr/local/bin/cnx-backup-zodb '{{ hostvars[groups.zeo[0]].inventory_hostname }}'
