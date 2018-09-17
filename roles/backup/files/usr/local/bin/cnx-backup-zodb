@@ -11,6 +11,7 @@ zodb_dump_base_name=cnx-$zodb_host-Data.fs.$(date +%y-%m-%d)
 zodb_dump_filename=$backup_dir/$zodb_dump_base_name
 
 rsync -e "sudo -u backup ssh -o StrictHostKeyChecking=no -i $backup_ssh_key" -a "backup@$zodb_host:$source" "$zodb_dump_filename"
+gzip "$zodb_dump_filename"
 
 # save a copy on Amazon AWS S3
-/usr/bin/s3cmd put "$zodb_dump_filename" "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name"
+/usr/bin/s3cmd put "$zodb_dump_filename.gz" "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name.gz"
