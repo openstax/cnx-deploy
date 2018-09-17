@@ -17,7 +17,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-pg_dump -h "$archive_db_host" -p "$archive_db_port" -u "$archive_db_user" \
+pg_dump -h "$archive_db_host" -p "$archive_db_port" -U "$archive_db_user" \
     "$archive_db_name" | gzip > "$db_dump_filename"
 
 # save a copy on Amazon AWS S3
