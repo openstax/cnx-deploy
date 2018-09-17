@@ -46,7 +46,7 @@
     group: postgres
     mode: 0640
   notify:
-    - reload postgresql
+    - restart postgresql
 
 - name: configure postgresql.conf to include replication
   become: yes
