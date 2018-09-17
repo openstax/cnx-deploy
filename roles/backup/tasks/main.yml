@@ -15,7 +15,7 @@
 
 - name: configure S3
   become: yes
-  shell: /usr/bin/s3cmd --configure --config=/root/.s3config < /tmp/s3configresponse.txt
+  shell: /usr/bin/s3cmd --configure --config=/root/.s3cfg < /tmp/s3configresponse.txt
   args:
     creates: /root/.s3cfg
 
