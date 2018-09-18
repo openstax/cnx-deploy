@@ -81,10 +81,11 @@
 - name: set up weekly backup
   become: yes
   template:
-    # The filename begins with tilde so these long running processes run after most other jobs, the number sets up the potential
-    # for further ordering. The jobs in cron.weekly, etc., are run in lexical order for the C locale.
-    src: etc/cron.weekly/~90~backup-cnx-ENVIRONMENT
-    dest: /etc/cron.weekly/~90~backup-cnx-{{ inventory_dir | basename }}
+    # The filename begins with zz- so these long running processes run after most other jobs, the number sets up the potential
+    # for further ordering. The jobs in cron.weekly, etc., are run by run-parts in lexical order for the C locale and only 
+    # support names with [a-zA-Z0-9_-].
+    src: etc/cron.weekly/zz-90-backup-cnx-ENVIRONMENT
+    dest: /etc/cron.weekly/zz-90-backup-cnx-{{ inventory_dir | basename }}
     mode: 0755
 
 - name: install slim dump script
