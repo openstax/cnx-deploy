@@ -225,10 +225,9 @@ sub vcl_recv {
         set req.backend_hint = resource_cluster.backend();
     }
     elsif ( req.url ~ "^/exports/") {
-        # Note: Large static files served directly from waitress
-        # We could pipe, but varnish is probably
-        # more suitable for serving these files than waitress
-        set req.backend_hint = archive_cluster.backend();
+        # Webview nginx config serves /exports files from /var/www/files*
+        set req.backend_hint = webview;
+        return (pass);
     }
     # cnx rewrite archive - specials served from nginx statically
     elsif (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
@@ -365,7 +364,7 @@ sub vcl_backend_response {
     else {
         # This is (mostly) the builtin vcl_backend_response with added diagnostic information
         if (bereq.uncacheable) {
-            set beresp.http.X-Varnish-Status = "uncacheable - backend request marked uncacheable";
+            set beresp.http.X-Varnish-Status = "uncacheable - pass or hit-for-pass";
         } else {
             if (beresp.ttl <= 0s) {
                 set beresp.http.X-Varnish-Status = "uncacheable - ttl <= 0";
