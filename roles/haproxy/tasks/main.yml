@@ -52,11 +52,12 @@
 
         monitor-uri /haproxy-ping
 
-        timeout connect 7s
-        timeout queue   300s
-        timeout client  300s
-        timeout server  300s
-        timeout check   10s
+        timeout connect         7s
+        timeout queue           300s
+        timeout client          300s
+        timeout server          300s
+        timeout check           10s
+        timeout http-keep-alive 100ms
 
         # Enable status page at this URL, on the port HAProxy is bound to
         stats enable
