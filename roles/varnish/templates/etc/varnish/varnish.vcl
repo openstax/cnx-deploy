@@ -366,7 +366,10 @@ sub vcl_backend_response {
         if (bereq.uncacheable) {
             set beresp.http.X-Varnish-Status = "uncacheable - pass or hit-for-pass";
         } else {
-            if (beresp.ttl <= 0s) {
+            # Varnish does not set a TTL for 302 and 307 statuses by default
+            # If we see a 302 or 307 status with a TTL <= 0s,
+            # we let them fall through to our default override below instead
+            if (beresp.ttl <= 0s && beresp.status != 302 && beresp.status != 307) {
                 set beresp.http.X-Varnish-Status = "uncacheable - ttl <= 0";
             }
             elsif (beresp.http.Set-Cookie) {
