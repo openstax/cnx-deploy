@@ -23,7 +23,7 @@ kombu==4.2.1
 lxml==4.2.4
 MarkupSafe==1.0
 openstax-accounts==1.0.0
-packaging==17.1
+packaging==18.0
 parsimonious==0.8.1
 Paste==2.0.3
 PasteDeploy==1.5.2
