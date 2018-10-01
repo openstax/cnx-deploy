@@ -10,3 +10,6 @@
 #
 # Varnish log format, to be used by "varnishlog" or "varnishncsa"
 VARNISHLOG_ENABLED=1
+DAEMON_OPTS="-a \
+             -w /var/log/varnish/varnish.log \
+             -n varnish"
