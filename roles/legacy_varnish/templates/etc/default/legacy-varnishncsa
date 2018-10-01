@@ -2,4 +2,7 @@
 {#
 vim: syntax=jinja ft=jinja
 #}
-
+DAEMON_OPTS="-a \
+             -n legacy_varnish \
+             -f /var/log/varnish/varnishncsa.format \
+             -w /var/log/varnish/legacy-varnishncsa.log"
