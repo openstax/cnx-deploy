@@ -7,8 +7,12 @@
 #    ssh)
 
 # Target databases settings
-SLIM_DUMP_DB_NAME=cnx_slim_dump
-SLIM_DUMP_FILENAME="/var/backups/$SLIM_DUMP_DB_NAME.$(date +%Y-%m-%d).sql.gz"
+DUMP_BASE_DIR="/var/backups/"
+DUMP_DB_NAME=cnx_dev_dump
+SLIM_DUMP_NAME=cnx_slim_dump
+LEAN_DUMP_NAME=cnx_lean_dump
+SLIM_DUMP_FILENAME="$DUMP_BASE_DIR$SLIM_DUMP_NAME.$(date +%Y-%m-%d).sql.gz"
+LEAN_DUMP_FILENAME="$DUMP_BASE_DIR$LEAN_DUMP_NAME.$(date +%Y-%m-%d).sql.gz"
 
 # Source databases settings
 ARCHIVE_DB_HOST={{ archive_db_host }}
@@ -16,48 +20,62 @@ ARCHIVE_DB_PORT={{ archive_db_port }}
 ARCHIVE_DB_USER={{ archive_db_user }}
 ARCHIVE_DB_NAME={{ archive_db_name }}
 
-# Only set SSH_USER if pg_dump cannot access the production database
-SSH_USER=
+
+function cleanUpDumps {
+    # Only keep 3 copies the dump
+    bname=$(basename $1)
+    ls -1 -r $(dirname $1)/${bname/.*/}* | sed -n '4,$ p' | xargs rm -f
+}
 
 # Install clean up code
-function cleanup {
-    # Only keep 3 copies of slim dump
-    bname=$(basename $SLIM_DUMP_FILENAME)
-    ls -1 -r $(dirname $SLIM_DUMP_FILENAME)/${bname/.*/}* | sed -n '4,$ p' | xargs rm -f
-    psql -U postgres -c "DROP DATABASE IF EXISTS $SLIM_DUMP_DB_NAME;"
+function cleanUp {
+    cleanUpDumps $SLIM_DUMP_FILENAME
+    cleanUpDumps $LEAN_DUMP_FILENAME
+    psql -U postgres -c "DROP DATABASE IF EXISTS $DUMP_DB_NAME;"
 }
-trap cleanup EXIT
+trap cleanUp EXIT
+
 
 # 1. Create a temporary database for the slim dump
 psql -U postgres <<EOF
-DROP DATABASE IF EXISTS $SLIM_DUMP_DB_NAME;
-CREATE DATABASE $SLIM_DUMP_DB_NAME;
+DROP DATABASE IF EXISTS $DUMP_DB_NAME;
+CREATE DATABASE $DUMP_DB_NAME;
 EOF
+
 
 # 2. Copy the production database (or a backup of)
 if [[ -z "$SSH_USER" ]]
 then
     pg_dump -h "$ARCHIVE_DB_HOST" -p "$ARCHIVE_DB_PORT" -U "$ARCHIVE_DB_USER" \
-        "$ARCHIVE_DB_NAME" | psql -U postgres $SLIM_DUMP_DB_NAME
+        "$ARCHIVE_DB_NAME" | psql -U postgres $DUMP_DB_NAME
 else
     ssh -l $SSH_USER $ARCHIVE_DB_HOST pg_dump -U "$ARCHIVE_DB_USER" \
-        "$ARCHIVE_DB_NAME" | psql -U postgres $SLIM_DUMP_DB_NAME
+        "$ARCHIVE_DB_NAME" | psql -U postgres $DUMP_DB_NAME
 fi
+
 
 # 3. Replace the resource files in cnx_slim_dump with dummy files except
 #    index.cnxml, index.cnxml.html, index_auto_generated.cnxml, ruleset.css,
 #    featured-cover.png
-psql -U postgres $SLIM_DUMP_DB_NAME <<EOF
+psql -U postgres $DUMP_DB_NAME <<EOF
 ALTER TABLE files DISABLE TRIGGER USER;
 
-UPDATE files SET file = 'dummy'
-    WHERE NOT EXISTS (
-        SELECT 1 FROM module_files
-        WHERE filename IN ('index.cnxml', 'index.cnxml.html',
-                           'index_auto_generated.cnxml',
-                           'ruleset.css', 'featured-cover.png',
-                           'collection.xml')
-          AND files.fileid = module_files.fileid);
+WITH files_to_keep AS (
+  SELECT fileid
+  FROM module_files natural join files
+  WHERE
+    filename IN ('index.cnxml', 'index.cnxml.html',
+                 'index_auto_generated.cnxml',
+                 'ruleset.css', 'featured-cover.png',
+                 'collection.xml')
+    AND files.fileid = module_files.fileid
+UNION
+  SELECT fileid
+  FROM collated_file_associations
+)
+UPDATE files
+SET file = 'dummy'
+WHERE fileid not in (SELECT distinct fileid FROM files_to_keep);
 
 -- dummy 1x1.png file from https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png
 UPDATE files SET file = '\\x89504e470d0a1a0a0000000d494844520000000100000001010300000025db56ca00000003504c5445000000a77a3dda0000000174524e530040e6d8660000000a4944415408d76360000000020001e221bc330000000049454e44ae426082'
@@ -69,5 +87,14 @@ UPDATE files SET file = '\\x89504e470d0a1a0a0000000d4948445200000001000000010103
 ALTER TABLE files ENABLE TRIGGER USER;
 EOF
 
-# 4. Create a database dump file for download
-pg_dump -U postgres $SLIM_DUMP_DB_NAME | gzip > $SLIM_DUMP_FILENAME
+
+# 4. Create a slim database dump file for download
+pg_dump -U postgres $DUMP_DB_NAME | gzip > $SLIM_DUMP_FILENAME
+
+
+# 5. Lean out the database to have only OpenStax content
+${PWD}/generate_lean_query.py | psql -U postgres -d $DUMP_DB_NAME -a
+
+
+# 6. Create a lean database dump file for download
+pg_dump -U postgres $DUMP_DB_NAME | gzip > $LEAN_DUMP_FILENAME

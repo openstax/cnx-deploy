@@ -88,6 +88,15 @@
     dest: /etc/cron.weekly/zz-90-backup-cnx-{{ inventory_dir | basename }}
     mode: 0755
 
+- name: install lean query generating script
+  become: yes
+  when:
+    - slim_dumps | default(False)
+  file:
+    src: usr/local/bin/generate_lean_query.py
+    dest: /usr/local/bin/generate_lean_query.py
+    mode: 0755
+
 - name: install slim dump script
   become: yes
   when:
