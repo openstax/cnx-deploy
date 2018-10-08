@@ -92,7 +92,7 @@
   become: yes
   when:
     - slim_dumps | default(False)
-  file:
+  copy:
     src: usr/local/bin/generate_lean_query.py
     dest: /usr/local/bin/generate_lean_query.py
     mode: 0755
