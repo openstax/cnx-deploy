@@ -64,7 +64,10 @@ def get_openstax_book_ids():
         resp = urlopen(OPENSTAX_BOOKS_URL)
     except Exception:
         sys.exit(1)
-    data = json.load(resp)
+    # BBB Because the system only has Python 3.5 rather than Python >=3.7
+    ##data = json.load(resp)
+    data = json.loads(resp.read().decode('utf8'))
+
     return [x['cnx_id'] for x in data['items']]
 
 
