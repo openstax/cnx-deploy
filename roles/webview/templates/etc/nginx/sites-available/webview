@@ -100,7 +100,7 @@ server {
     location ~ /exports/(.+?)(\.[^/]+)/(.+?)(\.[^/]+)$ {
         expires     1y;
         root        /var/www/;
-        add_header  Link "<https://{{ frontend_domain }}/contents/$1/$3> ;rel=\"Canonical\""
+        add_header  Link "<https://{{ frontend_domain }}/contents/$1/$3> ;rel=\"Canonical\"";
         add_header  Content-Disposition "attachment; filename=$3$4";
         try_files   {% for dir in archive_exports_directories|default(default_archive_exports_directories) %}/{{ dir }}/$1$2 {% endfor %} =404;
     }
