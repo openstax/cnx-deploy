@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION
  RETURNS text
  LANGUAGE sql
  IMMUTABLE
-AS \$\$ select public.short_id(uuid) || '@' || concat_ws('.', major, minor) \$\$
+AS $$ select public.short_id(uuid) || '@' || concat_ws('.', major, minor) $$
 ;
 -- A temporary table to store the results of our query, which will be used twice
 CREATE TEMPORARY TABLE to_be_saved (module_ident INT);
