@@ -52,14 +52,32 @@
   user:
     name: backup
     state: present
+    shell: /bin/bash
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
   register: remote_backup_user
 
-- name: add authorized key to zodb server
+- name: add authorized key to zodb server with restricted execution
   become: yes
   authorized_key:
     user: backup
     key: "{{ key_result.ssh_public_key }}"
+    key_options: 'command="/usr/local/bin/rrsync -ro /var/backups/cnx-files",no-agent-forwarding,no-port-forwarding,no-pty,no-user-rc,no-X11-forwarding'
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+
+- name: create directory for restricted rsync
+  become: yes
+  files:
+    path: "{{ remote_backup_user.home }}/cnx-files"
+    state: directory
+    mode: 0755
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+
+- name: create zodb symlink
+  become: yes
+  file:
+    src: /var/lib/cnx/cnx-buildout/var/filestorage
+    dest: "{{ remote_backup_user.home }}/cnx-files/zodb"
+    state: link
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
 
 - name: create backup destination directory

@@ -4,7 +4,8 @@ zodb_host=$1
 
 backup_ssh_key=~backup/.ssh/${zodb_host}_id_rsa
 
-source=/var/lib/cnx/cnx-buildout/var/filestorage/Data.fs
+# uses a directory relative to the restricted directory specified in the backup user's authorized_keys on the source server
+source=zodb/Data.fs
 
 backup_dir=/var/backups/cnx-backups
 zodb_dump_base_name=cnx-$zodb_host-Data.fs.$(date +%y-%m-%d)
