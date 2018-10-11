@@ -56,6 +56,15 @@
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
   register: remote_backup_user
 
+- name: install restricted rsync script (provided with rsync)
+  become: yes
+  unarchive:
+    src: /usr/share/doc/rsync/scripts/rrsync.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    mode: 0755
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+
 - name: add authorized key to zodb server with restricted execution
   become: yes
   authorized_key:
