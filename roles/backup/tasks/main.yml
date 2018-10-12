@@ -58,10 +58,18 @@
 
 - name: install restricted rsync script (provided with rsync)
   become: yes
-  unarchive:
-    src: /usr/share/doc/rsync/scripts/rrsync.gz
-    dest: /usr/local/bin
-    remote_src: yes
+  shell: |
+    gunzip -c /usr/share/doc/rsync/scripts/rrsync.gz > /usr/local/bin/rrsync
+  args:
+    creates: /usr/local/bin/rrsync
+  delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
+
+- name: set attributes on rrsync script
+  become: yes
+  file:
+    path: /usr/local/bin/rrsync
+    owner: root
+    group: root
     mode: 0755
   delegate_to: "{{ hostvars[groups.zeo[0]].inventory_hostname }}"
 
