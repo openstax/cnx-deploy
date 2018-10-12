@@ -75,7 +75,7 @@
 
 - name: create directory for restricted rsync
   become: yes
-  files:
+  file:
     path: "{{ remote_backup_user.home }}/cnx-files"
     state: directory
     mode: 0755
