@@ -77,7 +77,6 @@ channel_processing
 publishing_worker
 zclient
 pdf_gen
-backup
 press
 press_worker
 
