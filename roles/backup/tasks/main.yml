@@ -106,13 +106,6 @@
     group: backup
     mode: 0775
 
-# TODO: dtw - 2018-09-13 - remove this block after production deploy
-- name: remove old weekly backup
-  become: yes
-  file:
-    path: /etc/cron.weekly/cnx-backup
-    state: absent
-
 - name: set up weekly backup
   become: yes
   template:
