@@ -8,8 +8,8 @@ backup_ssh_key=~backup/.ssh/${zodb_host}_id_rsa
 source=zodb/Data.fs
 
 backup_dir=/var/backups/cnx-backups
-zodb_dump_base_name=cnx-$zodb_host-Data.fs.$(date +%y-%m-%d)
-zodb_dump_filename=$backup_dir/$zodb_dump_base_name
+zodb_dump_base_name=cnx-$zodb_host-Data.fs
+zodb_dump_filename=$backup_dir/$zodb_dump_base_name.$(date +%y-%m-%d)
 
 rsync -e "sudo -u backup ssh -o StrictHostKeyChecking=no -i $backup_ssh_key" -a "backup@$zodb_host:$source" "$zodb_dump_filename"
 gzip "$zodb_dump_filename"
