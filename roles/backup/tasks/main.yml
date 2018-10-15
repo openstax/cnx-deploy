@@ -106,7 +106,7 @@
     group: backup
     mode: 0775
 
-- name: set up weekly backup
+- name: ENABLE weekly backup
   become: yes
   template:
     # The filename begins with zz- so these long running processes run after most other jobs, the number sets up the potential
@@ -115,6 +115,16 @@
     src: etc/cron.weekly/zz-90-backup-cnx-ENVIRONMENT
     dest: /etc/cron.weekly/zz-90-backup-cnx-{{ inventory_dir | basename }}
     mode: 0755
+  when:
+    - "'db_connected' in group_names"
+
+- name: DISABLE weekly backups if backup role is not included
+  become: yes
+  file:
+    path: /etc/cron.weekly/zz-90-backup-cnx-{{ inventory_dir | basename }}
+    state: absent
+  when:
+    - "'db_connected' not in group_names"
 
 - name: install lean query generating script
   become: yes
