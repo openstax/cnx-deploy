@@ -9,10 +9,18 @@ source=zodb/Data.fs
 
 backup_dir=/var/backups/cnx-backups
 zodb_dump_base_name=cnx-$zodb_host-Data.fs
-zodb_dump_filename=$backup_dir/$zodb_dump_base_name.$(date +%y-%m-%d)
+file_date=$(date +%y-%m-%d)
+zodb_dump_filename=$backup_dir/$zodb_dump_base_name.$file_date
+
+# Install clean up code - deletes all but the most recent 3 backups localy and on s3
+function cleanup {
+    ls -1 -r "$backup_dir/$zodb_dump_base_name"* | sed -n '4,$ p' | xargs rm -f
+    /usr/bin/s3cmd ls "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name*" | sort -rn | sed -rn '4,$ s/^ *([^ ]* *){3}//p' | xargs -L 1 s3cmd rm
+}
+trap cleanup EXIT
 
 rsync -e "sudo -u backup ssh -o StrictHostKeyChecking=no -i $backup_ssh_key" -a "backup@$zodb_host:$source" "$zodb_dump_filename"
 gzip "$zodb_dump_filename"
 
 # save a copy on Amazon AWS S3
-/usr/bin/s3cmd put "$zodb_dump_filename.gz" "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name.gz"
+/usr/bin/s3cmd put "$zodb_dump_filename.gz" "s3://connexions/backups/$zodb_host/zodb/$zodb_dump_base_name.$file_date.gz"

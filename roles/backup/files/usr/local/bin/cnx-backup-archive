@@ -11,9 +11,10 @@ backup_dir=/var/backups/cnx-backups
 db_dump_base_name=cnx_dump.$archive_db_host
 db_dump_filename=$backup_dir/$db_dump_base_name.$(date +%y-%m-%d).sql.gz
 
-# Install clean up code
+# Install clean up code - deletes all but the most recent 3 backups localy and on s3
 function cleanup {
     ls -1 -r "$backup_dir/$db_dump_base_name"* | sed -n '4,$ p' | xargs rm -f
+    /usr/bin/s3cmd ls "s3://connexions/backups/$archive_db_host/repository/$db_dump_base_name*" | sort -rn | sed -rn '4,$ s/^ *([^ ]* *){3}//p' | xargs -L 1 s3cmd rm
 }
 trap cleanup EXIT
 
