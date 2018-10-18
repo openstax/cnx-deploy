@@ -46,7 +46,7 @@
 
       # Load balancing the frontend grouping
       backend nodes
-        balance uri
+        balance leastconn
         option httpchk GET /ping HTTP/1.1\r\nHOST:\ {{ frontend_domain }}
         option forwardfor
 
