@@ -11,7 +11,7 @@ cnx-easybake==1.1.0
 cnx-epub==0.14.0
 cnx-publishing==0.14.1
 cnx-query-grammar==0.2.2
-cnx-recipes==1.17.0
+cnx-recipes==1.18.0
 cssselect==1.0.3
 -e git+https://github.com/Connexions/cssselect2.git@129462767fe0161a2441f4aa341521c636e1a9e1#egg=cssselect2
 db-migrator==1.1.0
