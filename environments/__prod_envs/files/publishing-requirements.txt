@@ -6,7 +6,7 @@ celery==4.2.1
 certifi==2018.10.15
 chardet==3.0.4
 cnx-archive==4.5.2
-cnx-db==2.5.1
+cnx-db==2.6.0
 cnx-easybake==1.1.0
 cnx-epub==0.14.0
 cnx-publishing==0.14.1
