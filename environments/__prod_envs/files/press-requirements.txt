@@ -4,7 +4,7 @@ bravado-core==5.0.7
 celery==4.2.1
 certifi==2018.10.15
 chardet==3.0.4
-cnx-db==2.6.1
+cnx-db==2.6.2
 cnx-litezip==1.5.0
 cnxml==2.2.0
 gunicorn==19.8.1
