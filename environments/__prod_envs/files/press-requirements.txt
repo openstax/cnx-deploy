@@ -19,7 +19,7 @@ PasteDeploy==1.5.2
 plaster==1.0
 plaster-pastedeploy==0.6
 psycopg2==2.7.5
-pyramid==1.9.2
+pyramid==1.10
 pyramid-swagger==2.6.2
 python-dateutil==2.7.5
 pytz==2018.7
