@@ -12,7 +12,7 @@ hupper==1.4
 idna==2.7
 Jinja2==2.10
 lxml==4.2.5
-MarkupSafe==1.0
+MarkupSafe==1.1.0
 packaging==18.0
 parsimonious==0.8.1
 Paste==3.0.4
