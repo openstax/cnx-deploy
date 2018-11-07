@@ -34,7 +34,7 @@ plaster-pastedeploy==0.6
 psycopg2==2.7.5
 PyICU==2.2
 pyparsing==2.2.2
-pyramid==1.10
+pyramid==1.10.1
 pyramid-jinja2==2.7
 pyramid-multiauth==0.9.0
 pyramid-sawing==1.1.3
