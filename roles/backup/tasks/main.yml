@@ -49,6 +49,7 @@
   register: key_result
 
 - name: ensure backup user is present on the zodb server and get the home directory
+  become: yes
   user:
     name: backup
     state: present
