@@ -8,7 +8,7 @@ cnx-epub==0.14.0
 cnx-query-grammar==0.2.2
 db-migrator==1.1.0
 funcsigs==1.0.2
-hupper==1.4
+hupper==1.4.1
 idna==2.7
 Jinja2==2.10
 lxml==4.2.5
