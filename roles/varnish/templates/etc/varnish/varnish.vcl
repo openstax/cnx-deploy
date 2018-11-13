@@ -62,7 +62,8 @@ backend webview {
 }
 
 probe archive_probe {
-    .expected_response = 404;
+    .url = "/extras";
+    .expected_response = 200;
 }
 
 # archive waitress
