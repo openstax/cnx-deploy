@@ -29,6 +29,7 @@
 
 - import_playbook: archive.yml not_standalone=yes
 - import_playbook: publishing.yml not_standalone=yes
+- import_playbook: database_migration.yml
 - import_playbook: channel_processing.yml
 - import_playbook: publishing_worker.yml
 - import_playbook: authoring.yml

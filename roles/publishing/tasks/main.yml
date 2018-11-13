@@ -2,24 +2,6 @@
 # Installs publishing with all the dependencies.
 
 # +++
-# Init databases
-# +++
-
-# BBB (3-Feb-12017) cnx-publishing-initdb is deprecated.
-- name: check for cnx-publishing-initdb
-  stat:
-    path: "/var/cnx/venvs/publishing/bin/cnx-publishing-initdb"
-  register: "publishing_initdb_executable"
-
-- name: trigger deprecated migration
-  # We check for the executable's existence because prior to its removal, the migrations lived in cnx-publishing.
-  when: "publishing_initdb_executable.stat.exists"
-  command: /bin/true
-  notify:
-    - migrate repository database (deprecated)
-# /BBB
-
-# +++
 # Init service
 # +++
 
