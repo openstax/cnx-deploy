@@ -109,22 +109,6 @@
     - restart publishing workers
     - restart channel processing
 
-# FIXME this won't be necessary once publishing is >=0.7
-- name: check existence of publishing migrations
-  become: yes
-  become_user: www-data
-  stat:
-    path: "/var/cnx/venvs/publishing/lib/python2.7/site-packages/cnxpublishing/sql/migrations"
-  register: publishing_migrations_dir
-
-- name: migrate repository database
-  when: not publishing_migrations_dir.stat.exists
-  become: yes
-  become_user: www-data
-  command: /bin/true
-  notify:
-    - migrate repository database
-
 # +++
 # Configure
 # +++
