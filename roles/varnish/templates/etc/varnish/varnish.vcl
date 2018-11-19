@@ -108,7 +108,7 @@ backend {{ backend_name }} {
 {% endfor %}
 
 probe press_probe {
-    .url = "/ping";
+    .url = "/api/ping";
     .expected_response = 200;
 }
 
