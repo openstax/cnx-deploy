@@ -1,6 +1,6 @@
 amqp==2.3.2
 billiard==3.5.0.4
-bravado-core==5.0.7
+bravado-core==5.10.0
 celery==4.2.1
 certifi==2018.10.15
 chardet==3.0.4
