@@ -9,7 +9,7 @@ archive_db_name=$4
 
 backup_dir=/var/backups/cnx-backups
 db_dump_base_name=cnx_dump.$archive_db_host
-db_dump_filename=$backup_dir/$db_dump_base_name.$(date +%y-%m-%d).sql.gz
+db_dump_filename=$backup_dir/$db_dump_base_name.$(date +%Y-%m-%d).sql.gz
 
 # Install clean up code - deletes all but the most recent 3 backups localy and on s3
 function cleanup {
