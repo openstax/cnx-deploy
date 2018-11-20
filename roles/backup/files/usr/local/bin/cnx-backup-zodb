@@ -9,7 +9,7 @@ source=zodb/Data.fs
 
 backup_dir=/var/backups/cnx-backups
 zodb_dump_base_name=cnx-$zodb_host-Data.fs
-file_date=$(date +%y-%m-%d)
+file_date=$(date +%Y-%m-%d)
 zodb_dump_filename=$backup_dir/$zodb_dump_base_name.$file_date
 
 # Install clean up code - deletes all but the most recent 3 backups localy and on s3
