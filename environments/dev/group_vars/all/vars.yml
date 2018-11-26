@@ -53,6 +53,9 @@ tutor_domain: tutor-dev.openstax.org
 exercises_domain: exercises-dev.openstax.org
 cms_domain: oscms-dev.openstax.org
 
+graylog_server: "{{ default_graylog_server }}"
+graylog_port: 5140
+
 accounts_disable_verify_ssl: yes
 accounts_stub: yes
 
