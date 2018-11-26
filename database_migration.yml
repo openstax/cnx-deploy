@@ -1,7 +1,7 @@
 ---
 
 - name: migrate repository database
-  hosts: archive
+  hosts: publishing
   tasks:
     - name: stop archive
       become: yes
