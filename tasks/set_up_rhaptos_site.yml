@@ -6,11 +6,11 @@
     chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: set up rhaptos print host
-  shell: "echo -c \"app.plone.rhaptos_print._host = 'http://{{ frontend_domain }}'; import transaction; transaction.commit()\" | ./bin/instance debug"
+  shell: "echo \"app.plone.rhaptos_print._host = 'http://{{ frontend_domain }}'; import transaction; transaction.commit()\" | ./bin/instance debug"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: set up collections allowed content types
-  shell: "echo -c \"app.plone.portal_types.Collection.allowed_content_types += ('UnifiedFile',); import transaction; transaction.commit()\" | ./bin/instance debug"
+  shell: "echo \"app.plone.portal_types.Collection.allowed_content_types += ('UnifiedFile',); import transaction; transaction.commit()\" | ./bin/instance debug"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
