@@ -11,6 +11,6 @@
     chdir: "/var/lib/cnx/cnx-buildout"
 
 - name: set up collections allowed content types
-  shell: "echo \"app.plone.portal_types.Collection.allowed_content_types += ('UnifiedFile',); import transaction; transaction.commit()\" | ./bin/instance debug"
+  shell: "echo \"app.plone.portal_types.Collection.allowed_content_types += [('UnifiedFile',),()]['UnifiedFile' in app.plone.portal_types.Collection.allowed_content_types]; import transaction; transaction.commit()\" | ./bin/instance debug"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
