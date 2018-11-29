@@ -3,7 +3,7 @@ appdirs==1.4.3
 Beaker==1.10.0
 billiard==3.5.0.4
 celery==4.2.1
-certifi==2018.10.15
+certifi==2018.11.29
 chardet==3.0.4
 cnx-archive==4.6.0
 cnx-db==2.7.0
