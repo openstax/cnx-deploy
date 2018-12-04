@@ -16,7 +16,7 @@ MarkupSafe==1.1.0
 packaging==18.0
 parsimonious==0.8.1
 Paste==3.0.5
-PasteDeploy==1.5.2
+PasteDeploy==2.0.1
 PasteScript==3.0.0
 pkg-resources==0.0.0
 plaster==1.0
