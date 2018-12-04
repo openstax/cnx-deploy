@@ -9,7 +9,7 @@ cnx-litezip==1.5.0
 cnxml==2.2.0
 gunicorn==19.8.1
 hupper==1.4.2
-idna==2.7
+idna==2.8
 jsonref==0.2
 jsonschema==2.6.0
 kombu==4.2.1
