@@ -33,7 +33,7 @@ pytz==2018.7
 PyYAML==3.13
 repoze.lru==0.7
 requests==2.20.1
-rhaptos.cnxmlutils==1.3.2
+rhaptos.cnxmlutils==1.3.3
 sanction==0.4.1
 six==1.11.0
 SQLAlchemy==1.2.14
