@@ -2,7 +2,7 @@ appdirs==1.4.3
 Beaker==1.10.0
 certifi==2018.11.29
 chardet==3.0.4
-cnx-archive==4.6.0
+cnx-archive==4.7.0
 cnx-db==2.7.0
 cnx-epub==0.14.0
 cnx-query-grammar==0.2.2
