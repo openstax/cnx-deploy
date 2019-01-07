@@ -13,7 +13,7 @@ idna==2.8
 jsonref==0.2
 jsonschema==2.6.0
 kombu==4.2.2.post1
-lxml==4.2.5
+lxml==4.3.0
 msgpack-python==0.5.6
 PasteDeploy==2.0.1
 plaster==1.0
