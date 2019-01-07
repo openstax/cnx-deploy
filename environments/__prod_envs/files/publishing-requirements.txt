@@ -20,7 +20,7 @@ hupper==1.4.2
 idna==2.8
 Jinja2==2.10
 kombu==4.2.2.post1
-lxml==4.2.5
+lxml==4.3.0
 MarkupSafe==1.1.0
 openstax-accounts==1.0.0
 packaging==18.0
