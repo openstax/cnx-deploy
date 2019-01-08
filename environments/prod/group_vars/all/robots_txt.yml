@@ -11,8 +11,6 @@ robots_txt:
     - legacy.cnx.org
     - /lenses
     - /browse_content
-    - /content/
-    - /content$
     - /*/pdf$
     - /*/epub$
     - /*/complete$
