@@ -4,7 +4,7 @@ certifi==2018.11.29
 chardet==3.0.4
 cnx-archive==4.8.0
 cnx-db==2.7.0
-cnx-epub==0.15.0
+cnx-epub==0.16.0
 cnx-query-grammar==0.2.2
 db-migrator==1.1.0
 funcsigs==1.0.2
