@@ -47,7 +47,7 @@ requests==2.21.0
 rhaptos.cnxmlutils==1.3.3
 sanction==0.4.1
 six==1.12.0
-SQLAlchemy==1.2.15
+SQLAlchemy==1.2.16
 tinycss2==0.6.1
 translationstring==1.3
 tzlocal==1.5.1
