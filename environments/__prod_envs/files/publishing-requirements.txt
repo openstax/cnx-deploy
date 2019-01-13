@@ -1,4 +1,4 @@
-amqp==2.3.2
+amqp==2.4.0
 appdirs==1.4.3
 Beaker==1.10.0
 billiard==3.5.0.5
