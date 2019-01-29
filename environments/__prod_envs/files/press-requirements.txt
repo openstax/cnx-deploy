@@ -18,7 +18,7 @@ msgpack-python==0.5.6
 PasteDeploy==2.0.1
 plaster==1.0
 plaster-pastedeploy==0.6
-psycopg2==2.7.6.1
+psycopg2==2.7.7
 pyramid==1.10.1
 pyramid-swagger==2.6.2
 python-dateutil==2.7.5
