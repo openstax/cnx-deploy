@@ -8,7 +8,7 @@ cnx-db==2.7.0
 cnx-litezip==1.6.0
 cnxml==2.2.0
 gunicorn==19.8.1
-hupper==1.4.2
+hupper==1.5
 idna==2.8
 jsonref==0.2
 jsonschema==2.6.0
