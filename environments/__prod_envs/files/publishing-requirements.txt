@@ -5,7 +5,7 @@ billiard==3.5.0.5
 celery==4.2.1
 certifi==2018.11.29
 chardet==3.0.4
-cnx-archive==4.8.0
+cnx-archive==4.10.0
 cnx-db==2.7.0
 cnx-easybake==1.2.0
 cnx-epub==0.17.0
