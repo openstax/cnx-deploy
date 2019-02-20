@@ -1,6 +1,7 @@
 db-migrator==1.1.0
 
 -e git+https://github.com/Connexions/cnx-query-grammar.git#egg=cnx-query-grammar
+-e git+https://github.com/openstax/cnx-transforms.git#egg=cnx-transforms
 -e git+https://github.com/Connexions/rhaptos.cnxmlutils.git@fix-nested-terms-in-glossary#egg=rhaptos.cnxmlutils
 -e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
 -e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
