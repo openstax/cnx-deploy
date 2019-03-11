@@ -9,7 +9,7 @@ cnx-query-grammar==0.2.2
 cnx-transforms==1.0.1
 db-migrator==1.1.0
 funcsigs==1.0.2
-hupper==1.5
+hupper==1.6.1
 idna==2.8
 Jinja2==2.10
 lxml==4.3.2
