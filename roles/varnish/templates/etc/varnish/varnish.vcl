@@ -404,6 +404,16 @@ sub vcl_backend_response {
                 set beresp.http.X-Varnish-Status = "uncacheable - legacy VersionedCompleteZip";
             }
 
+            # Redirect search traffic from archive.cnx.org URLs to the corresponding pages on CNX
+            # See: https://github.com/openstax/cnx/issues/209
+            if (bereq.http.host ~ "archive" && bereq.url ~ "^/contents/" && bereq.http.Referer ~ "google") {
+              set beresp.http.status = 302;
+              set beresp.http.Location = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
+              set beresp.http.X-Varnish-Status = "uncacheable - redirected google";
+              # Expose the canonical url as diagnostic information
+              set beresp.http.X-Varnish-Canonical-Url = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
+            }
+
             # Serve stale requests for up to 1 minute longer than the ttl
             # Contact the backend to obtain a fresh response during this time
             set beresp.grace = 60s;
