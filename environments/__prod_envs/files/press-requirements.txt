@@ -24,7 +24,7 @@ pyramid-swagger==2.6.2
 python-dateutil==2.8.0
 python-magic==0.4.15
 pytz==2018.9
-PyYAML==3.13
+PyYAML==5.1
 repoze.lru==0.7
 requests==2.21.0
 rhaptos.cnxmlutils==1.3.3
