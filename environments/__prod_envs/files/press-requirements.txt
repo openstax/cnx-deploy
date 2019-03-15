@@ -7,7 +7,7 @@ chardet==3.0.4
 cnx-db==3.0.0
 cnx-litezip==1.6.0
 cnxml==2.2.0
-gunicorn==19.8.1
+gunicorn==19.9.0
 hupper==1.5
 idna==2.8
 jsonref==0.2
