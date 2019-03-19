@@ -27,7 +27,7 @@ pytz==2018.9
 PyYAML==5.1
 repoze.lru==0.7
 requests==2.21.0
-rhaptos.cnxmlutils==1.4.0
+rhaptos.cnxmlutils==1.5.0
 sentry-sdk==0.7.6
 simplejson==3.16.0
 six==1.12.0
