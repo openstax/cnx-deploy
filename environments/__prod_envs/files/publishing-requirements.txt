@@ -8,7 +8,7 @@ chardet==3.0.4
 cnx-archive==4.11.0
 cnx-db==3.1.1
 cnx-easybake==1.2.4
-cnx-epub==0.17.1
+cnx-epub==0.18.0
 cnx-publishing==0.16.2
 cnx-query-grammar==0.2.2
 cnx-recipes==1.28.0
