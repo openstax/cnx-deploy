@@ -4,3 +4,8 @@
 # Default: open a Pull Request as soon as there's an update for one of your
 # dependencies available
 # schedule: every week
+
+# update schedule
+# default: empty
+# allowed: "every day", "every week", ..
+schedule: "every week on thursday"
