@@ -12,7 +12,7 @@ cnx-epub==0.18.0
 cnx-publishing==0.16.2
 cnx-query-grammar==0.2.2
 cnx-recipes==1.28.0
-cnx-transforms==1.0.1
+cnx-transforms==1.2.0
 cssselect==1.0.3
 cnx-cssselect2==0.2.3
 db-migrator==1.1.0
