@@ -238,6 +238,12 @@ sub vcl_recv {
         elsif ( req.method == "POST" || req.method == "PUT" || req.method == "DELETE" || req.url ~ "^/(publications|callback|a|login|logout|moderations|feeds/moderations.rss|contents/.*/(licensors|roles|permissions))") {
             set req.backend_hint = publishing_cluster.backend(req.http.cookie);
         }
+        elsif (req.url ~ "^/contents/.*@.*" && req.http.Referer ~ "google") {
+            # Don't cache the response, let the request go to vcl_backend_response so that
+            # we can redirect to the canonical URL which comes from the archive response
+            set req.backend_hint = archive_cluster.backend();
+            return (pass);
+        }
         else {
             set req.backend_hint = archive_cluster.backend();
         }
@@ -362,6 +368,16 @@ sub vcl_backend_response {
         set beresp.uncacheable = true;
         set beresp.http.X-Varnish-Status = "uncacheable - status code >= 500";
     }
+    # Redirect search traffic from archive.cnx.org URLs to the corresponding pages on CNX
+    # See: https://github.com/openstax/cnx/issues/209
+    elsif (bereq.http.host ~ "archive" && bereq.url ~ "^/contents/.*@.*" && bereq.http.Referer ~ "google") {
+      set beresp.http.status = 302;
+      set beresp.http.Location = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
+      set beresp.http.X-Varnish-Status = "uncacheable - redirected google";
+      set beresp.ttl = 0s;
+      # Expose the canonical url as diagnostic information
+      set beresp.http.X-Varnish-Canonical-Url = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
+    }
     else {
         # This is (mostly) the builtin vcl_backend_response with added diagnostic information
         if (bereq.uncacheable) {
@@ -402,16 +418,6 @@ sub vcl_backend_response {
             }
             elsif (bereq.url ~ "content/[^/]*/[0-9.]*/complete$") {
                 set beresp.http.X-Varnish-Status = "uncacheable - legacy VersionedCompleteZip";
-            }
-
-            # Redirect search traffic from archive.cnx.org URLs to the corresponding pages on CNX
-            # See: https://github.com/openstax/cnx/issues/209
-            if (bereq.http.host ~ "archive" && bereq.url ~ "^/contents/.*@.*" && bereq.http.Referer ~ "google") {
-              set beresp.http.status = 302;
-              set beresp.http.Location = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
-              set beresp.http.X-Varnish-Status = "uncacheable - redirected google";
-              # Expose the canonical url as diagnostic information
-              set beresp.http.X-Varnish-Canonical-Url = regsub(beresp.http.Link, "^<(https://.*)>.*Canonical.", "\1");
             }
 
             # Serve stale requests for up to 1 minute longer than the ttl
