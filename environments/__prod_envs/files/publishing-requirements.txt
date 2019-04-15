@@ -9,7 +9,7 @@ cnx-archive==4.11.0
 cnx-db==3.1.1
 cnx-easybake==1.2.5
 cnx-epub==0.18.0
-cnx-publishing==0.16.2
+cnx-publishing==0.16.3
 cnx-query-grammar==0.2.2
 cnx-recipes==1.29.0
 cnx-transforms==1.2.0
