@@ -9,8 +9,7 @@
 - name: install python 3.6
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - "python3.6-dev"
+      - "python3.6-venv"
     state: present
-  with_items:
-    - "python3.6-dev"
-    - "python3.6-venv"

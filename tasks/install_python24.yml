@@ -10,19 +10,19 @@
 - name: install prerequisites
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - build-essential
+      - libreadline6-dev
+      - libncurses5-dev
+      # Required for zlib support in python.
+      # See also, http://fnch.users.sourceforge.net/pythononubuntu1104.html
+      - dpkg-dev
+      - zlib1g-dev
+      # Build with SSL support because cnx-buildout contacts PyPI over SSL.
+      - libssl-dev
     state: present
     update_cache: yes
-  with_items:
-    - build-essential
-    - libreadline6-dev
-    - libncurses5-dev
-    # Required for zlib support in python.
-    # See also, http://fnch.users.sourceforge.net/pythononubuntu1104.html
-    - dpkg-dev
-    - zlib1g-dev
-    # Build with SSL support because cnx-buildout contacts PyPI over SSL.
-    - libssl-dev
+
 
 # +++
 # Install
