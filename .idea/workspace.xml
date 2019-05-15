@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d541f238-a83b-4e9d-a415-4b5e76070538" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/jre8/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/jre8/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/press_common/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/press_common/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/publishing_common/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/publishing_common/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/python3/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/python3/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/zclient/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/zclient/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/zope_common/tasks/install_cnx_buildout.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/zope_common/tasks/install_cnx_buildout.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles/zope_common/tasks/pdf_gen_dependencies.yml" beforeDir="false" afterPath="$PROJECT_DIR$/roles/zope_common/tasks/pdf_gen_dependencies.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks/install_python24.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/install_python24.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,8 +51,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/roles/zclient/tasks/main.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="51" column="11" lean-forward="true" selection-start-line="51" selection-start-column="11" selection-end-line="51" selection-end-column="11" />
+            <state relative-caret-position="250">
+              <caret line="47" column="5" lean-forward="true" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -220,6 +212,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
@@ -355,8 +348,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/roles/zclient/tasks/main.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="51" column="11" lean-forward="true" selection-start-line="51" selection-start-column="11" selection-end-line="51" selection-end-column="11" />
+        <state relative-caret-position="250">
+          <caret line="47" column="5" lean-forward="true" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
         </state>
       </provider>
     </entry>
