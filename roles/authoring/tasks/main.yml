@@ -11,11 +11,10 @@
 - name: install build utilities
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - build-essential
+      - zlib1g-dev
     state: present
-  with_items:
-    - build-essential
-    - zlib1g-dev
 
 - name: install postgres client
   become: yes

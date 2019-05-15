@@ -4,14 +4,13 @@
 - name: install build utilities
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - build-essential
+      # pkg-config is required for plxslt builds
+      - pkg-config
+      # unzip is needed for the source acquisition step
+      - unzip
     state: present
-  with_items:
-    - build-essential
-    # pkg-config is required for plxslt builds
-    - pkg-config
-    # unzip is needed for the source acquisition step
-    - unzip
 
 - name: create temp unpack location
   become: yes

@@ -4,8 +4,8 @@
 - name: install python 2.x and tools
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - python-dev
+      - python-virtualenv
     state: present
-  with_items:
-    - python-dev
-    - python-virtualenv
+

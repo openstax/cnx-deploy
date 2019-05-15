@@ -43,18 +43,18 @@
 - name: install connexions pkgs
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - connexions-cnxml-0.8
+      - connexions-cnxml-0.7
+      - connexions-mdml-0.5
+      - connexions-memcases-xml
+      - connexions-qml-1.0
+      - connexions-bibtexml-1.0
+      - connexions-mathml-2.0
+      - connexions-mathml-3.0
+      - connexions-collxml-1.0
     state: present
     force: yes
   with_items:
-    - connexions-cnxml-0.8
-    - connexions-cnxml-0.7
-    - connexions-mdml-0.5
-    - connexions-memcases-xml
-    - connexions-qml-1.0
-    - connexions-bibtexml-1.0
-    - connexions-mathml-2.0
-    - connexions-mathml-3.0
-    - connexions-collxml-1.0
   tags:
     - install-cnxml-dtd-pkgs
