@@ -7,13 +7,12 @@
 
 - name: install dependencies
   apt:
-    name: "{{ item }}"
+    name:
+      - libjpeg-dev
+      - libpng-dev
+      - build-essential
     state: present
   become: yes
-  with_items:
-    - libjpeg-dev
-    - libpng-dev
-    - build-essential
   tags: buildout-apt
 
 # +++

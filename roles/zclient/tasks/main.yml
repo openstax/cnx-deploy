@@ -35,12 +35,11 @@
 - name: install packages for latex import
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - tralics
+      - texlive-latex-base
+      - imagemagick
     state: present
-  with_items:
-    - tralics
-    - texlive-latex-base
-    - imagemagick
   tags:
     - install-latex-import
 
