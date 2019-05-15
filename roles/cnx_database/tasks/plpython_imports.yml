@@ -16,13 +16,12 @@
 - name: install build utilities
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - build-essential
+      - git
+      - libpq-dev
+      - zlib1g-dev
     state: present
-  with_items:
-    - build-essential
-    - git
-    - libpq-dev
-    - zlib1g-dev
 
 # +++
 # Install virtualenv(s)
