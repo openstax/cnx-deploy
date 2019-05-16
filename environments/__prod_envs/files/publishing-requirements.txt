@@ -1,7 +1,7 @@
 amqp==2.4.2
 appdirs==1.4.3
 Beaker==1.10.1
-billiard==3.5.0.2
+billiard==3.6.0.0
 celery==4.2.1
 certifi==2019.3.9
 chardet==3.0.4
