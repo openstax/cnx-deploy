@@ -3,7 +3,8 @@ Beaker==1.10.1
 certifi==2018.11.29
 chardet==3.0.4
 cnx-archive==4.11.0
-cnx-db==3.1.1
+cnx-common==1.0.1
+cnx-db==3.2.0
 cnx-epub==0.18.0
 cnx-query-grammar==0.2.2
 cnx-transforms==1.2.0
