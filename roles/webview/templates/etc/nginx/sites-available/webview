@@ -1,3 +1,8 @@
+map $request_uri $rex_uri {
+    default "no-match";
+    include /etc/nginx/uri-maps/rex-uris.map;
+}
+
 server {
     listen          8081;
     server_name     {{ frontend_domain }};
@@ -5,6 +10,10 @@ server {
     index           index.html;
     try_files       $uri $uri/ /index.html;
     expires         -1;
+
+    if ($rex_uri != "no-match") {
+        return 302 https://{{ rex_domain }}$rex_uri;
+    }
 
     location /ping {
         add_header Content-Length 0;
