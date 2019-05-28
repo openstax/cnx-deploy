@@ -119,12 +119,62 @@ def update_rex_redirects(rex_host):
             write_nginx_map(book_uri_map, out=fb)
 
 
+def generate_cnx_uris(book_id):
+    """\
+    Generates a list of URIs for a cnx book. The URIs are several variations
+    of the same page. This includes URIs with and without versions
+    that use both the long and short id as well as the combination of the two.
+
+    """
+    nodes = list(get_book_nodes(book_id))
+    book_node = nodes[0]
+
+    short_book_id = book_node['short_id']
+
+    for node in nodes[1:]:  # skip the book
+        # Non-versioned URIs
+        yield f"/contents/{book_id}:{node['id']}/{node['slug']}"
+        yield f"/contents/{book_id}:{node['short_id']}/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}:{node['id']}/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}:{node['short_id']}/{node['slug']}"
+        # Partial versioned URIs
+        yield f"/contents/{book_id}@1.1:{node['id']}/{node['slug']}"
+        yield f"/contents/{book_id}@2.99:{node['short_id']}/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}@15.123:{node['id']}/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}@0.0:{node['short_id']}/{node['slug']}"
+        # Fully versioned URIs
+        yield f"/contents/{book_id}@1.1:{node['id']}@2/{node['slug']}"
+        yield f"/contents/{book_id}@2.99:{node['short_id']}@0/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}@15.123:{node['id']}@999/{node['slug']}"
+        yield f"/contents/{book_node['short_id']}@0.0:{node['short_id']}@654321/{node['slug']}"
+
+
+
+
+@click.command()
+@click.argument('rex-host')
+def generate_cnx_uris_for_rex_books(rex_host):
+    """This outputs a list of CNX URIs to stdout.
+    These are URIs that should redirect to REX.
+
+    The URIs output by this function are intended for testing use.
+    They exercise a number of variations the URI can be represented as.
+
+    """
+    release_json_url = get_rex_release_json_url(rex_host)
+    release_data = requests.get(release_json_url).json()
+    for book in release_data['books']:
+        for uri in generate_cnx_uris(book):
+            click.echo(uri)
+
+
 @click.group()
 def main():
     pass
 
 
 main.add_command(update_rex_redirects)
+main.add_command(generate_cnx_uris_for_rex_books)
 
 
 if __name__ == '__main__':

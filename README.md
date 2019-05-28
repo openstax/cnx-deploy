@@ -32,11 +32,22 @@ Please see the environment's README for specific details.
 
 ## Updating generated content
 
+### Updating the REX redirects
+
 This project has generatated content in it. By running the `python3 .update/do.py` you are updating that content. It's your responsibilty to commit, push and create a pull request for the changes.
 
 ```sh
 pip3 install --upgrade -r .update/requirements.txt
 python3 .update/do.py update-rex-redirects $REX_HOST
+```
+
+### Updating the REX redirects testing data
+
+The update script can be used to update the list of URLs used to load test and functional test the application.
+
+```sh
+pip3 install --upgrade -r .update/requirements.txt
+python3 .update/do.py generate-cnx-uris-for-rex-books $REX_HOST > ./cnx-uris.txt
 ```
 
 ## Troubleshooting
