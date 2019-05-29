@@ -93,3 +93,4 @@ google_site_verification_filename: "{{ vault_google_site_verification_filename }
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
+rex_domain: rex-web.herokuapp.com
