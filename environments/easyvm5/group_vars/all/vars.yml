@@ -70,3 +70,4 @@ nfs_server_for_specials: "{{ _host_prefix }}.cnx.org"
 webview_version: master
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
+rex_domain: rex-web.herokuapp.com
