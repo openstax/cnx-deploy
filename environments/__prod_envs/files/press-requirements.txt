@@ -12,7 +12,7 @@ hupper==1.6.1
 idna==2.8
 jsonref==0.2
 jsonschema==3.0.1
-kombu==4.3.0
+kombu==4.6.0
 lxml==4.3.3
 msgpack-python==0.5.6
 PasteDeploy==2.0.1
