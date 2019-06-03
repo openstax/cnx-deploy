@@ -31,7 +31,7 @@
 - name: copy CA chain for graylog
   become: yes
   copy:
-    src: etc/ssl/certs/ca-chain.pem
+    src: "{{ role_path }}/files/etc/ssl/certs/ca-chain.pem"
     dest: /etc/ssl/certs/ca-chain.pem
     mode: 0644
     group: ssl-cert
