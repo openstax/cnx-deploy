@@ -1,9 +1,14 @@
 ---
-- name: install rsyslog-gnutls
+- name: install rsyslog and rsyslog-gnutls
   become: yes
   apt:
-    name: rsyslog-gnutls
+    name: "{{ packages }}"
     state: present
+    update_cache: yes
+  vars: 
+    packages: 
+    - rsyslog
+    - rsyslog-gnutls
 
 - name: rsyslog conf template
   become: yes
