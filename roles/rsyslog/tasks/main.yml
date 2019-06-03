@@ -27,3 +27,13 @@
   when:
     - graylog_server is defined
     - graylog_port is defined
+
+- name: copy CA chain for graylog
+  become: yes
+  copy:
+    src: etc/ssl/certs/ca-chain.pem
+    dest: /etc/ssl/certs/ca-chain.pem
+    mode: 0644
+    group: ssl-cert
+  notify: restart rsyslog
+  tags: rsyslog-conf
