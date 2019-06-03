@@ -1,4 +1,9 @@
 ---
+- name: install rsyslog-gnutls
+  become: yes
+  apt:
+    name: rsyslog-gnutls
+    state: present
 
 - name: rsyslog conf template
   become: yes
