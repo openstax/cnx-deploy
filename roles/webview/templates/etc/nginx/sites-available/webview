@@ -11,9 +11,11 @@ server {
     try_files       $uri $uri/ /index.html;
     expires         -1;
 
+    {% if rex_redirects_enabled %}
     if ($rex_uri != "no-match") {
         return 302 https://{{ rex_domain }}$rex_uri;
     }
+    {% endif %}
 
     location /ping {
         add_header Content-Length 0;
