@@ -44,6 +44,6 @@
     src: "{{ role_path }}/files/etc/ssl/certs/ca-chain.pem"
     dest: /etc/ssl/certs/ca-chain.pem
     mode: 0644
-    group: ssl-cert
+    group: root
   notify: restart rsyslog
   tags: rsyslog-conf
