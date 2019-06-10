@@ -55,6 +55,5 @@
       - connexions-collxml-1.0
     state: present
     force: yes
-  with_items:
   tags:
     - install-cnxml-dtd-pkgs
