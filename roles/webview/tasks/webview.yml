@@ -81,6 +81,27 @@
   notify:
     - reload nginx
 
+- name: create the uri-maps directory
+  become: yes
+  file:
+    path: /etc/nginx/uri-maps
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy main nginx config
+  become: yes
+  copy:
+    src: etc/nginx/uri-maps/rex-uris.map
+    dest: /etc/nginx/uri-maps/rex-uris.map
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload nginx
+
 - name: enable the webview nginx site
   become: yes
   file:
