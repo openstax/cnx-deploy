@@ -27,6 +27,13 @@
         group: root
         mode: 0644
       register: nfs_configuration
+    - name: add cronjob to pune files directories
+      template:
+        src: etc/cron.daily/var_www_files_cleanup
+        dest: /etc/cron.daily/var_www_files_cleanup
+        owner: root
+        group: root
+        mode: 0755
     - name: reload nfs
       when: nfs_configuration is changed
       service:
