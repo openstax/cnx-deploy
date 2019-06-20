@@ -4,15 +4,16 @@
 - name: install postgres
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - "postgresql-{{ postgres_version }}"
+      - "postgresql-server-dev-{{ postgres_version }}"
+      - "postgresql-client-{{ postgres_version }}"
+      - "postgresql-contrib-{{ postgres_version }}"
+      # We'll assume plpython is required...
+      - "postgresql-plpython-{{ postgres_version }}"
     state: present
-  with_items:
-    - "postgresql-{{ postgres_version }}"
-    - "postgresql-server-dev-{{ postgres_version }}"
-    - "postgresql-client-{{ postgres_version }}"
-    - "postgresql-contrib-{{ postgres_version }}"
-    # We'll assume plpython is required...
-    - "postgresql-plpython-{{ postgres_version }}"
+
+
   notify:
     - restart postgresql
 
