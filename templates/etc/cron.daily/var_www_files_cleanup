@@ -1,6 +1,6 @@
 {% for nfs_mount in nfs_mounts|default(default_nfs_mounts) %}
-find {{ nfs_mount.name }} -type f -name 'm*.zip' -mtime +21 -exec rm {} \;
-find {{ nfs_mount.name }} -type f -name 'm*.pdf' -mtime +21 -exec rm {} \;
-find {{ nfs_mount.name }} -type f -name 'col*complete.zip' -mtime +180 -exec rm {} \;
-find {{ nfs_mount.name }} -type f -name 'col*offline.zip' -mtime +180 -exec rm {} \;
+find -O3 {{ nfs_mount.name }} -mindepth 1 \( -name m\*.zip -type f -mtime +21 \) -print0 | xargs -0 rm -f
+find -O3 {{ nfs_mount.name }} -mindepth 1 \( -name m\*.pdf -type f -mtime +21 \) -print0 | xargs -0 rm -f
+find -O3 {{ nfs_mount.name }} -mindepth 1 \( -name m\col*complete.zip -type f -mtime +21 \) -print0 | xargs -0 rm -f
+find -O3 {{ nfs_mount.name }} -mindepth 1 \( -name m\col*complete.pdf -type f -mtime +21 \) -print0 | xargs -0 rm -f
 {% endfor %}
