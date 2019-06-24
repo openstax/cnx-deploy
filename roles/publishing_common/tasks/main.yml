@@ -38,7 +38,7 @@
     path: "/var/cnx/venvs"
     state: directory
     mode: 0755
-    owner: www-data
+    owner: "{{ venvs_owner|default('www-data') }}"
 
 - name: set the owner of venvs directory
   become: yes
@@ -46,11 +46,11 @@
     path: "/var/cnx/venvs"
     state: directory
     recurse: yes
-    owner: www-data
+    owner: "{{ venvs_owner|default('www-data') }}"
 
 - name: create the publishing virtualenv
   become: yes
-  become_user: www-data
+  become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     name: pip
     virtualenv: "/var/cnx/venvs/publishing"
@@ -94,7 +94,7 @@
 
 - name: install publishing
   become: yes
-  become_user: www-data
+  become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
