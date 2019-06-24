@@ -30,6 +30,10 @@
         #     Error: Invalid data directory
         # This appears to be a problem after a postgresql-common update
         PGHOST: "{{ archive_db_host }}"
+        # These environment variables are for deferred migrations to purge cache
+        ARCHIVE_DOMAIN: "{{ arclishing_domain }}"
+        VARNISH_HOSTS: "{{ groups.frontend|join(',') }}"
+        VARNISH_PORT: "{{ varnish_port }}"
       become: yes
       become_user: "{{ venvs_owner|default('www-data') }}"
       run_once: yes
