@@ -31,7 +31,7 @@ pyramid-multiauth==0.9.0
 pyramid-sawing==1.1.3
 pyramid-translogger==0.1
 python-memcached==1.59
-pytz==2018.9
+pytz==2019.1
 PyYAML==5.1
 repoze.lru==0.7
 requests==2.21.0
