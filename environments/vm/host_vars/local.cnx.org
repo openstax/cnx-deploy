@@ -1,3 +1,6 @@
 ---
 source_dir: /var/lib/cnx
 local_source_dir: "{{ '~/cnx/src' | expanduser }}"
+accounts_stub_users:
+  - "admin,admin"
+  - "moderator,moderator"

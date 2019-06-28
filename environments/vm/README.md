@@ -21,6 +21,7 @@ ansible-playbook -i environments/vm/inventory configure_hosts.yml
 For provisioning the cnx-suite onto a VM:
 
 ```sh
+rm group_vars/all/vault.yml  # this is not necessary for development
 ansible-playbook -i environments/vm/inventory main.yml
 ```
 
