@@ -121,6 +121,16 @@
   with_items:
     - cnx
     - cnx/publishing
+
+- name: check whether repository database is initialized
+  register: repo_db
+  become: yes
+  command: "/var/cnx/venvs/publishing/bin/dbmigrator --config /etc/cnx/publishing/app.ini --context cnx-db list"
+  ignore_errors: True
+
+- name: initialize repository database
+  when: "'You may need to create the schema_migrations table' in repo_db.stdout"
+  command: "/bin/true"
   notify:
     - initialize repository database
 
