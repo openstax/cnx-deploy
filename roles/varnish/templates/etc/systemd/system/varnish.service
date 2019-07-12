@@ -9,6 +9,9 @@ LimitNOFILE={{ varnish.nfiles|default(131072) }}
 LimitMEMLOCK={{ varnish.memlock|default(82000) }}
 ExecStart=/usr/sbin/varnishd $DAEMON_OPTS
 ExecReload=/usr/share/varnish/varnishreload
+{% else %}
+ExecReload=/usr/share/varnish/reload-vcl
+{% endif %}
 ProtectSystem=full
 ProtectHome=true
 PrivateTmp=true
