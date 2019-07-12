@@ -8,6 +8,7 @@ EnvironmentFile=-/etc/default/varnish
 LimitNOFILE={{ varnish.nfiles|default(131072) }}
 LimitMEMLOCK={{ varnish.memlock|default(82000) }}
 ExecStart=/usr/sbin/varnishd $DAEMON_OPTS
+{% if hostvars[inventory_hostname].ansible_distribution_version  == '18.04' %}
 ExecReload=/usr/share/varnish/varnishreload
 {% else %}
 ExecReload=/usr/share/varnish/reload-vcl
