@@ -3,7 +3,7 @@
 - name: install dependencies
   apt:
     name:
-      - python-imaging
+      - python-lib
       - gif2png
       - cjk-latex
       - texlive-latex-extra
@@ -15,7 +15,6 @@
       - tralics
       - unzip
       - libxml2-utils
-      - texlive-latex3
       - libedit-dev
       - zip
       - libreoffice-script-provider-python
@@ -68,7 +67,7 @@
       - libfont-afm-perl
       - libfontconfig1:amd64
       - libfontenc1:amd64
-      - libxfont1:amd64
+      - libxfont2
       - texlive-font-utils
       - texlive-fonts-extra
       - texlive-fonts-extra-doc
