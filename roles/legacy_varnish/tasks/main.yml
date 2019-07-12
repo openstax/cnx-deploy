@@ -25,6 +25,7 @@
     dest: "/usr/share/varnish/reload-vcl"
     regexp: 'while getopts a:b:CdFf:g:h:i:l:M:n:P:p:S:s:T:t:u:Vw: flag \$DAEMON_OPTS'
     replace: 'while getopts a:b:CdFf:g:h:i:j:l:M:n:P:p:S:s:T:t:u:Vw: flag $DAEMON_OPTS'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '16.04'
 
 # +++
 # Configure
