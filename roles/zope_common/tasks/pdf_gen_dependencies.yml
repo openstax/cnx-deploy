@@ -3,7 +3,7 @@
 - name: install dependencies
   apt:
     name:
-      - python-lib
+      - python-pil
       - gif2png
       - cjk-latex
       - texlive-latex-extra
