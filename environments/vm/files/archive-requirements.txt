@@ -4,8 +4,8 @@ db-migrator==1.1.0
 -e git+https://github.com/openstax/cnx-transforms.git#egg=cnx-transforms
 -e git+https://github.com/Connexions/rhaptos.cnxmlutils.git#egg=rhaptos.cnxmlutils
 -e git+https://github.com/Connexions/cnx-epub.git#egg=cnx-epub
--e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
 -e git+https://github.com/Connexions/cnx-db.git#egg=cnx-db
+-e git+https://github.com/Connexions/cnx-archive.git#egg=cnx-archive
 
 # Deployment specific dependencies
 pyramid_sawing==1.1.3
