@@ -98,7 +98,7 @@
   pip:
     requirements: "/var/lib/cnx/publishing-requirements.txt"
     virtualenv: "/var/cnx/venvs/publishing"
-    state: latest
+    state: forcereinstall
 
 - name: restart publishing
   command: "/bin/true"
