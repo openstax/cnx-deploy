@@ -35,7 +35,7 @@ pytz==2019.2
 PyYAML==5.1.2
 repoze.lru==0.7
 requests==2.22.0
-rhaptos.cnxmlutils==1.7.0
+rhaptos.cnxmlutils==1.7.1
 sanction==0.4.1
 six==1.12.0
 SQLAlchemy==1.3.6
