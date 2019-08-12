@@ -35,6 +35,13 @@ def flatten_tree(tree):
             for y in flatten_tree(x):
                 yield y
 
+def first_leaf(tree):
+    """Find the first leaf node (Page) in the tree."""
+    if 'contents' in tree:
+        x = tree['contents'][0]
+        return first_leaf(x)
+    else:
+        return tree
 
 def rex_uri(book, page):
     if page is None:
@@ -65,13 +72,15 @@ def expand_tree_node(node):
         result['short_id'] = exc.id
     return result
 
-
-def get_book_nodes(book_id):
+def get_book_tree(book_id):
     """Returns a list of nodes in a book's tree."""
     resp = requests.get(f'https://{CNX_HOST}/contents/{book_id}.json')
     metadata = resp.json()
-    book_short_id = metadata
-    for x in flatten_tree(metadata['tree']):
+    return metadata['tree']
+
+def get_book_nodes(book_id):
+    """Returns a list of nodes in a book's tree."""
+    for x in flatten_tree(get_book_tree(book_id)):
         yield expand_tree_node(x)
 
 
@@ -81,14 +90,19 @@ def generate_nginx_uri_mappings(book):
     configuration's `map` block.
 
     """
+    tree = get_book_tree(book)
+    non_preface_tree = [ x for x in tree['contents'] if 'contents' in x ][0]
+    intro_page = first_leaf(non_preface_tree)
+
     nodes = list(get_book_nodes(book))
     book_node = nodes[0]
     book_slug = get_book_slug(book)
 
     uri_mappings = [
         # Book URL redirects to the first page of the REX book
-        (cnx_uri_regex(book_node, None), rex_uri(book_slug, nodes[1]['slug']),)
+        (cnx_uri_regex(book_node, None), rex_uri(book_slug, intro_page['slug']),)
     ]
+
     for node in nodes[1:]:  # skip the book
         uri_mappings.append(
             (cnx_uri_regex(book_node, node),

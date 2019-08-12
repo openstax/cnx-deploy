@@ -1,4 +1,4 @@
-~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/preface;
+~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/1-introduction;
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(7c42370b-c3ad-48ac-9620-d15367b882c6|fEI3C8Ot)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/preface;
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(45be1653-44af-5b6a-8616-658144b61046|Rb4WU0Sv)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/unit-1-levels-of-organization;
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(b4733279-9ed0-5a6d-9647-4382723c3050|tHMyeZ7Q)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/1-an-introduction-to-the-human-body;
@@ -369,7 +369,7 @@
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(fb234bc5-b334-5277-b187-c7d9a42cd182|-yNLxbM0)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/28-critical-thinking-questions;
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(be8cf726-95fa-5783-a71c-0815bdbf8726|voz3JpX6)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/references;
 ~/contents/(14fb4ad7-39a1-4eee-ab6e-3ef2482e3e22|FPtK1zmh)(@[.\d]+)?:(808e7285-11d0-51fe-94fb-1747bab95c65|gI5yhRHQ)(@[\d]+)?(/[-%\w\d]+)?$    /books/anatomy-and-physiology/pages/index;
-~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/preface;
+~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/1-introduction;
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(b795b4f7-3318-4419-a338-8f5eeb0874ee|t5W09zMY)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/preface;
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(20861ec0-e3ec-5675-8661-1108137ce0a1|IIYewOPs)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/1-science-and-the-universe-a-brief-tour;
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(ff8e6ee8-8a50-4756-b95e-c3b8e803622b|_45u6IpQ)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/1-introduction;
@@ -833,7 +833,7 @@
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(0e15f0fc-0d77-4a0b-8b70-cfdffc87b73f|DhXw_A13)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/l-the-constellations;
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(f97dbe3b-b6e5-45c1-a243-a0afa8c7b95e|-X2-O7bl)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/m-star-chart-and-sky-event-resources;
 ~/contents/(2e737be8-ea65-48c3-aa0a-9f35b4c6a966|LnN76Opl)(@[.\d]+)?:(82fe7603-28a6-59b5-862f-46262f1baa62|gv52Ayim)(@[\d]+)?(/[-%\w\d]+)?$    /books/astronomy/pages/index;
-~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/preface;
+~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/1-introduction;
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(db36053c-5281-42f4-90ec-afcc21ab28c3|2zYFPFKB)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/preface;
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(059c3388-24d1-5870-b79e-9f8e3dc123c5|BZwziCTR)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/the-chemistry-of-life;
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(519352ca-e6a9-5534-ae2c-3dd982bb17df|UZNSyuap)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/1-the-study-of-life;
@@ -1384,7 +1384,7 @@
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(7f9cdc1f-a1a3-4353-9fa4-901681da97dc|f5zcH6Gj)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/b-geological-time;
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(461abba6-4236-4913-9ab4-17328dcda078|Rhq7pkI2)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/c-measurements-and-the-metric-system;
 ~/contents/(8d50a0af-948b-4204-a71d-4826cba765b8|jVCgr5SL)(@[.\d]+)?:(ec2b2f34-4e59-5cbc-9e54-aca820ff68b6|7CsvNE5Z)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-2e/pages/index;
-~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/preface;
+~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/1-introduction;
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(1dde1b61-63d4-4d4c-9137-d18fc12b56b3|Hd4bYWPU)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/preface;
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(dca6616b-906a-549f-a14f-f8d334068c51|3KZha5Bq)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/unit-1;
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(31b443a0-054a-5059-9a93-afb2bb25efb9|MbRDoAVK)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/1-the-study-of-life;
@@ -1863,7 +1863,7 @@
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(aebd6cfc-39e6-4b33-ad78-604d5de78dfd|rr1s_Dnm)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/b-geological-time;
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(461abba6-4236-4913-9ab4-17328dcda078|Rhq7pkI2)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/c-measurements-and-the-metric-system;
 ~/contents/(6c322e32-9fb0-4c4d-a1d7-20c95c5c7af2|bDIuMp-w)(@[.\d]+)?:(41aaf652-4d4d-59ee-a51a-7cd8548c6f1c|Qar2Uk1N)(@[\d]+)?(/[-%\w\d]+)?$    /books/biology-ap-courses/pages/index;
-~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/preface;
+~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/1-introduction;
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(138634ed-6ed0-4edb-b13d-b78d388028b0|E4Y07W7Q)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/preface;
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(da9a3ba3-df5e-5a7c-85a1-2ceb4533d65d|2po7o99e)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/1-essential-ideas;
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(0d8fa7a1-89a1-46a8-b340-aa25a6093908|DY-noYmh)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/1-introduction;
@@ -2138,7 +2138,7 @@
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(d7a078fa-803e-54f6-8384-4258983e8acc|16B4-oA-)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/chapter-20;
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(a23b98fb-ca4e-519f-8a0a-75d6e7f8e086|ojuY-8pO)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/chapter-21;
 ~/contents/(7fccc9cf-9b71-44f6-800b-f9457fd64335|f8zJz5tx)(@[.\d]+)?:(7830181a-4abe-53dc-bdc6-3318149f9063|eDAYGkq-)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-2e/pages/index;
-~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/preface;
+~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/1-introduction;
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(541d7d79-a70e-42c2-b765-d55586648390|VB19eacO)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/preface;
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(31943053-0511-56db-9a7a-5f1359da8b39|MZQwUwUR)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/1-essential-ideas;
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(0d8fa7a1-89a1-46a8-b340-aa25a6093908|DY-noYmh)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/1-introduction;
@@ -2413,7 +2413,7 @@
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(5da1e852-fb17-5f69-9473-1980ed906291|XaHoUvsX)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/chapter-20;
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(c919dda3-a8f4-517b-98d7-3608bbea8bb6|yRndo6j0)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/chapter-21;
 ~/contents/(d9b85ee6-c57f-4861-8208-5ddf261e9c5f|2bhe5sV_)(@[.\d]+)?:(12898e8b-170b-5886-8429-f5446d5e23c1|EomOixcL)(@[\d]+)?(/[-%\w\d]+)?$    /books/chemistry-atoms-first-2e/pages/index;
-~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/preface;
+~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/1-introduction-to-science-and-the-realm-of-physics-physical-quantities-and-units;
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(a4579e90-f894-4438-88c3-14772d3da9ff|pFeekPiU)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/preface;
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(e4cd9bdf-413b-5adf-9a29-ce77cd9bf486|5M2b30E7)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/1-introduction-the-nature-of-science-and-physics;
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(1d1fd537-77fb-4eac-8a8a-60bbaa747b6d|HR_VN3f7)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/1-introduction-to-science-and-the-realm-of-physics-physical-quantities-and-units;
@@ -2868,7 +2868,7 @@
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(72343285-683e-46d9-a6c2-5de097e36ff9|cjQyhWg-)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/c-useful-information;
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(f9d7e0fb-7dc8-471a-b4d8-976fce44baa0|-dfg-33I)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/d-glossary-of-key-symbols-and-notation;
 ~/contents/(031da8d3-b525-429c-80cf-6c8ed997733a|Ax2o07Ul)(@[.\d]+)?:(d9000ec8-b697-5ab0-b8b6-8d2f587f1684|2QAOyLaX)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics/pages/index;
-~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/preface;
+~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/1-connection-for-ap-r-courses;
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(7dd6dad7-8641-434e-b2dc-4b729140ff5d|fdba14ZB)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/preface;
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(111b1c6a-0b11-5abe-b643-0f07ef044542|ERscagsR)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/1-introduction-the-nature-of-science-and-physics;
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(ea90794e-0043-4160-a494-3f370885c7e3|6pB5TgBD)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/1-connection-for-ap-r-courses;
@@ -3390,7 +3390,7 @@
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(8df6b83e-e786-5981-b048-634718a0d3d7|jfa4PueG)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/chapter-33;
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(da3c4b4a-899d-5851-8fa9-7e67bb30a032|2jxLSomd)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/chapter-34;
 ~/contents/(8d04a686-d5e8-4798-a27d-c608e4d0e187|jQSmhtXo)(@[.\d]+)?:(fdd806cf-d537-5305-9975-6a9d691e412a|_dgGz9U3)(@[\d]+)?(/[-%\w\d]+)?$    /books/college-physics-ap-courses/pages/index;
-~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/preface;
+~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/1-introduction;
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(acbc8f9e-f2f1-4d79-a8fd-ed38925fb0cc|rLyPnvLx)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/preface;
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(6ff3b49e-5de9-579e-9db5-ee54430bb171|b_O0nl3p)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/unit-1-the-cellular-foundation-of-life;
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(fca24876-5ed3-516b-a2ae-ddb06fbeb62e|_KJIdl7T)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/1-introduction-to-biology;
@@ -3631,7 +3631,7 @@
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(e0c3f73d-1077-45c2-a220-d79fa32b4f00|4MP3PRB3)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/b-geological-time;
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(ab03d5e9-1061-4719-b6fc-912d6d69d002|qwPV6RBh)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/c-measurements-and-the-metric-system;
 ~/contents/(b3c1e1d2-839c-42b0-a314-e119a8aafbdd|s8Hh0oOc)(@[.\d]+)?:(8d7d0f5d-1c20-5571-b872-ab6061f7df12|jX0PXRwg)(@[\d]+)?(/[-%\w\d]+)?$    /books/concepts-biology/pages/index;
-~/contents/(e42bd376-624b-4c0f-972f-e0c57998e765|5CvTdmJL)(@[.\d]+)?(/[-%\w\d]+)?$    /books/microbiology/pages/preface;
+~/contents/(e42bd376-624b-4c0f-972f-e0c57998e765|5CvTdmJL)(@[.\d]+)?(/[-%\w\d]+)?$    /books/microbiology/pages/1-introduction;
 ~/contents/(e42bd376-624b-4c0f-972f-e0c57998e765|5CvTdmJL)(@[.\d]+)?:(af2b7d70-5d43-4076-b6a5-63e652249e1f|ryt9cF1D)(@[\d]+)?(/[-%\w\d]+)?$    /books/microbiology/pages/preface;
 ~/contents/(e42bd376-624b-4c0f-972f-e0c57998e765|5CvTdmJL)(@[.\d]+)?:(e412da95-5800-5d48-a64f-c8355aaa3a32|5BLalVgA)(@[\d]+)?(/[-%\w\d]+)?$    /books/microbiology/pages/1-an-invisible-world;
 ~/contents/(e42bd376-624b-4c0f-972f-e0c57998e765|5CvTdmJL)(@[.\d]+)?:(ac5ce2a2-d687-4df7-babd-5fad42346b2a|rFziotaH)(@[\d]+)?(/[-%\w\d]+)?$    /books/microbiology/pages/1-introduction;
