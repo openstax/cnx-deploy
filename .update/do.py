@@ -11,7 +11,9 @@ MAP_FILEPATH = here.resolve().parent / 'roles/webview/files/etc/nginx/uri-maps/r
 
 
 def get_rex_release_json_url(host):
-    return f'https://{host}/rex/release.json'
+    env_url = f'https://{host}/rex/environment.json'
+    release_id = requests.get(env_url).json()['release_id']
+    return f'https://{host}/rex/releases/{release_id}/rex/release.json'
 
 
 def get_book_slug(book_id):
