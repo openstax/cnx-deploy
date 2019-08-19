@@ -89,7 +89,7 @@
     recurse: yes
     owner: root
     group: root
-    mode: 0644
+    mode: 0755
 
 - name: copy main nginx config
   become: yes
