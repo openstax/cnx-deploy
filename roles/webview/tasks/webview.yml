@@ -94,7 +94,7 @@
 - name: copy main nginx config
   become: yes
   copy:
-    src: etc/nginx/uri-maps/rex-uris.map
+    src: "{{ inventory_dir }}/files/etc/nginx/uri-maps/rex-uris.map"
     dest: /etc/nginx/uri-maps/rex-uris.map
     owner: root
     group: root
