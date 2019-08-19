@@ -92,5 +92,5 @@ nfs_connections: "{{ vault_nfs_connections }}"
 blocked_ip_addresses: "{{ vault_blocked_ip_addresses }}"
 
 princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
-rex_domain: rex-web.herokuapp.com
-rex_redirects_enabled: false
+rex_domain: staging.openstax.org
+rex_redirects_enabled: true
