@@ -1,13 +1,13 @@
-import click
-import requests
 from pathlib import Path
 
+import click
+import yaml
+import requests
 from cnxcommon import ident_hash
 
 
 here = Path(__file__).parent
 CNX_HOST = 'archive.cnx.org'
-MAP_FILEPATH = here.resolve().parent / 'roles/webview/files/etc/nginx/uri-maps/rex-uris.map'
 
 
 def get_rex_release_json_url(host):
@@ -120,18 +120,33 @@ def write_nginx_map(uri_map, out):
 
 
 @click.command()
-@click.argument('rex-host')
-def update_rex_redirects(rex_host):
+@click.argument('environment')
+def update_rex_redirects(environment):
+    """
+    Generate environments/<ENVIRONMENT>/files/etc/nginx/uri-maps/rex-uris.map
+    for redirecting books and pages from cnx to rex.
+
+    ENVIRONMENT   Name of cnx-deploy environment, e.g. staging, used for
+                  determining the rex domain
+    """
+    env_dir = here.resolve().parent / 'environments' / environment
+    vars_path = env_dir / 'group_vars/all/vars.yml'
+    if not vars_path.exists():
+        vars_path = env_dir / 'group_vars/all.yml'
+    with vars_path.open('r') as f:
+        all_vars = yaml.load(f)
+        rex_host = all_vars['rex_domain']
     release_json_url = get_rex_release_json_url(rex_host)
     release_data = requests.get(release_json_url).json()
     books = [book for book in release_data['books']]
-    if MAP_FILEPATH.exists():
-        click.echo("Removing existing map")
-        MAP_FILEPATH.unlink()
+    map_filepath = env_dir / 'files/etc/nginx/uri-maps/rex-uris.map'
+    if map_filepath.exists():
+        click.echo("Removing existing map {}".format(map_filepath))
+        map_filepath.unlink()
     for book in books:
         click.echo(f"Write entries for {book}.")
         book_uri_map = generate_nginx_uri_mappings(book)
-        with MAP_FILEPATH.open('ab') as fb:
+        with map_filepath.open('ab') as fb:
             write_nginx_map(book_uri_map, out=fb)
 
 
