@@ -6,4 +6,4 @@
 1. `python do.py update-rex-redirects openstax.org`
 
 
-Then, check `roles/webview/files/etc/nginx/uri-maps/rex-uris.map` for changes.
+Then, check `environments/<environment>/files/etc/nginx/uri-maps/rex-uris.map` for changes.
