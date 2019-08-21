@@ -2,12 +2,15 @@ from pathlib import Path
 
 import click
 import yaml
-import requests
+import requests as reqs
 from cnxcommon import ident_hash
 
 
 here = Path(__file__).parent
 CNX_HOST = 'archive.cnx.org'
+requests = reqs.Session()
+adapter = reqs.adapters.HTTPAdapter(max_retries=5)
+requests.mount('https://', adapter)
 
 
 def get_rex_release_json_url(host):
