@@ -57,7 +57,7 @@ def cnx_uri_regex(book, page):
     if page is None:
         uri_regex = f"/contents/({book['id']}|{book['short_id']})(@[.\d]+)?(/[-%\w\d]+)?$"
     else:
-        uri_regex = f"/contents/({book['id']}|{book['short_id']})(@[.\d]+)?:({page['id']}|{page['short_id']})(@[\d]+)?(/[-%\w\d]+)?$"
+        uri_regex = f"/contents/({book['id']}|{book['short_id']})(@[.\d]+)?:({page['id']}|{page['short_id']})(@[.\d]+)?(/[-%\w\d]+)?$"
     return uri_regex
 
 
