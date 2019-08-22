@@ -51,5 +51,5 @@ cms_domain: openstax.org
 
 accounts_disable_verify_ssl: yes
 accounts_stub: yes
-rex_domain: rex-web.herokuapp.com
+rex_domain: staging.openstax.org
 rex_redirects_enabled: false
