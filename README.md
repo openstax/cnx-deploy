@@ -115,5 +115,3 @@ RAILS_ENV=production RBENV_ROOT=/home/ostaccounts/.rbenv/ rbenv exec bundle exec
 ```
 
 Make sure to run this command as 'ostaccounts'.
-
-Boop.
