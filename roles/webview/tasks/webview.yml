@@ -91,7 +91,8 @@
     group: root
     mode: 0755
 
-- name: copy main nginx config
+- name: copy rex-uris.map
+  when: rex_redirects_enabled
   become: yes
   copy:
     src: "{{ inventory_dir }}/files/etc/nginx/uri-maps/rex-uris.map"
