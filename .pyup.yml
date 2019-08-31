@@ -9,3 +9,20 @@
 # default: empty
 # allowed: "every day", "every week", ..
 schedule: "every week on thursday"
+
+# pyup-bot incorrectly updates a symlink instead of the actual file
+# see https://github.com/pyupio/pyup/issues/360
+# so we need to disable updates to symlinked requirements.txt files
+requirements:
+  - ./environments/prod/files/archive-requirements.txt:
+      update: False
+  - ./environments/prod/files/press-requirements.txt:
+      update: False
+  - ./environments/prod/files/publishing-requirements.txt:
+      update: False
+  - ./environments/staging/files/archive-requirements.txt:
+      update: False
+  - ./environments/staging/files/press-requirements.txt:
+      update: False
+  - ./environments/staging/files/publishing-requirements.txt:
+      update: False
