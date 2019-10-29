@@ -29,3 +29,9 @@ archive_robots_txt:
     - {name: '*'}
   allow_list:
     - /
+
+vendor_robots_txt:
+  user_agents:
+    - {name: '*'}
+  allow_list:
+    - /
