@@ -1,6 +1,10 @@
 ---
 # Installs webview with all the dependencies.
 
+- import_tasks: code-deploy.yml
+  tags:
+    - webview
+
 - import_tasks: webview.yml
   tags:
     - webview

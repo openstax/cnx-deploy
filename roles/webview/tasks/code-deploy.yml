@@ -1,0 +1,73 @@
+---
+# Installs webview code with all the dependencies.
+
+- name: check for existing version
+  stat:
+    path: "{{ _install_location }}"
+  register: webview_install
+
+# +++
+# Install
+# +++
+
+- when:
+    - (not webview_install.stat.exists) or (webview_version == 'master')
+  block:
+    - name: create the webview install location
+      become: yes
+      file:
+        path: "{{ _install_location }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+    - name: download and unpack webview
+      become: yes
+      unarchive:
+        src: "https://packages.cnx.org/js-builds/webview_{{ webview_version }}.tar.gz"
+        remote_src: yes
+        dest: "{{ _install_location }}"
+        owner: www-data
+        group: www-data
+
+# To allow for webview version downgrades, the link creation is broken out of
+# the above block.
+- name: link to /var/www/webview
+  become: yes
+  file:
+    src: "{{ _install_location }}"
+    dest: "/var/www/webview"
+    state: link
+    owner: www-data
+  notify:
+    - restart nginx
+
+# TODO Cleanup old webview versions
+
+# +++
+# Configure
+# +++
+
+- name: gather facts from authoring
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ groups.authoring }}"
+
+- name: configure webview settings.js
+  become: yes
+  template:
+    src: var/www/webview/scripts/settings.js
+    dest: "/var/www/webview/scripts/settings.js"
+    owner: www-data
+  notify:
+    - reload nginx
+
+- name: compress settings.js into settings.js.gz
+  become: yes
+  archive:
+    path: /var/www/webview/scripts/settings.js
+    owner: www-data
+  notify:
+    - reload nginx
