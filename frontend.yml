@@ -24,5 +24,19 @@
 #    - static_files
 #    - fe
 
+- name: install vendor frontend
+  hosts:
+    - frontend
+  vars:
+    frontend_domain: "{{ vendor_domain|default('') }}"
+    webview_site_name: vendor
+    rex_redirects_enabled: false
+  roles:
+    - role: webview
+      when: "vendor_domain is defined"
+      tags: webview
+  tags:
+    - frontend
+
 - when: not_standalone is undefined
   import_playbook: update_versions.yml
