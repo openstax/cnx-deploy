@@ -1,10 +1,10 @@
 ---
 
-- name: configure the webview nginx site
+- name: "configure the {{ webview_site_name }} nginx site"
   become: yes
   template:
     src: etc/nginx/sites-available/webview
-    dest: "/etc/nginx/sites-available/webview"
+    dest: "/etc/nginx/sites-available/{{ webview_site_name }}"
     owner: www-data
   notify:
     - reload nginx
@@ -31,11 +31,11 @@
   notify:
     - reload nginx
 
-- name: enable the webview nginx site
+- name: "enable the {{ webview_site_name }} nginx site"
   become: yes
   file:
-    src: "/etc/nginx/sites-available/webview"
-    dest: "/etc/nginx/sites-enabled/webview"
+    src: "/etc/nginx/sites-available/{{ webview_site_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ webview_site_name }}"
     state: link
     owner: www-data
   notify:

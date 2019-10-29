@@ -4,6 +4,8 @@
 - name: install frontend
   hosts:
     - frontend
+  vars:
+    webview_site_name: webview
   roles:
     - role: webview
       tags: webview
