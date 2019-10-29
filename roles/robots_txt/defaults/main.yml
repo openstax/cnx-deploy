@@ -9,3 +9,8 @@ archive_robots_txt:
     - {name: '*'}
   disallow_list:
     - '/'
+vendor_robots_txt:
+  user_agents:
+    - {name: '*'}
+  disallow_list:
+    - '/'

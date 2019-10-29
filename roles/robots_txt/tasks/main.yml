@@ -18,3 +18,12 @@
     owner: www-data
   tags:
     - robots_txt
+
+- name: Add vendor robots.txt
+  become: yes
+  template:
+    src: var/www/vendor/robots.txt
+    dest: /var/www/vendor/robots.txt
+    owner: www-data
+  tags:
+    - robots_txt

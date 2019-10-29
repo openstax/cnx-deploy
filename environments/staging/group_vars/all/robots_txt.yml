@@ -14,3 +14,9 @@ archive_robots_txt:
     - {name: 'ARCHIVE TESTING', crawl_delay: 10}
   disallow_list:
     - /
+vendor_robots_txt:
+  user_agents:
+    - {name: '*'}
+    - {name: 'ARCHIVE TESTING', crawl_delay: 10}
+  allow_list:
+    - /
