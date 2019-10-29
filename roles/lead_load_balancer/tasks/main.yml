@@ -30,6 +30,9 @@
         acl is_legacy hdr(host) -i {{ zope_domain }}
         acl is_arclishing hdr(host) -i {{ arclishing_domain }}
         acl is_cnxorg hdr(host) -i {{ frontend_domain }}
+        {% if vendor_domain is defined %}
+        acl is_vendorcnxorg hdr(host) -i {{ vendor_domain }}
+        {% endif %}
         acl has_www hdr_beg(host) -i www
         acl from_zope src 127.0.0.1 {% for host in groups.zope %}{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %} # This comment is necessary because otherwise Ansible eats the newline and the config becomes invalid
         acl double_slash url //
@@ -42,6 +45,9 @@
         use_backend legacy_nodes if is_legacy
         use_backend nodes if is_cnxorg
         use_backend nodes if is_arclishing
+        {% if vendor_domain is defined %}
+        use_backend nodes if is_vendorcnxorg
+        {% endif %}
         default_backend nodes
 
       # Load balancing the frontend grouping
