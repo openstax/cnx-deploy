@@ -1,0 +1,69 @@
+---
+root_prefix: ""
+
+archive_db_name: cnxarchive
+archive_db_user: cnxarchive
+archive_db_password: cnxarchive
+archive_db_host: localhost
+archive_db_port: 5432
+
+publishing_broker_user: cnxpublishing
+publishing_broker_password: cnxpublishing
+
+authoring_db_name: cnxauthoring
+authoring_db_user: cnxauthoring
+authoring_db_password: cnxauthoring
+authoring_db_host: localhost
+authoring_db_port: 5432
+
+press_db_name: "{{ archive_db_name }}"
+press_db_user: "{{ archive_db_user }}"
+press_db_password: "{{ archive_db_password }}"
+press_db_host: "{{ archive_db_host }}"
+press_db_port: "{{ archive_db_port }}"
+press_broker_user: press
+press_broker_password: press
+
+# FIXME Not really yaml'ish to use space separated values...
+# Note, don't confuse the usage of 'hosts' here with ansible 'hosts'.
+# 'hosts' is a space separated value containing hostnames or ip addresses
+# where a memcached instance is running.
+memcached_hosts: localhost
+
+varnish_port: 8990
+legacy_varnish_port: 8991
+haproxy_zcluster_port: 8998
+
+archive_host: archive.local.cnx.org
+publishing_host: archive.local.cnx.org
+authoring_host: authoring.local.cnx.org
+zclient_base_port: 8280
+
+zope_domain: legacy.local.cnx.org
+arclishing_domain: archive.local.cnx.org
+frontend_domain: local.cnx.org
+accounts_domain: accounts.local.openstax.org
+tutor_domain: openstaxtutor.org
+exercises_domain: exercises.openstax.org
+cms_domain: openstax.org
+
+accounts_consumer_token:
+accounts_consumer_secret:
+accounts_disable_verify_ssl: yes
+accounts_stub: yes
+# accounts_stub_users is defined in host_vars/local.cnx.org
+
+exercises_token: "somekindoftoken"
+
+nfs_server_for_files1: local.cnx.org
+nfs_server_for_files2: local.cnx.org
+nfs_server_for_specials: local.cnx.org
+nfs_server_for_varnish_logs: local.cnx.org
+
+webview_version: master
+
+princexml_deb_url: "http://www.princexml.com/download/prince_11-1_ubuntu16.04_amd64.deb"
+rex_domain: staging.openstax.org
+rex_redirects_enabled: false
+
+venvs_owner: "{{ ansible_user_id }}"

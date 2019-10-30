@@ -5,6 +5,15 @@ The currently supported operating system (OS) is: Ubuntu 16.04 LTS (Xenial)
 
 ## Installation
 
+### Using Docker
+
+```
+docker build -t openstax/cnx-deploy .
+docker run -d --name cnx -P openstax/cnx-deploy tail -f /dev/null
+```
+
+### Using a virtual machine or your local machine
+
 It goes without saying that you should use a [virtualenv](https://virtualenv.readthedocs.org/en/latest/), but it's outside the scope of this documentation to explain that. So use a virtualenv for your own protection.
 
 To install the necessary dependencies run:
