@@ -19,6 +19,16 @@
   tags:
     - robots_txt
 
+- name: Create /var/www/vendor
+  become: yes
+  file:
+    path: /var/www/vendor
+    state: directory
+    mode: 0755
+    owner: www-data
+  tags:
+    - robots_txt
+
 - name: Add vendor robots.txt
   become: yes
   template:
