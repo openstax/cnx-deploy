@@ -61,7 +61,8 @@ backend webview {
 .between_bytes_timeout = 60s;
 }
 
-# vendor (nginx)
+{% if vendor_domain is defined %}
+  # vendor (nginx)
 backend vendor {
 .host = "127.0.0.1";
 .port = "{{ vendor_nginx_port }}";
@@ -69,6 +70,7 @@ backend vendor {
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
 }
+{% endif %}
 
 probe archive_probe {
     .url = "/extras";
@@ -257,7 +259,7 @@ sub vcl_recv {
             set req.backend_hint = archive_cluster.backend();
         }
     }
-    elsif (req.http.host ~ "^{{ frontend_domain }}(:[0-9]+)?$" || req.http.host ~ "^{{ vendor_domain }}(:[0-9]+)?$") {
+    elsif (req.http.host ~ "^{{ frontend_domain }}(:[0-9]+)?$"{% if vendor_domain is defined %} || req.http.host ~ "^{{ vendor_domain }}(:[0-9]+)?$"{% endif %}) {
         # Doing the static file dance
         # Note: Cannot pipe here because we want to be able to handle restarts
         if (req.url ~ "^/pdfs") {
@@ -307,6 +309,12 @@ sub vcl_recv {
         elsif (req.url ~ "^/content/((col|m)[0-9]+)") {
             set req.backend_hint = archive_cluster.backend();
         }
+        # vendor domain webview
+        {% if vendor_domain is defined %}
+        elsif (req.http.host ~ "^{{ vendor_domain }}(:[0-9]+)?$" && (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish|robots.txt)")) {
+            set req.backend_hint = vendor;
+        }
+        {% endif %}  
         # all webview
         elsif (req.url ~ "_escaped_fragment_=" || req.url ~ "^/$" || req.url ~ "^/?.*" || req.url ~ "^/opensearch\.xml" || req.url ~ "^/version\.txt" || req.url ~ "^/search" || req.url ~ "^/contents$" || req.url ~ "^/(contents|data|exports|styles|fonts|bower_components|node_modules|images|scripts)/" || req.url ~ "^/(about|about-us|people|contents|donate|tos|browse)" || req.url ~ "^/(login|logout|workspace|callback|users|publish|robots.txt)") {
             set req.backend_hint = webview;
