@@ -43,7 +43,7 @@ backend legacy_frontend {
 }
 {% endif %}
 
-# static_files nginx
+# static_files (nginx)
 backend static_files {
 .host = "127.0.0.1";
 .port = "8080";
@@ -52,10 +52,19 @@ backend static_files {
 .between_bytes_timeout = 10s;
 }
 
-# webview nginx
+# webview (nginx)
 backend webview {
 .host = "127.0.0.1";
 .port = "8081";
+.connect_timeout = 0.4s;
+.first_byte_timeout = 600s;
+.between_bytes_timeout = 60s;
+}
+
+# vendor (nginx)
+backend vendor {
+.host = "127.0.0.1";
+.port = "{{ vendor_nginx_port }}";
 .connect_timeout = 0.4s;
 .first_byte_timeout = 600s;
 .between_bytes_timeout = 60s;
@@ -248,7 +257,7 @@ sub vcl_recv {
             set req.backend_hint = archive_cluster.backend();
         }
     }
-    elsif (req.http.host ~ "^{{ frontend_domain }}(:[0-9]+)?$") {
+    elsif (req.http.host ~ "^{{ frontend_domain }}(:[0-9]+)?$" || req.http.host ~ "^{{ vendor_domain }}(:[0-9]+)?$") {
         # Doing the static file dance
         # Note: Cannot pipe here because we want to be able to handle restarts
         if (req.url ~ "^/pdfs") {
