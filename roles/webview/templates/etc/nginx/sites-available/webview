@@ -6,7 +6,7 @@ map $request_uri $rex_uri {
 {% endif %}
 
 server {
-    listen          8081;
+    listen          {{ webview_port|default(8081) }};
     server_name     {{ frontend_domain }};
     root            /var/www/webview;
     index           index.html;

@@ -6,6 +6,7 @@
     - frontend
   vars:
     webview_site_name: webview
+    vendor_nginx_port: 8082
   roles:
     - role: webview
       tags: webview
@@ -30,6 +31,7 @@
   vars:
     frontend_domain: "{{ vendor_domain|default('') }}"
     webview_site_name: vendor
+    webview_port: 8082
     rex_redirects_enabled: false
   roles:
     - role: webview
