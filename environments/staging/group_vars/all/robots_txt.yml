@@ -18,5 +18,5 @@ vendor_robots_txt:
   user_agents:
     - {name: '*'}
     - {name: 'ARCHIVE TESTING', crawl_delay: 10}
-  allow_list:
+  disallow_list:
     - /
