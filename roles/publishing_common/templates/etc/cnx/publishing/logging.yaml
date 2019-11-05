@@ -50,6 +50,10 @@ loggers:
     level     : DEBUG
     handlers  : [console]
     propagate : 0
+  channel_processing:
+    level     : DEBUG
+    handlers  : [console]
+    propagate : 0
   transit_logger:
     # This is the transit logger in pyramid_sawing.
     level     : INFO
