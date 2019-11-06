@@ -33,5 +33,5 @@ archive_robots_txt:
 vendor_robots_txt:
   user_agents:
     - {name: '*'}
-  allow_list:
+  disallow_list:
     - /
