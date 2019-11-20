@@ -43,7 +43,7 @@ accounts_domain: accounts-stage1.openstax.org
 tutor_domain: tutor.openstax.org
 exercises_domain: exercises.openstax.org
 cms_domain: openstax.org
-vendor_domain: vendor-staging.cnx.org
+vendor_domain: vendor.cnx.org
 
 # See group_vars/all.yml for defaults
 graylog_port: 5141
