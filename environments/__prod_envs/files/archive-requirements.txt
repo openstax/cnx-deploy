@@ -34,7 +34,7 @@ python-memcached==1.59
 pytz==2019.3
 PyYAML==5.3
 repoze.lru==0.7
-requests==2.22.0
+requests==2.23.0
 rhaptos.cnxmlutils==1.7.3
 sanction==0.4.1
 six==1.12.0
