@@ -1,4 +1,4 @@
 click==7.0
 cnx-common==1.2.2
 PyYAML==5.3
-requests==2.22.0
+requests==2.23.0
