@@ -242,7 +242,7 @@ sub vcl_recv {
         return (pass);
     }
     # cnx rewrite archive - specials served from nginx statically
-    elsif (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml") {
+    elsif (req.http.host ~ "^{{ arclishing_domain }}" || req.url ~ "^/sitemap.*.xml" || (req.http.host !~ "^{{ frontend_domain }}" && req.url ~ "^(/contents|/extras)")) {
         if (req.url  == "/robots.txt" || req.url ~ "^/specials") {
             set req.backend_hint = static_files;
         }
