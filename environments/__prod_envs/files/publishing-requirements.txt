@@ -60,4 +60,4 @@ waitress==1.4.3
 webencodings==0.5.1
 WebOb==1.8.6
 zope.deprecation==4.4.0
-zope.interface==4.6.0
+zope.interface==4.7.2
