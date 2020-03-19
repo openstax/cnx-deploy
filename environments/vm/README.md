@@ -36,3 +36,5 @@ There is a `Vagrantfile` in the root of the project which can be used to deploy 
 * [Vagrant](https://www.vagrantup.com/)
 
 Once installed, you can kickoff the deployment by simply running `vagrant up` from the root of this repository. If you get a failure along the way, you can try `vagrant up --provision` to see if it is able to succeed. You can use commands such as `vagrant ssh cnx-target` to ssh into the VMs, etc. as needed.
+
+The `Vagrantfile` is configured to set the target VM with IP `10.0.10.10`. If you configure your ``/etc/hosts`` accordingly, the VM will have port 80 open to access services via `local.cnx.org`, etc.
