@@ -34,12 +34,7 @@ Please see the environment's README for specific details. For deploying to a loc
 
 ### Updating the REX redirects
 
-This project has generatated content in it. By running the `python3 .update/do.py` you are updating that content. It's your responsibilty to commit, push and create a pull request for the changes.
-
-```sh
-pip3 install --upgrade -r .update/requirements.txt
-python3 .update/do.py update-rex-redirects $REX_HOST
-```
+The rex redirect process is described in our wiki [here](https://github.com/openstax/cnx/wiki/Redirecting-to-REX):
 
 ### Updating the REX redirects testing data
 
