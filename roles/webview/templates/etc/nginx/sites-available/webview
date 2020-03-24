@@ -1,5 +1,5 @@
 {% if rex_redirects_enabled %}
-map $request_uri $rex_uri {
+map $uri $rex_uri {
     default "no-match";
     include /etc/nginx/uri-maps/rex-uris.map;
 }
