@@ -36,14 +36,9 @@ Please see the environment's README for specific details. For deploying to a loc
 
 The rex redirect process is described in our wiki [here](https://github.com/openstax/cnx/wiki/Redirecting-to-REX):
 
-### Updating the REX redirects testing data
+### Testing REX redirects 
 
-The update script can be used to update the list of URLs used to load test and functional test the application.
-
-```sh
-pip3 install --upgrade -r .update/requirements.txt
-python3 .update/do.py generate-cnx-uris-for-rex-books $REX_HOST > ./cnx-uris.txt
-```
+The testing of REX redirects occurs in [cnx-automation](https://github.com/openstax/cnx-automation). See that project [README.md](https://github.com/openstax/cnx-automation/blob/master/README.md) for more information.
 
 ## Troubleshooting
 
