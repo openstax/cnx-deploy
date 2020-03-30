@@ -100,13 +100,19 @@
     virtualenv: "/var/cnx/venvs/publishing"
     state: latest
 
+- name: ensure that distribute is installed
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  easy_install:
+    name: distribute
+    virtualenv: "/var/cnx/venvs/publishing"
+    state: latest
+
 - name: ensure that setuptools<45 is installed
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
-    name:
-      - distribute
-      - setuptools<45
+    name: setuptools<45
     virtualenv: "/var/cnx/venvs/publishing"
     state: present
 
