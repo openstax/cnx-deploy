@@ -28,27 +28,17 @@ export ENV=vm
 ansible-playbook -i environments/$ENV/inventory main.yml
 ```
 
-Please see the environment's README for specific details.
+Please see the environment's README for specific details. For deploying to a local VM, there are instructions on using Vagrant available in the [VM environment README.md](./environments/vm/README.md)
 
 ## Updating generated content
 
 ### Updating the REX redirects
 
-This project has generatated content in it. By running the `python3 .update/do.py` you are updating that content. It's your responsibilty to commit, push and create a pull request for the changes.
+The rex redirect process is described in our wiki [here](https://github.com/openstax/cnx/wiki/Redirecting-to-REX):
 
-```sh
-pip3 install --upgrade -r .update/requirements.txt
-python3 .update/do.py update-rex-redirects $REX_HOST
-```
+### Testing REX redirects 
 
-### Updating the REX redirects testing data
-
-The update script can be used to update the list of URLs used to load test and functional test the application.
-
-```sh
-pip3 install --upgrade -r .update/requirements.txt
-python3 .update/do.py generate-cnx-uris-for-rex-books $REX_HOST > ./cnx-uris.txt
-```
+The testing of REX redirects occurs in [cnx-automation](https://github.com/openstax/cnx-automation). See that project [README.md](https://github.com/openstax/cnx-automation/blob/master/README.md) for more information.
 
 ## Troubleshooting
 

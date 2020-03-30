@@ -18,5 +18,6 @@
     name: "{{ db_user }}"
     password: "{{ db_password|default('') }}"
     role_attr_flags: "{{ role_attr_flags|default('CREATEDB,NOSUPERUSER') }}"
+    state: present
   tags:
     - create-db-user
