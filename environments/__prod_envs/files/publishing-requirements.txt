@@ -19,7 +19,7 @@ cnx-cssselect2==0.2.3
 db-migrator==1.1.0
 funcsigs==1.0.2
 hupper==1.10.2
-idna==2.9
+idna==2.8
 Jinja2==2.10.3
 kombu==4.6.5
 lxml==4.4.1
