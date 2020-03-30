@@ -15,7 +15,7 @@ jsonschema==3.1.1
 kombu==4.6.5
 lxml==4.5.0
 msgpack-python==0.5.6
-PasteDeploy==2.1.0
+PasteDeploy==2.0.1
 plaster==1.0
 plaster-pastedeploy==0.7
 psycopg2==2.8.3
