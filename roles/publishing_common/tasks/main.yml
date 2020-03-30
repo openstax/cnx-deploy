@@ -92,6 +92,14 @@
     - archive
     - publishing
 
+- name: upgrade pip
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  pip:
+    name: pip
+    virtualenv: "/var/cnx/venvs/publishing"
+    state: latest
+
 - name: ensure that setuptools<45 is installed
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
