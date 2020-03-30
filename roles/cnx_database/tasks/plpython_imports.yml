@@ -64,6 +64,7 @@
     name: pip
     virtualenv: "/var/cnx/venvs/archive"
     virtualenv_python: python2
+    state: latest
 
 - name: upgrade pip
   become: yes
@@ -78,8 +79,8 @@
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     name:
-      - setuptools<45
       - distribute
+      - setuptools<45
     virtualenv: "/var/cnx/venvs/archive"
     state: present
 
