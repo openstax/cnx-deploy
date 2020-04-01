@@ -1,0 +1,32 @@
+# Pipeline to run deployment playbook on QA for every new tag
+---
+
+resources:
+  - name: cnx-deploy
+    type: git
+    source:
+      uri: git@github.com:openstax/cnx-deploy.git
+      private_key: ((github-private-key))
+      tag_filter: '*'
+
+  jobs:
+    - name: cnx-deploy ((environment)) environment
+      plan:
+        - get: cnx-deploy
+          trigger: true
+
+    - task: deploy-((environment))
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: python
+            tag: 3.8-slim
+        inputs:
+          - name: cnx-deploy
+        run:
+          path: cnx-deploy/.concourse/deploy.sh
+        params:
+          SSH_PRIVATE_KEY: ((ce-cnx-deploy-qa))
+          ENVIRONMENT: ((environment))

@@ -1,0 +1,3 @@
+# Variables to be used based on the environment
+---
+environment: qa
