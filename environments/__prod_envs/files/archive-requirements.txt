@@ -37,7 +37,7 @@ repoze.lru==0.7
 requests==2.23.0
 rhaptos.cnxmlutils==1.7.3
 sanction==0.4.1
-six==1.12.0
+six==1.14.0
 SQLAlchemy==1.3.10
 translationstring==1.3
 tzlocal==2.0.0
