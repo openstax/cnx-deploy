@@ -21,9 +21,6 @@ Vagrant.configure("2") do |config|
     host.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
-
-    # Expose ports to host for accessing services
-    host.vm.network :forwarded_port, guest: 80, host: 80
   end
 
   config.vm.define "cnx-deploy" do |host|
