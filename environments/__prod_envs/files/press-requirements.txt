@@ -2,7 +2,7 @@ amqp==2.5.2
 billiard==3.6.3.0
 bravado-core==5.16.1
 celery==4.4.1
-certifi==2019.11.28
+certifi==2020.4.5.1
 chardet==3.0.4
 cnx-db==3.5.3
 cnx-litezip==1.6.0
