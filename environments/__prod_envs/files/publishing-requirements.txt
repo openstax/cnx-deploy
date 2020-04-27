@@ -5,12 +5,12 @@ billiard==3.6.3.0
 celery==4.4.2
 certifi==2020.4.5.1
 chardet==3.0.4
-cnx-archive==4.14.1
-cnx-common==1.2.2
+cnx-archive==4.14.2
+cnx-common==1.2.3
 cnx-db==3.5.3
 cnx-easybake==1.2.7
 cnx-epub==0.21.0
-cnx-publishing==0.17.8
+cnx-publishing==0.17.9
 cnx-query-grammar==0.2.2
 cnx-recipes==1.49.0
 cnx-transforms==1.2.0
