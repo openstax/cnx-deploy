@@ -9,7 +9,7 @@ cnx-archive==4.14.2
 cnx-common==1.2.3
 cnx-db==3.5.3
 cnx-easybake==1.2.7
-cnx-epub==0.21.0
+cnx-epub==0.21.1
 cnx-publishing==0.17.9
 cnx-query-grammar==0.2.2
 cnx-recipes==1.49.0
@@ -22,7 +22,7 @@ hupper==1.10.2
 idna==2.9
 Jinja2==2.11.2
 kombu==4.6.8
-lxml==4.5.0
+lxml==4.4.3
 MarkupSafe==1.1.1
 openstax-accounts==1.0.0
 packaging==20.3
