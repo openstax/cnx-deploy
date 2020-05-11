@@ -146,6 +146,24 @@
     - cnx
     - cnx/publishing
 
+- name: render configuration
+  become: yes
+  template:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - "etc/cnx/publishing/app.ini"
+    - "etc/cnx/publishing/logging.yaml"
+    - "etc/cnx/publishing/vars.sh"
+  notify:
+    - list supervisor applications
+    - restart publishing
+    - restart publishing workers
+    - restart channel processing
+
 - name: check whether repository database is initialized
   register: repo_db
   become: yes
@@ -164,21 +182,3 @@
   delegate_facts: yes
   with_items:
     - "{{ groups.broker }}"
-
-- name: render configuration
-  become: yes
-  template:
-    src: "{{ item }}"
-    dest: "/{{ item }}"
-    mode: 0644
-    owner: root
-    group: root
-  with_items:
-    - "etc/cnx/publishing/app.ini"
-    - "etc/cnx/publishing/logging.yaml"
-    - "etc/cnx/publishing/vars.sh"
-  notify:
-    - list supervisor applications
-    - restart publishing
-    - restart publishing workers
-    - restart channel processing
