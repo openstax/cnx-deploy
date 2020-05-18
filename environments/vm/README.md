@@ -72,12 +72,6 @@ PLAY RECAP *********************************************************************
 local.cnx.org              : ok=512  changed=204  unreachable=0    failed=0    skipped=196  rescued=0    ignored=2
 ```
 
-**NOTE:** Users have observed issues where they get a failure during the deployment. Sometimes (e.g. when there's not an underlying issue in the playbooks) invoking a second provisioning pass seems to address the issue (we know this isn't a desirable characteristic, and we hope to address the root cause). You can do this by running the following:
-
-```sh
-vagrant provision cnx-deploy
-```
-
 ### Step 3: Login to the target VM and browse the services
 You can use the standard `vagrant` commands to ssh into the VMs, etc. as needed. For example, running the following will ssh you into the VM with the cnx stack installed:
 
@@ -116,10 +110,7 @@ vagrant provision cnx-deploy
 #### Issue: I can't connect to my VM after deployment
 If your VM deploys successfully, but you can't connect to `https://local.cnx.org`, there may be some networking issue. Here are suggested ways to debug / test:
 
-* Run `vagrant port cnx-target` and confirm that it displays port 80 as being mapped from guest to host
-    * If the port is missing, double check your configuration and / or try running `vagrant reload`
-* Run `curl -ik https://10.0.10.10` to test for response from the server
-    * If this shows a `301` response then you may have forgotten to update your `/etc/hosts`
+* Confirm that you've updated your `/etc/hosts` per the entry above
 * Run `ping 10.0.10.10`
     * If you don't get ping responses, there may be a routing issue on your host. This is most often due to a conflict with either a VPN or your home / office network configuration. Depending on your host OS, check and see if the traffic to the 10.0.10.0/24 subnet is pointing at a `vboxnet` (or similarly appropriate) interface:
         * macOS: `netstat -rn`
