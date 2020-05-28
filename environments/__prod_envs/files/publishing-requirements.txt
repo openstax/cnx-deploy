@@ -1,5 +1,5 @@
 amqp==2.5.2
-appdirs==1.4.3
+appdirs==1.4.4
 Beaker==1.11.0
 billiard==3.6.3.0
 celery==4.4.2
