@@ -43,6 +43,18 @@ There is a `Vagrantfile` in the root of the project which can be used to deploy 
 2. Install [Vagrant](https://www.vagrantup.com/) on  your host OS
 
 ### Step 2: Kickoff deployment with Vagrant
+On a clean deployment, you need to establish an ssh tunnel to `bastion2.cnx.org` so packages hosted on `dist.rhaptos.org` can be downloaded. The firewall on the host would otherwise prevent external access. If you have your private key configured with `ssh-agent`, you can run the following command in a separate terminal (it will hang on success):
+
+```
+sudo -E ssh -L 10.0.10.1:80:dist.rhaptos.org:80 <YOUR_USERNAME>@bastion2.cnx.org -N
+```
+
+Otherwise, you can use the following variant and provide a path to your private key:
+
+```
+sudo ssh -L 10.0.10.1:80:dist.rhaptos.org:80 <YOUR_USERNAME>@bastion2.cnx.org -N -i <PATH_TO_PRIVATE_KEY>
+```
+
 You can kickoff the deployment by running the following command from the root of this repository:
 
 ```sh
@@ -71,6 +83,8 @@ META: ran handlers
 PLAY RECAP *********************************************************************
 local.cnx.org              : ok=512  changed=204  unreachable=0    failed=0    skipped=196  rescued=0    ignored=2
 ```
+
+Once completed, you can `CTRL-C` the terminal with your ssh tunnel connection to close it. On future provisions, you only need to setup the tunnel when there are new versions of packages that need to be downloaded from `dist.rhaptos.org`, otherwise the locally cached `.egg` files will be sufficient for the corresponding deployment steps to succeed.
 
 ### Step 3: Login to the target VM and browse the services
 You can use the standard `vagrant` commands to ssh into the VMs, etc. as needed. For example, running the following will ssh you into the VM with the cnx stack installed:
