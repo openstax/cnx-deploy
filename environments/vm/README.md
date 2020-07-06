@@ -120,6 +120,42 @@ In both cases, a subsequent `vagrant up` will restart the environment. If you ma
 vagrant provision cnx-deploy
 ```
 
+### Adding users to the Legacy system
+
+After a VM is provisioned the Legacy system needs to have users added to the 
+system. To add users to the system first ensure you have successfully provisioned 
+the VM using the instructions above and the VM is running using `vagrant up`.
+
+SSH into the Vagrant VM by running the following:
+
+```sh
+vagrant ssh cnx-target
+```
+
+You'll see your prompt change to indicate that you are logged into the VM.
+
+```sh
+vagrant@cnx-target:~$
+```
+
+Change directories to `cnx-buildout/instance` directory:
+
+```sh
+vagrant@cnx-target:~$ cd /var/lib/cnx/cnx-buildout
+```
+
+Run the following to add a user to the Legacy system:
+
+The username and password are both `admin`.
+
+```sh
+vagrant@cnx-target:~$ /bin/instance addusers admin "admin"
+```
+
+Visit the Legacy frontend at https://legacy.local.cnx.org/ in your browser and 
+login with the admin user.
+
+
 ### Debugging issues
 #### Issue: I can't connect to my VM after deployment
 If your VM deploys successfully, but you can't connect to `https://local.cnx.org`, there may be some networking issue. Here are suggested ways to debug / test:
