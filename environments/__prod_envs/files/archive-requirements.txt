@@ -17,7 +17,7 @@ lxml==4.4.3 # pyup: update no, Unicode problem in lxml 4.5.0 cnx#924
 MarkupSafe==1.1.1
 packaging==20.4
 parsimonious==0.8.1
-Paste==3.4.1
+Paste==3.4.2
 PasteDeploy==2.1.0
 PasteScript==3.2.0
 pkg-resources==0.0.0
