@@ -9,13 +9,13 @@
 - name: get archive versions
   hosts: frontend
   tasks:
-    - shell: /var/cnx/venvs/archive/bin/pip freeze | grep 'cnx-archive'
+    - shell: "$(dirname {{ archive_pserve_path }})/pip freeze | grep 'cnx-archive'"
       register: archive_version
       when: groups.archive
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.archive|first }}"
-    - shell: /var/cnx/venvs/archive/bin/pip freeze
+    - shell: "$(dirname {{ archive_pserve_path }})/pip freeze"
       register: archive_full_versions
       when: groups.archive
       delegate_to: "{{ item }}"

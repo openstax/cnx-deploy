@@ -6,6 +6,7 @@ archive_db_user: cnxarchive
 archive_db_password: cnxarchive
 archive_db_host: localhost
 archive_db_port: 5432
+archive_pserve_path: /var/cnx/venvs/python2/archive/bin/pserve
 
 source:
   # - name:

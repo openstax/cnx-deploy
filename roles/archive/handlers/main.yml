@@ -1,4 +1,9 @@
 ---
+- name: add archive 
+  become: yes
+  supervisorctl:
+    name: 'archive:'
+    state: present
 
 - name: restart archive
   become: yes
