@@ -6,6 +6,7 @@ archive_db_user: "{{ vault_archive_db_user }}"
 archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: prod09.cnx.org
 archive_db_port: 5432
+archive_pserve_path: /var/cnx/venvs/python2/archive/bin/pserve
 
 publishing_broker_user: "{{ vault_publishing_broker_user }}"
 publishing_broker_password: "{{ vault_publishing_broker_password }}"

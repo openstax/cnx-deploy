@@ -40,6 +40,15 @@
     mode: 0755
     owner: "{{ venvs_owner|default('www-data') }}"
 
+- name: create a new folder for python2 virtualenv 
+  become: yes
+  when: not venvs_dir.stat.exists
+  file:
+    path: "/var/cnx/venvs/python2"
+    state: directory
+    mode: 0755
+    owner: "{{ venvs_owner|default('www-data') }}"
+
 - name: set the owner of venvs directory
   become: yes
   file:
@@ -48,7 +57,7 @@
     recurse: yes
     owner: "{{ venvs_owner|default('www-data') }}"
 
-- name: create the archive virtualenv
+- name: create the archive virtualenv - before migrating to new virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
@@ -56,6 +65,16 @@
     virtualenv: "/var/cnx/venvs/archive"
     virtualenv_python: python2
     state: latest
+
+- name: create the archive virtualenv - new virtualenv for installing archive
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  pip:
+    name: pip
+    virtualenv: "/var/cnx/venvs/python2/archive"
+    virtualenv_python: python2
+    state: latest
+
 
 # +++
 # Install
@@ -96,6 +115,34 @@
     virtualenv: "/var/cnx/venvs/archive"
     state: latest
 
+- name: ensure that setuptools<45 is installed in new virtualenv
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  pip:
+    name: setuptools<45
+    virtualenv: "/var/cnx/venvs/python2/archive"
+    state: present
+
+- name: install archive as a package in new virtualenv
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  pip:
+    name: cnx-archive
+    version: "{{ archive_version }}|default('latest')"
+    virtualenv: "/var/cnx/venvs/python2/archive"
+    state: present
+
+- name: install new archive virtualenv deploy dependencies
+  become: yes
+  become_user: "{{ venvs_owner|default('www-data') }}"
+  pip:
+    name: "{{ item.key }}"
+    version: "{{ item.value }}"
+    virtualenv: "/var/cnx/venvs/python2/archive"
+    state: present
+  with_dict:
+    - {"pyramid-sawing": 1.1.3}
+
 - name: restart archive
   command: "/bin/true"
   notify:
@@ -133,7 +180,6 @@
 # +++
 # Init service
 # +++
-
 - name: configure archive under supervisor
   become: yes
   template:
@@ -141,7 +187,8 @@
     dest: "/etc/supervisor/conf.d/archive.conf"
     mode: 0644
   notify:
-    - reload supervisord
+    - add archive
+    - restart archive
 
 # +++
 # Cron Configuration
