@@ -55,6 +55,8 @@ Otherwise, you can use the following variant and provide a path to your private 
 sudo ssh -L 10.0.10.1:80:dist.rhaptos.org:80 <YOUR_USERNAME>@bastion2.cnx.org -N -i <PATH_TO_PRIVATE_KEY>
 ```
 
+(**NOTE:** See this [workaround](#issue-i-need-packages-from-distrhaptos-but-it-is-currently-inaccessible) if you have issues accessing `dist.rhaptos.org`)
+
 You can kickoff the deployment by running the following command from the root of this repository:
 
 ```sh
@@ -122,8 +124,8 @@ vagrant provision cnx-deploy
 
 ### Adding users to the Legacy system
 
-After a VM is provisioned the Legacy system needs to have users added to the 
-system. To add users to the system first ensure you have successfully provisioned 
+After a VM is provisioned the Legacy system needs to have users added to the
+system. To add users to the system first ensure you have successfully provisioned
 the VM using the instructions above and the VM is running using `vagrant up`.
 
 SSH into the Vagrant VM by running the following:
@@ -152,7 +154,7 @@ The username and password are both `admin`.
 vagrant@cnx-target:~$ /bin/instance addusers admin "admin"
 ```
 
-Visit the Legacy frontend at https://legacy.local.cnx.org/ in your browser and 
+Visit the Legacy frontend at https://legacy.local.cnx.org/ in your browser and
 login with the admin user.
 
 
@@ -173,3 +175,11 @@ If your VM deploys successfully, but you can't connect to `https://local.cnx.org
         * Employ a user local "permanent" fix: Modify the IP address ranges in the `Vagrantfile` as needed to avoid a conflict (e.g. replace all occurences of 10.0.10 with X.Y.Z where the X.Y.Z.0/24 subnet won't conflict). Once updated, you should also:
             1. Run `vagrant destroy` followed by `vagrant up` to do a full rebuild
             2. Update your `/etc/hosts` with the select IP address (e.g. instead of 10.0.10.10 use X.Y.Z.10)
+
+#### Issue: I need packages from dist.rhaptos but it is currently inaccessible
+
+If `dist.rhaptos.org` is down or unreachable for some reason, it can cause local Vagrant deployments to fail. You can workaround the failure by manually copying files from a server that has already been successfully deployed with the dependency versions you're missing locally. For example, you can login to `qa.cnx.org` and:
+
+* Tar / download the files in `/var/lib/cnx/cnx-buildout/downloads/dist/`
+* Places those files under `cnx-deploy/files/src/cnx-buildout/downloads/dist`
+* Run `vagrant provision cnx-deploy`
