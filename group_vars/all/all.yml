@@ -75,3 +75,7 @@ default_nfs_mounts:
 # Used in combination with ``accounts_stub=true`` to provide a set of user
 # names and passwords
 accounts_stub_users: "{{ vault_accounts_stub_users }}"
+
+# AWS secrets for dist.cnx.org
+dist_cnx_username_secret: /concourse/CE/dist-cnx-username
+dist_cnx_password_secret: /concourse/CE/dist-cnx-password

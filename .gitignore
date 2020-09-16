@@ -9,3 +9,4 @@ environments/*/secrets
 # Vagrant #
 ###########
 .vagrant
+vm_vars.yml
