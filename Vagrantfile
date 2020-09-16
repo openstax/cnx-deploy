@@ -69,6 +69,7 @@ Vagrant.configure("2") do |config|
       ansible.inventory_path = "environments/vm/inventory"
       ansible.limit = "all"
       ansible.verbose = "-vvv"
+      ansible.extra_vars = "vm_vars.yml"
     end
   end
 end

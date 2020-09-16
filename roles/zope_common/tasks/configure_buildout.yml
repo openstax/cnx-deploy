@@ -11,6 +11,15 @@
     dest: "/var/lib/cnx/cnx-buildout/ansible.cfg"
     owner: www-data
     group: www-data
+  vars:
+    dist_cnx_username: >-
+     {{ lookup('aws_secret', dist_cnx_username_secret)
+         if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE'))
+         else dist_cnx_dev_username }}
+    dist_cnx_password: >-
+      {{ lookup('aws_secret', dist_cnx_password_secret)
+         if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE'))
+         else dist_cnx_dev_password }}
 
 - name: place the ansible-versions.cfg
   become: yes
