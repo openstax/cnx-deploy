@@ -28,6 +28,8 @@ export ENV=vm
 ansible-playbook -i environments/$ENV/inventory main.yml
 ```
 
+**NOTE:** If you need to use AWS secrets in a deployment, you should set an appropriate `AWS_PROFILE` environment variable, or the typical set of `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_REGION`.
+
 Please see the environment's README for specific details. For deploying to a local VM, there are instructions on using Vagrant available in the [VM environment README.md](./environments/vm/README.md)
 
 ## Updating generated content
