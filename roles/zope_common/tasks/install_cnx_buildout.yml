@@ -97,6 +97,12 @@
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
+- name: set buildout log file permissions
+  become: yes
+  file:
+    path: /var/lib/cnx/cnx-buildout/buildout_output.txt
+    mode: '0640'
+
 - name: install lxml 3.2.1
   become: yes
   shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install --index-url=https://pypi.python.org/simple/ lxml==3.2.1"
