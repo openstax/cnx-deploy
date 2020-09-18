@@ -12,6 +12,7 @@
     dest: "/var/lib/cnx/cnx-buildout/ansible.cfg"
     owner: www-data
     group: www-data
+    mode: '0640'
   vars:
     dist_cnx_username: >-
      {{ lookup('aws_secret', dist_cnx_username_secret)
