@@ -50,6 +50,10 @@ Vagrant.configure("2") do |config|
         echo "host_key_checking = False" >> /home/vagrant/.ansible.cfg
         chown vagrant:vagrant /home/vagrant/.ansible.cfg
       fi
+      # Setup dummy vm_vars.yml if not already present
+      if [ ! -f "/vagrant/vm_vars.yml" ]; then
+        echo "---\ndist_cnx_dev_username: ''\ndist_cnx_dev_password: ''\n" > /vagrant/vm_vars.yml
+      fi
     SHELL
 
     # Run vagrant specific playbook for preliminary setup
