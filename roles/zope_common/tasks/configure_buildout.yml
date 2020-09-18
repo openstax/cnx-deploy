@@ -15,11 +15,11 @@
     dist_cnx_username: >-
      {{ lookup('aws_secret', dist_cnx_username_secret)
          if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE'))
-         else dist_cnx_dev_username }}
+         else dist_cnx_dev_username|default('') }}
     dist_cnx_password: >-
       {{ lookup('aws_secret', dist_cnx_password_secret)
          if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE'))
-         else dist_cnx_dev_password }}
+         else dist_cnx_dev_password|default('') }}
 
 - name: place the ansible-versions.cfg
   become: yes
