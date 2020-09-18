@@ -6,6 +6,7 @@
 
 - name: configure buildout for ansible
   become: yes
+  no_log: True
   template:
     src: var/lib/cnx/cnx-buildout/ansible.cfg
     dest: "/var/lib/cnx/cnx-buildout/ansible.cfg"
