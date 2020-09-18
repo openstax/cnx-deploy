@@ -58,11 +58,8 @@ Vagrant.configure("2") do |config|
 
     # Run vagrant specific playbook for preliminary setup
     host.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "configure_vagrant.yml"
+      ansible.playbook = "configure_hosts.yml"
       ansible.inventory_path = "environments/vm/inventory"
-      ansible.extra_vars = {
-        rhaptos_tunnel_ip: "10.0.10.1"
-      }
       ansible.limit = "all"
       ansible.verbose = "-vvv"
     end
