@@ -42,20 +42,22 @@ There is a `Vagrantfile` in the root of the project which can be used to deploy 
 1. Install [Virtualbox](https://www.virtualbox.org/) on your host OS
 2. Install [Vagrant](https://www.vagrantup.com/) on  your host OS
 
-### Step 2: Kickoff deployment with Vagrant
-On a clean deployment, you need to establish an ssh tunnel to `bastion2.cnx.org` so packages hosted on `dist.rhaptos.org` can be downloaded. The firewall on the host would otherwise prevent external access. If you have your private key configured with `ssh-agent`, you can run the following command in a separate terminal (it will hang on success):
+### Step 2: Setup credentials for `dist.cnx.org` OR Manually obtain buildout files
+
+As part of the legacy zope buildout, we need to pull packages from `dist.cnx.org`. In order to access the server, developers should obtain individual credentials from Devops, and populate them in their local `vm_vars.yml` in the root of `cnx-deploy` (e.g. as `cnx-deploy/vm_vars.yml`):
 
 ```
-sudo -E ssh -L 10.0.10.1:80:dist.rhaptos.org:80 <YOUR_USERNAME>@bastion2.cnx.org -N
+---
+dist_cnx_dev_username: ezra
+dist_cnx_dev_password: dume
 ```
 
-Otherwise, you can use the following variant and provide a path to your private key:
+These credentials will then be used when / if packages need to be downloaded. Alternatively, if `dist.cnx.org` is offline or you don't have credentials, as a temporary work around you can login to `qa.cnx.org` and:
 
-```
-sudo ssh -L 10.0.10.1:80:dist.rhaptos.org:80 <YOUR_USERNAME>@bastion2.cnx.org -N -i <PATH_TO_PRIVATE_KEY>
-```
+* Tar / download the files in `/var/lib/cnx/cnx-buildout/downloads/dist/`
+* Places those files under `cnx-deploy/files/src/cnx-buildout/downloads/dist`
 
-(**NOTE:** See this [workaround](#issue-i-need-packages-from-distrhaptos-but-it-is-currently-inaccessible) if you have issues accessing `dist.rhaptos.org`)
+### Step 3: Kickoff deployment with Vagrant
 
 You can kickoff the deployment by running the following command from the root of this repository:
 
@@ -86,9 +88,7 @@ PLAY RECAP *********************************************************************
 local.cnx.org              : ok=512  changed=204  unreachable=0    failed=0    skipped=196  rescued=0    ignored=2
 ```
 
-Once completed, you can `CTRL-C` the terminal with your ssh tunnel connection to close it. On future provisions, you only need to setup the tunnel when there are new versions of packages that need to be downloaded from `dist.rhaptos.org`, otherwise the locally cached `.egg` files will be sufficient for the corresponding deployment steps to succeed.
-
-### Step 3: Login to the target VM and browse the services
+### Step 4: Login to the target VM and browse the services
 You can use the standard `vagrant` commands to ssh into the VMs, etc. as needed. For example, running the following will ssh you into the VM with the cnx stack installed:
 
 ```sh
@@ -103,7 +103,7 @@ Since the `Vagrantfile` is configured to set the target VM with IP `10.0.10.10`,
 
 **NOTE:** Since the certificates are self-signed, you will likely get some browser-specific nagging.
 
-### Step 4: Basic lifecycle of the environment
+### Step 5: Basic lifecycle of the environment
 If you want to close your VMs but not completely lose the deployment, you can run the following to place the VMs into saved state:
 
 ```sh
@@ -175,11 +175,3 @@ If your VM deploys successfully, but you can't connect to `https://local.cnx.org
         * Employ a user local "permanent" fix: Modify the IP address ranges in the `Vagrantfile` as needed to avoid a conflict (e.g. replace all occurences of 10.0.10 with X.Y.Z where the X.Y.Z.0/24 subnet won't conflict). Once updated, you should also:
             1. Run `vagrant destroy` followed by `vagrant up` to do a full rebuild
             2. Update your `/etc/hosts` with the select IP address (e.g. instead of 10.0.10.10 use X.Y.Z.10)
-
-#### Issue: I need packages from dist.rhaptos but it is currently inaccessible
-
-If `dist.rhaptos.org` is down or unreachable for some reason, it can cause local Vagrant deployments to fail. You can workaround the failure by manually copying files from a server that has already been successfully deployed with the dependency versions you're missing locally. For example, you can login to `qa.cnx.org` and:
-
-* Tar / download the files in `/var/lib/cnx/cnx-buildout/downloads/dist/`
-* Places those files under `cnx-deploy/files/src/cnx-buildout/downloads/dist`
-* Run `vagrant provision cnx-deploy`
