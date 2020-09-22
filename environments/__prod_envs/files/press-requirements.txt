@@ -38,7 +38,7 @@ swagger-spec-validator==2.6.0 # pyup: ignore
 translationstring==1.4
 urllib3==1.25.10
 venusian==3.0.0
-vine==5.0.0
+vine==1.3.0 # pyup: update no, vine dropped support for python 2.7
 waitress==1.4.4
 WebOb==1.8.6
 zope.deprecation==4.4.0
