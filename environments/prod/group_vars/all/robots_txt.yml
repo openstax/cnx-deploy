@@ -9,6 +9,7 @@ robots_txt:
     - {name: 'Slurp', crawl_delay: 10}
   disallow_list:
     - legacy.cnx.org
+    - vendor.cnx.org
     - /lenses
     - /browse_content
     - /*/pdf$
