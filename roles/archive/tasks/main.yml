@@ -40,9 +40,8 @@
     mode: 0755
     owner: "{{ venvs_owner|default('www-data') }}"
 
-- name: create a new folder for python2 virtualenv 
+- name: create a folder for python2 virtualenvs
   become: yes
-  when: not venvs_dir.stat.exists
   file:
     path: "/var/cnx/venvs/python2"
     state: directory
@@ -57,16 +56,7 @@
     recurse: yes
     owner: "{{ venvs_owner|default('www-data') }}"
 
-- name: create the archive virtualenv - before migrating to new virtualenv
-  become: yes
-  become_user: "{{ venvs_owner|default('www-data') }}"
-  pip:
-    name: pip
-    virtualenv: "/var/cnx/venvs/archive"
-    virtualenv_python: python2
-    state: latest
-
-- name: create the archive virtualenv - new virtualenv for installing archive
+- name: create the archive virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
@@ -107,14 +97,6 @@
     group: www-data
     mode: 0755
 
-- name: install archive
-  become: yes
-  become_user: "{{ venvs_owner|default('www-data') }}"
-  pip:
-    requirements: "/var/lib/cnx/archive-requirements.txt"
-    virtualenv: "/var/cnx/venvs/archive"
-    state: latest
-
 - name: ensure that setuptools<45 is installed in new virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
@@ -123,7 +105,7 @@
     virtualenv: "/var/cnx/venvs/python2/archive"
     state: present
 
-- name: install archive as a package in new virtualenv
+- name: install archive into the virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
@@ -132,7 +114,7 @@
     virtualenv: "/var/cnx/venvs/python2/archive"
     state: present
 
-- name: install new archive virtualenv deploy dependencies
+- name: install archive deploy dependencies into the virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
