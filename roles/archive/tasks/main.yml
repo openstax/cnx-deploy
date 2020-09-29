@@ -86,15 +86,6 @@
     owner: www-data
     group: www-data
 
-- name: copy over requirements.txt
-  become: yes
-  copy:
-    src: "{{ inventory_dir }}/files/archive-requirements.txt"
-    dest: "/var/lib/cnx/archive-requirements.txt"
-    owner: www-data
-    group: www-data
-    mode: 0755
-
 - name: ensure that setuptools<45 is installed in new virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
