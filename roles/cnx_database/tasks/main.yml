@@ -11,5 +11,3 @@
 
 - import_tasks: install_session_exec.yml
   when: not session_exec_so.stat.exists
-
-- import_tasks: plpython_imports.yml
