@@ -28,7 +28,7 @@ fi
 # If the temporary file is not empty
 if [[ -s $varnfiles_tmp ]] ; then
     xargs -0 -a $varnfiles_tmp zcat > $combined_out
-    /var/cnx/venvs/archive/bin/cnx-archive-hits_counter \
+    /var/cnx/venvs/python2/archive/bin/cnx-archive-hits_counter \
         --hostname={{ arclishing_domain }} --log-format=plain \
         /etc/cnx/archive/app.ini $combined_out
     printf $current_datestamp > $timestamp_file
