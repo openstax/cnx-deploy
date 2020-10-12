@@ -5,12 +5,12 @@ billiard==3.6.3.0
 celery==4.4.7 # pyup: update no, celery dropped support for python 2.7
 certifi==2020.6.20
 chardet==3.0.4
-cnx-archive==4.15.10
+cnx-archive==4.15.11
 cnx-common==1.3.6
 cnx-db==3.5.3
 cnx-easybake==1.2.7
 cnx-epub==0.24.0
-cnx-publishing==0.17.20
+cnx-publishing==0.17.21
 cnx-query-grammar==0.2.2
 cnx-recipes==1.62.0
 cnx-transforms==1.2.1
