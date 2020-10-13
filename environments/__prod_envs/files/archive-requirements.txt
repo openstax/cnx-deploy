@@ -2,7 +2,7 @@ appdirs==1.4.4
 Beaker==1.11.0
 certifi==2020.6.20
 chardet==3.0.4
-cnx-archive==4.15.11
+cnx-archive==4.15.11 # NOTE: Should match archive_version in ../vars/versions.yml
 cnx-common==1.3.6
 cnx-db==3.5.3
 cnx-epub==0.24.0
