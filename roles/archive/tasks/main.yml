@@ -99,7 +99,7 @@
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     name: cnx-archive
-    version: "{{ archive_version }}|default('latest')"
+    version: "{{ archive_version|default('latest') }}"
     virtualenv: "/var/cnx/venvs/python2/archive"
     state: present
 
