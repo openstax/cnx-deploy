@@ -16,7 +16,7 @@ jsonschema==3.2.0
 kombu==4.6.11 # pyup: update no, kombu dropped support for python 2.7
 lxml==4.4.3 # pyup: update no, Unicode problem in lxml 4.5.0 cnx#924
 msgpack-python==0.5.6
-PasteDeploy==2.1.0
+PasteDeploy==2.1.1
 plaster==1.0
 plaster-pastedeploy==0.7
 psycopg2==2.8.6
