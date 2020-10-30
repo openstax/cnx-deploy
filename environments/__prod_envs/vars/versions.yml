@@ -1,8 +1,12 @@
 webview_version: v0.54.0
 press_version: v8.1.8
 archive_version: 4.15.12
+publishing_version: 0.17.22
 
-# These are dependencies required to run archive in production
-archive_deploy_dependencies:
+# These are dependencies required to run archive and publishing in production
+archive_deploy_dependencies: 
   - { "pyramid-sawing": 1.1.3 }
+  - { "db-migrator": 1.1.0 }
+
+publishing_deploy_dependencies:
   - { "db-migrator": 1.1.0 }

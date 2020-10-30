@@ -40,7 +40,7 @@
   tasks:
     - become: yes
       stat:
-        path: "/var/cnx/venvs/publishing/bin/cnx-publishing-post-publication"
+        path: "/var/cnx/venvs/python2/publishing/bin/cnx-publishing-post-publication"
       register: post_publication_bin
     - become: yes
       when: post_publication_bin.stat.exists
@@ -147,7 +147,7 @@
   tasks:
     - become: yes
       stat:
-        path: "/var/cnx/venvs/publishing/bin/cnx-publishing-post-publication"
+        path: "/var/cnx/venvs/python2/publishing/bin/cnx-publishing-post-publication"
       register: post_publication_bin
     - become: yes
       when: post_publication_bin.stat.exists

@@ -12,6 +12,7 @@
     dest: "/etc/supervisor/conf.d/publishing.conf"
     mode: 0644
   notify:
+    - add publishing
     - reload supervisord
 
 # XXX (26-May-12017) post-publishing moved to channel-processing
@@ -21,6 +22,7 @@
     path: "/etc/supervisor/conf.d/post_publication.conf"
     state: absent
   notify:
+    - add publishing worker
     - reload supervisord
 # /XXX
 
