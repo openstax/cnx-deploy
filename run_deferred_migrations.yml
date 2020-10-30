@@ -20,7 +20,7 @@
       when: deferred_migrations.rc == 1
 
     - name: run deferred migrations
-      shell: "nohup /var/cnx/venvs/publishing/bin/dbmigrator --context=cnx-db --config /etc/cnx/archive/app.ini migrate --run-deferred  > /tmp/deferred-migrations.out 2>/tmp/deferred-migrations.err &"
+      shell: "nohup /var/cnx/venvs/python2/publishing/bin/dbmigrator --context=cnx-db --config /etc/cnx/archive/app.ini migrate --run-deferred  > /tmp/deferred-migrations.out 2>/tmp/deferred-migrations.err &"
       args:
         executable: "/bin/bash"
       environment:

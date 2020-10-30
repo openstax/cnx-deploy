@@ -4,6 +4,18 @@
   command: supervisorctl avail
   register: supervisorctl_avail
 
+- name: add publishing
+  become: yes
+  supervisorctl:
+    name: 'publishing:'
+    state: present
+
+- name: add publishing worker
+  become: yes
+  supervisorctl:
+    name: 'publishing_worker:'
+    state: present
+
 - name: restart publishing
   become: yes
   supervisorctl:

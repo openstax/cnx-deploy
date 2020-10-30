@@ -7,6 +7,7 @@ archive_db_password: "{{ vault_archive_db_password }}"
 archive_db_host: tea00.cnx.org
 archive_db_port: 5432
 archive_pserve_path: /var/cnx/venvs/python2/archive/bin/pserve
+publishing_pserve_path: /var/cnx/venvs/python2/publishing/bin/pserve
 
 
 publishing_broker_user: "{{ vault_publishing_broker_user }}"

@@ -25,13 +25,13 @@
 - name: get publishing versions
   hosts: frontend
   tasks:
-    - shell: /var/cnx/venvs/publishing/bin/pip freeze | grep 'cnx-publishing'
+    - shell: "$(dirname {{ publishing_pserve_path }})/pip freeze | grep 'cnx-publishing'"
       register: publishing_version
       when: groups.publishing
       delegate_to: "{{ item }}"
       with_items:
         - "{{ groups.publishing|first }}"
-    - shell: /var/cnx/venvs/publishing/bin/pip freeze
+    - shell: "$(dirname {{ publishing_pserve_path }})/pip freeze"
       register: publishing_full_versions
       when: groups.publishing
       delegate_to: "{{ item }}"
