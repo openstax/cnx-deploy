@@ -10,7 +10,7 @@
   hosts: frontend
   tasks:
     - shell: "$(dirname {{ archive_pserve_path }})/pip freeze | grep 'cnx-archive'"
-      register: archive_version
+      register: archive_ver
       when: groups.archive
       delegate_to: "{{ item }}"
       with_items:
@@ -26,7 +26,7 @@
   hosts: frontend
   tasks:
     - shell: "$(dirname {{ publishing_pserve_path }})/pip freeze | grep 'cnx-publishing'"
-      register: publishing_version
+      register: publishing_ver
       when: groups.publishing
       delegate_to: "{{ item }}"
       with_items:
@@ -91,11 +91,11 @@
           date +'{"date": "%Y-%m-%d %H:%M:%S %Z",'>/var/www/webview/version.txt
           cat >>/var/www/webview/version.txt <<EOF
            "webview": "{{ webview_rev.stdout }}",
-          {% if archive_version.results|default(False) %}
-           "cnx-archive": "{{ archive_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+          {% if archive_ver.results|default(False) %}
+           "cnx-archive": "{{ archive_ver.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
           {% endif %}
-          {% if publishing_version.results|default(False) %}
-           "cnx-publishing": "{{ publishing_version.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
+          {% if publishing_ver.results|default(False) %}
+           "cnx-publishing": "{{ publishing_ver.results.0.stdout|regex_replace('^[^@]*@([^#]*).*$', '\1')|regex_replace('^[^=]*==') }}",
           {% endif %}
           {% if oer_exports_version.results|default(False) %}
            "oer.exports": "{{ oer_exports_version.results.0.stdout }}",
