@@ -158,7 +158,7 @@
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     name: cnx-publishing
-    version: "{{ publishing_version }}|default('latest')"
+    version: "{{ publishing_version|default('latest') }}"
     virtualenv: "/var/cnx/venvs/python2/publishing"
     state: present
 
