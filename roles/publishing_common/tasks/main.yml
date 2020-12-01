@@ -5,8 +5,6 @@
 # Prerequisites
 # +++
 
-# TODO Kill this dependency by prebuilding or using packaged versions
-#      of the application/library.
 - name: install build utilities
   become: yes
   apt:
@@ -56,16 +54,7 @@
     recurse: yes
     owner: "{{ venvs_owner|default('www-data') }}"
 
-- name: create the publishing virtualenv - old fallback virtualenv
-  become: yes
-  become_user: "{{ venvs_owner|default('www-data') }}"
-  pip:
-    name: pip
-    virtualenv: "/var/cnx/venvs/publishing"
-    virtualenv_python: python2
-    state: latest
-
-- name: create the publishing virtualenv - new virtualenv in python2 folder
+- name: create the publishing virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
@@ -96,20 +85,6 @@
     owner: www-data
     group: www-data
 
-- name: copy over requirements.txt
-  become: yes
-  copy:
-    src: "{{ inventory_dir }}/files/{{ item }}-requirements.txt"
-    dest: "/var/lib/cnx/{{ item }}-requirements.txt"
-    owner: www-data
-    group: www-data
-    mode: 0755
-  with_items:
-    # We do both because these are sometimes ref'ing one another.
-    - publishing
-
-# Upgrades pip in both the fallback venv and new python2 venv
-# FIXME: Remove fallback venv after confirmation new python2 venv works
 - name: upgrade pip
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
@@ -118,11 +93,8 @@
     virtualenv: "{{ item }}"
     state: latest
   with_items:
-    - "/var/cnx/venvs/publishing"
     - "/var/cnx/venvs/python2/publishing"
 
-# Installs distribute in both the rollback venv and new python2 venv
-# FIXME: Remove fallback venv after confirmation new python2 venv works
 - name: ensure that distribute is installed
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
@@ -131,7 +103,6 @@
     virtualenv: "{{ item }}"
     state: latest
   with_items:
-    - "/var/cnx/venvs/publishing"
     - "/var/cnx/venvs/python2/publishing"
 
 - name: ensure that setuptools<45 is installed
@@ -142,18 +113,9 @@
     virtualenv: "{{ item }}"
     state: present
   with_items:
-    - "/var/cnx/venvs/publishing"
     - "/var/cnx/venvs/python2/publishing"
 
-- name: install publishing into rollback venv
-  become: yes
-  become_user: "{{ venvs_owner|default('www-data') }}"
-  pip:
-    requirements: "/var/lib/cnx/publishing-requirements.txt"
-    virtualenv: "/var/cnx/venvs/publishing"
-    state: latest
-
-- name: install publishing into the new virtualenv
+- name: install publishing into a virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
