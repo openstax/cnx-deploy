@@ -10,4 +10,4 @@ archive_deploy_dependencies:
 
 publishing_deploy_dependencies:
   - { "db-migrator": 1.1.0 }
-  - { "cnx-recipes": 1.66.0 }
+  - { "cnx-recipes": 1.67.0 }
