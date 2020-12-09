@@ -38,6 +38,14 @@
     mode: 0755
     owner: "{{ venvs_owner|default('www-data') }}"
 
+- name: create a folder for python3 virtualenvs
+  become: yes
+  file:
+    path: "/var/cnx/venvs/python3"
+    state: directory
+    mode: 0755
+    owner: "{{ venvs_owner|default('www-data') }}"
+
 - name: set the owner of venvs directory
   become: yes
   file:
@@ -49,7 +57,7 @@
 - name: create the venv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
-  command: "python3.6 -m venv /var/cnx/venvs/press"
+  command: "python3.6 -m venv /var/cnx/venvs/python3/press"
 
 # +++
 # Install
@@ -87,63 +95,33 @@
     - restart press
     - restart press workers
 
-- name: Do we have pinned requirements?
-  local_action:
-    module: stat
-    path: "{{ inventory_dir }}/files/press-requirements.txt"
-  register: pinned_reqs
-
-- name: copy over pinned requirements.txt
-  become: yes
-  when: pinned_reqs.stat.exists
-  copy:
-    src: "{{ inventory_dir }}/files/press-requirements.txt"
-    dest: "/var/lib/cnx/press-requirements.txt"
-    owner: www-data
-    group: www-data
-    mode: 0755
-
 - name: upgrade pip
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
     name: pip
-    virtualenv: "/var/cnx/venvs/press"
+    virtualenv: "/var/cnx/venvs/python3/press"
     state: latest
 
-- name: install pinned dependencies
+- name: install pinned dependencies via requirements/main.txt 
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
-  when: pinned_reqs.stat.exists
   pip:
-    virtualenv: "/var/cnx/venvs/press"
-    requirements: "/var/lib/cnx/press-requirements.txt"
+    virtualenv: "/var/cnx/venvs/python3/press"
+    requirements: "/var/cnx/apps/press/requirements/main.txt"
   notify:
     - restart press
     - restart press workers
 
-- name: install latest dependencies
-  become: yes
-  become_user: "{{ venvs_owner|default('www-data') }}"
-  when: not pinned_reqs.stat.exists
-  pip:
-    virtualenv: "/var/cnx/venvs/press"
-    requirements: "/var/cnx/apps/press/requirements/{{ item }}"
-    state: latest
-  with_items:
-    - "main.txt"
-    - "deploy.txt"
-  notify:
-    - restart press
-    - restart press workers
-
-# This is currently only a cnx-deploy deployment dependency.
-- name: install deployment dependencies
+- name: install press deploy dependencies into the virtualenv
   become: yes
   become_user: "{{ venvs_owner|default('www-data') }}"
   pip:
-    virtualenv: "/var/cnx/venvs/press"
-    name: "waitress"
+    name: "{{ item.key }}"
+    version: "{{ item.value }}"
+    virtualenv: "/var/cnx/venvs/python3/press"
+    state: present
+  with_dict: "{{ press_deploy_dependencies }}"
 
 # +++
 # Configure
