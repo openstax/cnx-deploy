@@ -12,3 +12,20 @@
     mode: 0644
   notify:
     - reload supervisord
+  register: press_supervisor_conf
+
+# When state = present module calls reread and then add
+- name: add supervisor config
+  become: yes
+  supervisorctl:
+    name: "press:"
+    state: present
+  when: press_supervisor_conf.changed
+
+# When state = restarted module calls update and then restart
+- name: reload supervisor config
+  become: yes
+  supervisorctl:
+    name: "press:"
+    state: restarted
+  when: press_supervisor_conf.changed
