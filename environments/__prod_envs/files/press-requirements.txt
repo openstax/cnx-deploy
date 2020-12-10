@@ -6,7 +6,7 @@ certifi==2020.12.5
 chardet==3.0.4
 cnx-db==3.5.3
 cnx-litezip==1.6.0
-cnxml==3.1.0
+cnxml==3.1.1
 future==0.18.2
 gunicorn==20.0.4
 hupper==1.10.2
