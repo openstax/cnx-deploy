@@ -34,6 +34,7 @@
     mode: 0600
   notify: "{{ on_ssl_install }}"
 #  when: local_cert_stat.checksum != cert_stat.checksum
-  when: not cert_stat.stat.exists
+#  when: not cert_stat.stat.exists
+  when: not cert_stat.stat.exists or local_cert_stat.stat.mtime > cert_stat.stat.mtime or local_cert_stat.stat.checksum != cert_stat.stat.checksum
   tags:
     - install-ssl
