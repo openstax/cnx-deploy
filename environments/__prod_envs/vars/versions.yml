@@ -1,7 +1,7 @@
 webview_version: v0.55.0
 press_version: v8.1.12
-archive_version: 4.15.18
-publishing_version: 0.17.28
+archive_version: 4.15.20
+publishing_version: 0.17.29
 
 # These are dependencies required to run archive and publishing in production
 archive_deploy_dependencies:
