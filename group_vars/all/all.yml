@@ -80,3 +80,15 @@ accounts_stub_users: "{{ vault_accounts_stub_users }}"
 aws_secrets_region: us-east-2
 dist_cnx_username_secret: /concourse/CE/dist-cnx-username
 dist_cnx_password_secret: /concourse/CE/dist-cnx-password
+
+# Lookup CE hosted credentials for dist.cnx.org pypi package server
+dist_cnx_username: >-
+  {{ lookup('aws_secret', dist_cnx_username_secret, region=aws_secrets_region)
+     if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE')
+       or lookup('file', '~/.aws/credentials', errors='ignore'))
+     else dist_cnx_dev_username|default('') }}
+dist_cnx_password: >-
+  {{ lookup('aws_secret', dist_cnx_password_secret, region=aws_secrets_region)
+     if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE')
+       or lookup('file', '~/.aws/credentials', errors='ignore'))
+     else dist_cnx_dev_password|default('') }}
