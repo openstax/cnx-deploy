@@ -78,9 +78,9 @@
     name: "{{ item.name }}"
     virtualenv: "/var/cnx/venvs/cnx-buildout"
   with_items:
-    - name: file:///var/lib/cnx/cnx-buildout/python-memcached-1.48.tar.gz
-    - name: file:///var/lib/cnx/cnx-buildout/hashlib-20081119.zip
-    - name: file:///var/lib/cnx/cnx-buildout/simplejson-1.9.2.tar.gz
+    - name: file:///var/lib/cnx/cnx-buildout/packages/python-memcached-1.48.tar.gz
+    - name: file:///var/lib/cnx/cnx-buildout/packages/hashlib-20081119.zip
+    - name: file:///var/lib/cnx/cnx-buildout/packages/simplejson-1.9.2.tar.gz
 
 - name: run bootstrap
   become: yes
@@ -106,7 +106,7 @@
 
 - name: install lxml 3.2.1
   become: yes
-  shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install lxml-3.2.1.tar.gz"
+  shell: ". bin/libs.sh && /var/cnx/venvs/cnx-buildout/bin/pip install ./packages/lxml-3.2.1.tar.gz"
   args:
     chdir: "/var/lib/cnx/cnx-buildout"
 
