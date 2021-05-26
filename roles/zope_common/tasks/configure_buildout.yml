@@ -12,17 +12,6 @@
     owner: www-data
     group: www-data
     mode: '0640'
-  vars:
-    dist_cnx_username: >-
-      {{ lookup('aws_secret', dist_cnx_username_secret, region=aws_secrets_region)
-         if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE')
-           or lookup('file', '~/.aws/credentials', errors='ignore'))
-         else dist_cnx_dev_username|default('') }}
-    dist_cnx_password: >-
-      {{ lookup('aws_secret', dist_cnx_password_secret, region=aws_secrets_region)
-         if (lookup('env', 'AWS_ACCESS_KEY_ID') or lookup('env', 'AWS_PROFILE')
-           or lookup('file', '~/.aws/credentials', errors='ignore'))
-         else dist_cnx_dev_password|default('') }}
 
 - name: place the ansible-versions.cfg
   become: yes
