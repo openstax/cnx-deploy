@@ -62,6 +62,24 @@
     use_ssh_args: yes
   tags: buildout-copy
 
+- name: copy over zc.buildout-1.4.4.tar.gz
+  become: yes
+  copy:
+    src: zc.buildout-1.4.4.tar.gz
+    dest: /var/lib/cnx/cnx-buildout/zc.buildout-1.4.4.tar.gz
+    owner: www-data
+    group: www-data
+  tags: buildout-perms
+
+- name: copy over simplejson-1.9.2.tar.gz
+  become: yes
+  copy:
+    src: simplejson-1.9.2.tar.gz
+    dest: /var/lib/cnx/cnx-buildout/simplejson-1.9.2.tar.gz
+    owner: www-data
+    group: www-data
+  tags: buildout-perms
+
 - name: ensure proper ownership of buildout
   become: yes
   file:
@@ -84,11 +102,9 @@
 - name: install simplejson 1.9.2
   become: yes
   pip:
-    name: simplejson
-    version: 1.9.2
+    name: "file:///var/lib/cnx/cnx-buildout/simplejson-1.9.2.tar.gz"
     virtualenv: "/var/cnx/venvs/cnx-buildout"
     virtualenv_python: python2
-    extra_args: --index-url=https://pypi.python.org/simple/
 
 - name: run buildout
   become: yes
