@@ -10,7 +10,7 @@ archive_deploy_dependencies:
 
 publishing_deploy_dependencies:
   - { "db-migrator": 1.1.0 }
-  - { "cnx-recipes": 1.81.0 }
+  - { "cnx-recipes": 1.82.0 }
 
 press_deploy_dependencies:
   - { "gunicorn": 20.0.4}
